@@ -1,0 +1,14 @@
+**/node_modules/
+**/screenShots
+**/detail.js
+**/mData.js
+.pmd
+.project
+**/npm-debug.log
+**/.DS_Store
+**/output/
+**/coverage/
+**/jsonFile_test_*
+**/temp
+**/i18n
+
