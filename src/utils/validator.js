@@ -93,7 +93,7 @@ const validator = {
 						let value = (val || '').replace(/\s{2,}/g, ' ').trim();
 						return !value;
 					};
-				} else if (rule == 'maxLength' && Number(ruleInfo) != NaN && Number(ruleInfo) != Infinity) {
+				} else if (rule == 'maxLength' && !Number.isNaN(ruleInfo) && Number.isFinite(ruleInfo) ) {
 					let maxLength = Number(ruleInfo);
 					newValidationRules[rule] = (val, el) => {
 						if (el.willValidate && el.validity.tooLong) {
@@ -103,7 +103,7 @@ const validator = {
 						let value = (val || '').trim();
 						return !(value.length <= maxLength);
 					};
-				} else if (rule == 'minLength' && Number(ruleInfo) != NaN && Number(ruleInfo) != Infinity) {
+				} else if (rule == 'minLength' && !Number.isNaN(ruleInfo) && Number.isFinite(ruleInfo) ) {
 					let minLength = Number(ruleInfo);
 					newValidationRules[rule] = (val, el) => {
 						let value = (val || '').trim();
@@ -134,7 +134,7 @@ const validator = {
 						let value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity || (step == NaN || step == Infinity)) {
+						if (Number.isNaN(value) || !Number.isFinite(value) || ( Number.isNaN(step) || !Number.isFinite(step) )) {
 							return true;
 						}
 
@@ -155,7 +155,7 @@ const validator = {
 						let value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity || (max == NaN || max == Infinity)) {
+						if (Number.isNaN(value) || !Number.isFinite(value) || (Number.isNaN(max) || !Number.isFinite(max) )) {
 							return true;
 						}
 
@@ -176,7 +176,7 @@ const validator = {
 						let value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity || (min == NaN || min == Infinity)) {
+						if (Number.isNaN(value) || !Number.isFinite(value) || (Number.isNaN(min)  || !Number.isFinite(min))) {
 							return true;
 						}
 
@@ -190,18 +190,19 @@ const validator = {
 						let value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity) {
+						if (Number.isNaN(value) || !Number.isFinite(value)) {
 							return true;
 						}
 
 						return !(value >= ranges[0] && value <= ranges[1]);
 					};
 				} else if ((rule == 'digits' || rule == 'integer' || rule == 'double') && ruleInfo === true) {
+					
 					newValidationRules[rule] = (val, el) => {
 						let value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity) {
+						if (Number.isNaN(value) || !Number.isFinite(value)) {
 							return true;
 						}
 
