@@ -1,0 +1,19 @@
+.default {
+}
+
+.default.focused {
+	outline: 5px auto #7bb3f2;
+}
+
+.default.raised {
+	outline: 5px auto green;
+}
+
+.searchinput {
+	outline: 1px auto violet;
+}
+
+.searchinput:focus {
+	border: 1px auto green;
+	color: red;
+}

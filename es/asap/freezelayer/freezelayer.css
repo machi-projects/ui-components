@@ -1,0 +1,20 @@
+@value _per_100 from "../common-css/variables/units.css";
+
+.base {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: _per_100;
+	height: _per_100;
+}
+
+.default {
+	composes: base;
+}
+
+.default:focus {
+	border: 10px solid red;
+}
+.myfreeze {
+	composes: base;
+}

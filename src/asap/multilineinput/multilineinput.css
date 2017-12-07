@@ -1,0 +1,25 @@
+.default{
+
+}
+
+.default.focused {
+  outline: 5px auto #7bb3f2;
+}
+
+.default.raised {
+  outline: 5px auto green;
+}
+
+
+
+.myinput{
+
+}
+
+.myinput.focused {
+  outline: 5px auto #7bb3f2;
+}
+
+.myinput.raised {
+  outline: 5px auto green;
+}
