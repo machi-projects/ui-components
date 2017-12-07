@@ -1,21 +1,21 @@
 {
 	"name": "machi-ui-components",
 	"umdVar": "Library",
-	"version": "1.0.11",
-	"description": "",
+	"version": "1.0.12",
+	"description": "common ui components library for all",
 	"main": "lib/index",
 	"module": "es/index.js",
 	"jsnext:main": "es/index.js",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/vimalceg/fz-dnd.git"
+		"url": "https://github.com/machi-projects/ui-components.git"
 	},
-	"author": "",
+	"author": "inian Karthick",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/vimalceg/fz-dnd/issues"
+		"url": "https://github.com/machi-projects/ui-components/issues"
 	},
-	"homepage": "https://github.com/vimalceg/fz-dnd#readme",
+	"homepage": "https://github.com/machi-projects/ui-components#readme",
 	"scripts": {
 		"docs": "fz-react-cli docs",
 		"clean": "fz-react-cli clean lib coverage",
