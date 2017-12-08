@@ -1,4 +1,6 @@
 import _Number$isSafeInteger from 'babel-runtime/core-js/number/is-safe-integer';
+import _Number$isFinite from 'babel-runtime/core-js/number/is-finite';
+import _Number$isNaN from 'babel-runtime/core-js/number/is-nan';
 import _Object$keys from 'babel-runtime/core-js/object/keys';
 import _toConsumableArray from 'babel-runtime/helpers/toConsumableArray';
 import typeChecker from './typeChecker';
@@ -96,7 +98,7 @@ var validator = {
 						var value = (val || '').replace(/\s{2,}/g, ' ').trim();
 						return !value;
 					};
-				} else if (rule == 'maxLength' && Number(ruleInfo) != NaN && Number(ruleInfo) != Infinity) {
+				} else if (rule == 'maxLength' && !_Number$isNaN(ruleInfo) && _Number$isFinite(ruleInfo)) {
 					var maxLength = Number(ruleInfo);
 					newValidationRules[rule] = function (val, el) {
 						if (el.willValidate && el.validity.tooLong) {
@@ -106,7 +108,7 @@ var validator = {
 						var value = (val || '').trim();
 						return !(value.length <= maxLength);
 					};
-				} else if (rule == 'minLength' && Number(ruleInfo) != NaN && Number(ruleInfo) != Infinity) {
+				} else if (rule == 'minLength' && !_Number$isNaN(ruleInfo) && _Number$isFinite(ruleInfo)) {
 					var minLength = Number(ruleInfo);
 					newValidationRules[rule] = function (val, el) {
 						var value = (val || '').trim();
@@ -137,7 +139,7 @@ var validator = {
 						var value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity || step == NaN || step == Infinity) {
+						if (_Number$isNaN(value) || !_Number$isFinite(value) || _Number$isNaN(step) || !_Number$isFinite(step)) {
 							return true;
 						}
 
@@ -158,7 +160,7 @@ var validator = {
 						var value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity || max == NaN || max == Infinity) {
+						if (_Number$isNaN(value) || !_Number$isFinite(value) || _Number$isNaN(max) || !_Number$isFinite(max)) {
 							return true;
 						}
 
@@ -179,7 +181,7 @@ var validator = {
 						var value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity || min == NaN || min == Infinity) {
+						if (_Number$isNaN(value) || !_Number$isFinite(value) || _Number$isNaN(min) || !_Number$isFinite(min)) {
 							return true;
 						}
 
@@ -193,18 +195,19 @@ var validator = {
 						var value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity) {
+						if (_Number$isNaN(value) || !_Number$isFinite(value)) {
 							return true;
 						}
 
 						return !(value >= ranges[0] && value <= ranges[1]);
 					};
 				} else if ((rule == 'digits' || rule == 'integer' || rule == 'double') && ruleInfo === true) {
+
 					newValidationRules[rule] = function (val, el) {
 						var value = (val || '').trim();
 						value = Number(value);
 
-						if (value == NaN || value == Infinity) {
+						if (_Number$isNaN(value) || !_Number$isFinite(value)) {
 							return true;
 						}
 
@@ -264,12 +267,12 @@ var validator = {
 							}
 						}
 					};
-				} else if (rule == 'pattern' && ruleInfo) {
+				} else if (rule == 'pattern' && ruleInfo && ruleInfo.constructor == RegExp) {
 					newValidationRules[rule] = function (val, el) {
 						var value = (val || '').trim();
 						return !new RegExp(ruleInfo).test(value);
 					};
-				} else if ((rule == 'email' || rule == 'month' || rule == 'time' || rule == 'phone' || rule == 'url' || rule == 'hexcode') && ruleInfo === true) {
+				} else if ((rule == 'email' || rule == 'month' || rule == 'time' || rule == 'phone' || rule == 'url' || rule == 'hexcode' || rule == 'cleartextpattern') && ruleInfo === true) {
 					newValidationRules[rule] = function (val, el) {
 						var value = (val || '').trim();
 						return !defaultPatterns[rule].test(value);
@@ -296,7 +299,8 @@ var validator = {
 		date: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])$/,
 		time: /^([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9]$/,
 		datetime: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])[T](([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9])$/,
-		url: /^(ht|f)tp(s?)\:\/\/[\-\.\w]+[.][\w]+(\/?)([A-z0-9\-\.\?\,\:\'\/\\\+=\&%\$#_@]*)?$/
+		url: /^(ht|f)tp(s?)\:\/\/[\-\.\w]+[.][\w]+(\/?)([A-z0-9\-\.\?\,\:\'\/\\\+=\&%\$#_@]*)?$/,
+		cleartextpattern: /^([A-z0-9\_\-\.\$@\?\,\:\'\/\!\s]|[^\u0000-\u007F])+$/
 	}
 };
 

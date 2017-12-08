@@ -1,5 +1,0 @@
-@value _none from "../variables/units.css";
-
-.ptr_ev_none {
-	pointer-events: _none;
-}
