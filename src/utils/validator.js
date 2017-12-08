@@ -262,12 +262,12 @@ const validator = {
 							}
 						}
 					};
-				} else if (rule == 'pattern' && ruleInfo) {
+				} else if (rule == 'pattern' && ruleInfo && ruleInfo.constructor == RegExp ) {
 					newValidationRules[rule] = (val, el) => {
 						let value = (val || '').trim();
 						return !new RegExp(ruleInfo).test(value);
 					};
-				} else if ((rule == 'email' || rule == 'month' || rule == 'time' || rule == 'phone' || rule == 'url' || rule == 'hexcode') && ruleInfo === true) {
+				} else if ((rule == 'email' || rule == 'month' || rule == 'time' || rule == 'phone' || rule == 'url' || rule == 'hexcode' || rule == 'cleartextpattern') && ruleInfo === true) {
 					newValidationRules[rule] = (val, el) => {
 						let value = (val || '').trim();
 						return !defaultPatterns[rule].test(value);
@@ -290,7 +290,8 @@ const validator = {
 		date: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])$/,
 		time: /^([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9]$/,
 		datetime: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])[T](([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9])$/,
-		url: /^(ht|f)tp(s?)\:\/\/[\-\.\w]+[.][\w]+(\/?)([A-z0-9\-\.\?\,\:\'\/\\\+=\&%\$#_@]*)?$/
+		url: /^(ht|f)tp(s?)\:\/\/[\-\.\w]+[.][\w]+(\/?)([A-z0-9\-\.\?\,\:\'\/\\\+=\&%\$#_@]*)?$/,
+		cleartextpattern : /^([A-z0-9\_\-\.\$@\?\,\:\'\/\!\s]|[^\u0000-\u007F])+$/
 	}
 };
 

@@ -1,0 +1,22 @@
+@value _small, _medium, _large, _xlarge,  _small_2 from "../variables/fontsizes.css";
+
+.fs_small {
+    font-size: _small;
+}
+
+.fs_medium {
+    font-size: _medium;
+}
+
+.fs_large {
+    font-size: _large;
+}
+
+
+.fs_xlarge {
+    font-size: _xlarge;
+}
+
+.fs_small_2 {
+    font-size: _small_2;
+}

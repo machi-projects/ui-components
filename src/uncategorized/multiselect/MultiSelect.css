@@ -1,0 +1,73 @@
+/* $Id$ */
+.notfound{
+    padding:0 7px;
+}
+.mainrel{
+    position:relative;
+}
+.mainBorder{
+    border-bottom: 1px solid #ddd;
+    padding:0 0 4px 0;
+    margin:5px 0 0;
+    background-color: #fff;
+    min-height:31px;
+}
+.mainFlexWrap{
+    composes:mainBorder;
+    border-bottom: 1px solid #0f7df0 ;
+}
+.inputAdjust{
+    display:block;
+    overflow:hidden;
+    white-space: nowrap;
+    min-width: 120px;
+}
+.inputFocus{
+    width:100%;
+    box-sizing:border-box;
+    padding:0.5rem 0.75rem;
+    color: #000;
+    outline: 0;
+    border:1px solid #e3e6eb;
+    border-radius:.2rem;
+    background: #fff ;
+    font: 15px "ProximaNovaLight",sans-serif;
+}
+.inputFocus:focus{
+  border-color:#e3e6eb;
+  box-shadow:none;
+}
+.ListAds{
+    position: absolute;
+    width:100%;
+    border:1px solid #0f7df0;
+    box-shadow:0 0 3px #0d6acc;
+    background: #fff;
+    color: #000;
+    left: 0px;
+    z-index:2;
+   box-sizing:border-box;
+    border-top: 0px;
+}
+.suggestion{
+   width:100%;
+     box-sizing:border-box;
+    padding: 3px 7px 4px;
+    cursor:pointer;
+    color: #000;
+}
+.suggestionFocus{
+    composes:suggestion;
+    color:#fff;
+    background-color:#0f7df0;
+}
+.hide{
+ display:none;
+}
+.clr{
+    clear:both;
+}
+.multiSel{
+  float:left;
+  margin:3px 5px 4px 0
+}
