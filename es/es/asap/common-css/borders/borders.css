@@ -1,0 +1,28 @@
+@value _per_100, _per_5, _px_5 from "../variables/units.css";
+@value _green from "../variables/colors.css";
+
+@value _solid : solid;
+
+
+.bdr_none{
+
+}
+
+.bdr_5px_rs_5per{
+  border: _px_5 _solid _green;
+  border-radius: _per_5;
+}
+
+.bdr_5px_rs_100per{
+  border: _px_5 _solid _green;
+  border-radius: _per_100;
+}
+
+/*
+
+  border _ bdr
+  radius _ rs
+
+  border _ px _ rounded _ per
+
+*/

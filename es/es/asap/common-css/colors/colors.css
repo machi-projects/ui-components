@@ -1,0 +1,25 @@
+@value _blue, _green, _transparent, _black_alpha_half from "../variables/colors.css";
+
+.clr_red {
+	color: _blue;
+}
+
+.clr_green {
+	color: _green;
+}
+
+.bg_red {
+	background-color: _blue;
+}
+
+.bg_green {
+	background-color: _green;
+}
+
+.bg_transparent {
+	background-color: _transparent;
+}
+
+.bg_black_alpha_half {
+	background-color: _black_alpha_half;
+}

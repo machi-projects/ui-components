@@ -1,0 +1,50 @@
+/* $Id$ */
+.container{
+    composes:posRel from '../../../css/CommonStyle.css';
+    composes:w100per from '../../../css/CommonStyle.css';
+}
+.suggestions{
+    composes:posAbsolute from '../../../css/CommonStyle.css';
+    composes:w100per from '../../../css/CommonStyle.css';
+    z-index:1;
+    top:33px;
+}
+.hide
+{
+    composes:hide from '../../../css/CommonStyle.css';
+}
+/* Dropdown css */
+.listmenu{
+  	margin:0;
+  	composes:w100per from '../../../css/CommonStyle.css';
+  	padding:3px 0;
+  	max-height:200px;
+    composes:overYAuto from '../../../css/CommonStyle.css';
+    border:1px solid #0f7df0;
+    box-shadow: 0 0 1px #0d6acc;
+    background-color: #FFF;
+}
+.option{
+  	padding:3px 7px 4px;
+  	composes:curPointer from '../../../css/CommonStyle.css';
+  	letter-spacing:0.1px;
+  	composes:listStyleNone from '../../../css/CommonStyle.css';
+  	color:#000;
+}
+.option:hover{
+	  background:#0f7df0;
+    color:#fff;
+}
+.optionFocus{
+  	background-color:#0f7df0;
+  	composes:option;
+  	color:#fff;
+}
+
+.option1{
+  	padding:3px 7px 4px;
+  	composes:curPointer from '../../../css/CommonStyle.css';
+  	letter-spacing:0.1px;
+  	composes:listStyleNone from '../../../css/CommonStyle.css';
+  	color:#000;
+}

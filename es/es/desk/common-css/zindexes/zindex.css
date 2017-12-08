@@ -1,0 +1,41 @@
+/* Max levels */
+.max_level_1 {
+	z-index: 9991;
+}
+
+.max_level_2 {
+	z-index: 9992;
+}
+
+.max_level_3 {
+	z-index: 9993;
+}
+
+.max_level_4 {
+	z-index: 9994;
+}
+
+.max_level_5 {
+	z-index: 9995;
+}
+
+/* Min levels */
+.min_level_1 {
+	z-index: 1;
+}
+
+.min_level_2 {
+	z-index: 2;
+}
+
+.min_level_3 {
+	z-index: 3;
+}
+
+.min_level_4 {
+	z-index: 4;
+}
+
+.min_level_5 {
+	z-index: 5;
+}

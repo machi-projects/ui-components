@@ -1,0 +1,131 @@
+/* $Id$ */
+.main{
+	width:100%;
+	position:relative;
+}
+.dropdown{
+	width:100%;
+    border:1px solid #e3e6eb;
+    border-radius:.2rem;
+    font-size:0;
+    padding:2px 6px;
+    min-height:31px;
+}
+.selectname{
+	 overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
+    width:93%;
+    display:inline-block;
+    font-size:16px;
+}
+.arrowDown:after
+{
+	content:"";
+    width:10px;
+    height:10px;
+    border-left:2px solid #c2c5c2;
+    border-radius:2px 0px 2px;
+    border-bottom:2px solid #c2c5c2;
+    transform:rotate(-45deg);
+    position:absolute;
+    background-color:#fff;
+    top:9px;
+    right:10px;
+}
+.arrowUp:after
+{
+	content:"";
+    width:10px;
+    height:10px;
+    border-left:2px solid #c2c5c2;
+    border-radius:2px 0px 2px;
+    border-bottom:2px solid #c2c5c2;
+    transform:rotate(-225deg);
+    position:absolute;
+    background-color:#fff;
+    top:14px;
+    right:10px;
+}
+.listview{
+	width:100%;
+    border-top-right-radius:2px;
+    border-top-left-radius:2px;
+    border: 1px solid #0f7df0;
+    box-shadow: 0px 0px 2px #0d6acc;
+    background-color: #FFF;
+   position : absoulte;
+    top:30px;
+    z-index: 10;
+}
+.listViewTop
+{
+	composes:listview;
+	bottom:30px;
+	top:auto;
+}
+.listmenu{
+	margin:3px 0px 4px 0px;
+	width:100%;
+	padding:0px;
+	max-height:200px;
+	overflow:auto;
+}
+.option{
+	padding:3px 7px 4px;
+	cursor:pointer;
+	list-style : none;
+	letter-spacing:0.1px;
+	color:#000;
+}
+.posRel
+{
+	position : relative;
+}
+.option:hover{
+	background:#0f7df0;
+    color:#fff;
+}
+.hide{
+	display : none;
+}
+.searchicon{
+ width:100%;
+  box-sizing:border-box;
+	
+  padding:4px 35px 4px 5px;
+  max-height:29px;
+  border-bottom:1px solid #d0cece;
+  outline:none;
+  border-left:0;
+  border-right:0;
+  border-top:0;
+  border-radius:0;
+	font-size:1.066666667em
+}
+.searchIconPosSet
+{
+	position : absoulte;
+	top:2px;
+	right:8px;
+}
+.searchicon:focus
+{
+	outline:none;
+	border-color:#e5e5e5;
+	box-shadow:none;
+}
+.bccolor{
+	background-color:#0f7df0;
+	composes:option;
+	color:#fff;
+}
+.normal{
+	background-color:white;
+	composes:option;
+}
+.isError
+{
+    box-shadow:inset 0 0 0 2px #d9534f;
+}
