@@ -5,7 +5,7 @@ import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructo
 import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import style from './TimeField.css';
-import DropdownComponent from './DropdownComponent.js';
+import DropdownComponent from './DropdownComponent';
 
 var DateTime = function (_React$Component) {
 	_inherits(DateTime, _React$Component);

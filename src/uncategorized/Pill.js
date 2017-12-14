@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Icon from './Icon';
-import style from './css/Pill.css';
+import { Icon } from '../asap/index';
+import style from './Pill.css';
 
 export default class Pill extends React.Component {
 
@@ -28,12 +28,12 @@ export default class Pill extends React.Component {
     	<span className={type == "tag"?style.tag:style.pill}>
   		  <span className={style.pillBody} onClick={this.onClick}>
   		  	 {frontIcon && <span className={style.pillTypeIcon}>
-  			  	 <Icon icon={frontIcon.name} size={frontIcon.size} />
+  			  	 <Icon id={frontIcon.name} size={frontIcon.size} />
   			  </span>}
   			  <span className={type == "tag"?style.tagColor+" "+style.pillLabel:style.pillLabel} title={text}>{text}</span>
   		  </span>
   		  { backIcon &&<span className={style.pillRemove} >
-  		  	 <span><Icon icon={backIcon.name} size={backIcon.size} onClick={this.onBackIconClick}/></span>
+  		  	 <span><Icon id={backIcon.name} size={backIcon.size} onClick={this.onBackIconClick}/></span>
   		  </span> }
 		  </span>
     );

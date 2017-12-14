@@ -7,8 +7,8 @@ import _toArray from 'babel-runtime/helpers/toArray';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import style from './DropdownComponent.css';
-import Popup from '../Popup.js';
-import { formatValue, bind } from '../../../utils/common';
+import Popup from '../Popup';
+import { formatValue, bind } from '../common';
 var getI18NValue = function getI18NValue(value, _ref) {
   var _ref2 = _toArray(_ref);
 
@@ -246,8 +246,8 @@ var DropdownComponent = function (_React$Component) {
           'div',
           { className: styles.container ? styles.container : this.props.dropStyle ? style.dropStyle : style.dropdown, 'data-testid': 'remindByCountContainer' },
           React.createElement(
-            'a',
-            { rel: 'noopener', className: style.flexline },
+            'span',
+            { className: style.flexline },
             selectedValue && React.createElement(
               'span',
               { 'data-testid': 'selectedValue', className: this.props.dropStyle ? style.dropSelectName : style.selectname },

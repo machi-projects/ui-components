@@ -1,13 +1,53 @@
 .default{
-
+	
 }
 
-.default.focused , .default:focus{
-
+.default_checkbox[type="checkbox"]
+{
+	position:relative;
 }
 
-.default.checked , .default:checked{
+.default_checkbox[type="checkbox"]::before{
+	content: "";
+    display: inline-block;
+    vertical-align: -25%;
+    height: 14px;
+    width: 14px;
+    margin-right: 10px;
+    transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    border-radius: 2px;
+    position: relative;
+    bottom: 2px;
+    left: 0;
+    background-color: rgb(255,255,255);
+    border: 1px solid rgb(229,229,229);
+}
 
+.default_checkbox[type="checkbox"]:checked::before{
+	background: #f46e7b;
+    border: 1px solid #f46e7b 
+}
+
+.default_checkbox[type="checkbox"]:checked::after{
+	content: '';
+    position: absolute;
+    width: 8px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0);
+    left: 0px;
+    top:0px;
+    border: 2px solid rgb(255,255,255);
+    border-top: none;
+    border-right: none;
+    -webkit-transform: rotate(-50deg);
+    -moz-transform: rotate(-50deg);
+    -o-transform: rotate(-50deg);
+    -ms-transform: rotate(-50deg);
+    transform: rotate(-50deg);
+    border-radius: 0;
+   margin-left: 3px;
+    margin-top: 2px;
 }
 
 .default.optional , .default:optional{

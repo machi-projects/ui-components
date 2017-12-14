@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import style from './DropdownComponent.css';
-import Popup from '../Popup.js';
-import { formatValue,bind } from '../../../utils/common';
+import Popup from '../Popup';
+import { formatValue,bind } from '../common';
 let getI18NValue = (value,[])=>{
    return value;
 }
@@ -166,12 +166,12 @@ class DropdownComponent extends React.Component {
 
     return  <div className={dropDownMainstyle} onClick={!isReadOnly && this.handleToggle} data-testid={id}>
               <div className={styles.container?styles.container:this.props.dropStyle?style.dropStyle : style.dropdown} data-testid="remindByCountContainer">
-                <a rel="noopener" className={style.flexline}>
-                {
-                  selectedValue && <span data-testid="selectedValue" className={this.props.dropStyle?style.dropSelectName :style.selectname}>{selectedValue[textField]}</span>
-                }
-                  <span className={isPopupOpen?style.topArow :style.downArow}> {/*<FontIcon name="rightArow" size="size16" color="color5"/>*/} </span>
-                </a>
+                <span className={style.flexline}>
+	                {
+	                  selectedValue && <span data-testid="selectedValue" className={this.props.dropStyle?style.dropSelectName :style.selectname}>{selectedValue[textField]}</span>
+	                }
+	                  <span className={isPopupOpen?style.topArow :style.downArow}> {/*<FontIcon name="rightArow" size="size16" color="color5"/>*/} </span>
+	             </span>
               </div>
               <div className={isPopupOpen? position == "top"? style.topListView:style.listview: style.hide} >
                 <div className={searchField? style.searchinp: style.hide} onClick={ removeClose }>

@@ -21,7 +21,7 @@ var IconSvgBase = function (_React$Component) {
 
       return React.createElement(
         'svg',
-        { className: this.props.className },
+        { className: this.props.className, onClick: this.props.onClick },
         React.createElement('use', { xlinkHref: this.props.icon })
       );
     }
@@ -35,5 +35,6 @@ export default IconSvgBase;
 
 IconSvgBase.propTypes = {
   icon: PropTypes.string.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  onClick: PropTypes.func
 };

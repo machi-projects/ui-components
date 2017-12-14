@@ -29,7 +29,7 @@ export default class Message extends React.Component {
 			hidden,
 			raised
 		} = this.props;
-
+		
 		let newProps = omit(this.props, [
 			'className',
 			'styleId',

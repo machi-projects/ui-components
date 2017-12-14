@@ -1,4 +1,4 @@
-@value _blue, _green, _transparent, _black_alpha_half from "../variables/colors.css";
+@value _blue, _green, _transparent, _black_alpha_half, _grey_shade, _grey_shade2 from "../variables/colors.css";
 
 .clr_red {
 	color: _blue;
@@ -8,9 +8,20 @@
 	color: _green;
 }
 
+.clr_greyshade{
+    color: _grey_shade;
+}
+.clr_greyshade2{
+    color: _grey_shade2;
+}
+
+
+
+
 .bg_red {
 	background-color: _blue;
 }
+
 
 .bg_green {
 	background-color: _green;
@@ -23,3 +34,4 @@
 .bg_black_alpha_half {
 	background-color: _black_alpha_half;
 }
+

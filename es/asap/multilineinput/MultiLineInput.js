@@ -36,12 +36,14 @@ var MultiLineInput = function (_Component) {
 			    focused = _props.focused,
 			    errored = _props.errored,
 			    valid = _props.valid,
-			    raised = _props.raised;
+			    raised = _props.raised,
+			    autoExpandX = _props.autoExpandX,
+			    autoExpandY = _props.autoExpandY;
 
 
 			var newProps = omit(this.props, ['className', 'styleId', 'focused', 'errored', 'valid', 'raised']);
 
-			var classNames = cx(styles, (_cx = {}, _defineProperty(_cx, styleId, true), _defineProperty(_cx, 'required', required), _defineProperty(_cx, 'disabled', disabled), _defineProperty(_cx, 'readOnly', readOnly), _defineProperty(_cx, 'hidden', hidden), _defineProperty(_cx, 'focused', focused), _defineProperty(_cx, 'errored', errored), _defineProperty(_cx, 'valid', valid), _defineProperty(_cx, 'raised', raised), _cx));
+			var classNames = cx(styles, (_cx = {}, _defineProperty(_cx, styleId, true), _defineProperty(_cx, 'required', required), _defineProperty(_cx, 'disabled', disabled), _defineProperty(_cx, 'readOnly', readOnly), _defineProperty(_cx, 'hidden', hidden), _defineProperty(_cx, 'focused', focused), _defineProperty(_cx, 'errored', errored), _defineProperty(_cx, 'valid', valid), _defineProperty(_cx, 'raised', raised), _defineProperty(_cx, 'autoExpandX', autoExpandX), _defineProperty(_cx, 'autoExpandY', autoExpandY), _cx));
 
 			//let onPassValidation = validation.validate ?  errored =  true
 
@@ -68,6 +70,9 @@ MultiLineInput.propTypes = {
 	maxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	cols: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+	autoExpandY: PropTypes.bool,
+	autoExpandX: PropTypes.bool,
 
 	autoFocus: PropTypes.bool,
 	disabled: PropTypes.bool,

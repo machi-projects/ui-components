@@ -1,11 +1,20 @@
 .default {
+	margin-top: 10px;
+    padding-left: 5px;
+	}
+
+
+.default:focus{
+	outline:none;
 }
 
 .default .checkbox_item {
-}
+	display: inline-block;
+	}
 
 .default .checkbox_item.active_item {
-}
+	display: inline-block;
+	}
 
 .mycheckbox {
 }

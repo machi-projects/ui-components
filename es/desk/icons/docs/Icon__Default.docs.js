@@ -23,7 +23,7 @@ var Icon__Default = function (_Component) {
 			return React.createElement(
 				'div',
 				null,
-				React.createElement(Icon, { id: 'plusIcon', color: 'green', size: 'small_2' })
+				React.createElement(Icon, { id: 'searchIcon', color: 'green', size: 'small' })
 			);
 		}
 	}]);

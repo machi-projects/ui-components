@@ -16,6 +16,7 @@ export default class Label extends React.Component {
 			focused,
 
 			mandatory,
+			
 			primary,
 			success,
 			info,
@@ -30,7 +31,7 @@ export default class Label extends React.Component {
 			hidden,
 			raised
 		} = this.props;
-
+		
 		let newProps = omit(this.props, [
 			'className',
 			'styleId',
@@ -48,6 +49,7 @@ export default class Label extends React.Component {
 			'up',
 			'down'
 		]);
+		
 
 		let classNames = cx(styles, {
 			[styleId]: true,
@@ -55,7 +57,7 @@ export default class Label extends React.Component {
 			disabled: disabled,
 			focused: focused,
 
-			mandatory: mandatory,
+			mandatory : mandatory,
 			primary: primary,
 			success: success,
 			info: info,

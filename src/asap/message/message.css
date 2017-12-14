@@ -1,10 +1,23 @@
+
+.dis_block{
+	display: block;
+}
+
 .default {
-
+	display: block;
+    background: #f7f7f7;
+    color: #999;
+    font: 400 14px 'San Francisco Display Light';
+    padding: 10px 15px;
 }
 
-.default.raised {
+.default.valid {
+	display: none;
 }
 
-.mytext.raised {
-
+.default.errored {
+	display: block;
 }
+
+
+

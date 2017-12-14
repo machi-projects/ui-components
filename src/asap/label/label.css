@@ -1,5 +1,42 @@
 .default {
+	color: #999;
+    cursor: text;
+    transition: .2s ease-out;
+    font: 600 14px 'San Francisco Display Thin';
+    display: inline-block;
+    position: relative;
+    left: 5px;
 }
+
+.default:focus {
+	font-size: 14px;
+    -webkit-transform: translateY(-20px);
+    transform: translateY(-20px);
+    visibility: visible;
+    outline:none;
+}
+
+.default.mandatory::before{
+	content: "*";
+    color: #f46e7b;
+    font: bold 15px/18px 'San Francisco Display Regular';
+    background: none;
+    width: auto;
+    height: auto;
+    position: relative;
+    left: 0;
+    float: right;
+    bottom: 0;
+    padding-left: 7px;
+}
+
+
+
+
+
+
+
+/*
 
 .info {
 }
@@ -13,7 +50,6 @@
 .warning {
 }
 
-/*
 .primary_x  .a {
 	color: red;
 }

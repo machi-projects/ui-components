@@ -217,9 +217,10 @@ const validator = {
 
 						return !defaultPatterns[rule].test(value) && condition;
 					};
-				} else if ((rule == 'date' || rule == 'datetime') && ruleInfo === true) {
+				} 
+				else if ((rule == 'timezonedate' || rule == 'datetimezone' || rule == "date" || rule == "datetime"  ) && ruleInfo === true) {
 					newValidationRules[rule] = (val, el) => {
-						let value = (val || '').trim();
+						let value = (val || '').trim(); 
 
 						if (!defaultPatterns[rule].test(value)) {
 							return true;
@@ -227,6 +228,9 @@ const validator = {
 
 						if (rule == 'datetime') {
 							value = value.split('T')[0];
+							//let timings = value[1].replace("Z","").split(":")
+							//let 
+							//if( !defaultPatterns[rule].test(value); )
 						}
 
 						value = value.replace('/', '-');
@@ -267,7 +271,8 @@ const validator = {
 						let value = (val || '').trim();
 						return !new RegExp(ruleInfo).test(value);
 					};
-				} else if ((rule == 'email' || rule == 'month' || rule == 'time' || rule == 'phone' || rule == 'url' || rule == 'hexcode' || rule == 'cleartextpattern') && ruleInfo === true) {
+				} else if ((rule == 'email' || rule == 'month' || rule == 'time' || rule == 'phone' || rule == 'url' || 
+						rule == 'hexcode' || rule == 'cleartextpattern' ) && ruleInfo === true) {
 					newValidationRules[rule] = (val, el) => {
 						let value = (val || '').trim();
 						return !defaultPatterns[rule].test(value);
@@ -290,6 +295,7 @@ const validator = {
 		date: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])$/,
 		time: /^([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9]$/,
 		datetime: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])[T](([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9])$/,
+		datetimezone : /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])[T](([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9][\-\/\:\.][0-9]{3}[Z])$/, 
 		url: /^(ht|f)tp(s?)\:\/\/[\-\.\w]+[.][\w]+(\/?)([A-z0-9\-\.\?\,\:\'\/\\\+=\&%\$#_@]*)?$/,
 		cleartextpattern : /^([A-z0-9\_\-\.\$@\?\,\:\'\/\!\s]|[^\u0000-\u007F])+$/
 	}

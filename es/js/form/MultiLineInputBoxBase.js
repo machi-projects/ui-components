@@ -63,6 +63,9 @@ MultiLineInputBoxBase.propTypes = {
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	cols: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
+	autoExpandY: PropTypes.bool,
+	autoExpandX: PropTypes.bool,
+
 	autoFocus: PropTypes.bool,
 	disabled: PropTypes.bool,
 	required: PropTypes.bool,

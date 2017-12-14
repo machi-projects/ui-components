@@ -1,1 +1,1 @@
-export { default as DateWidget, FormDateWidget } from "./DateWidget.js";
+export { default as DateWidget, DateTimeBox } from "./DateWidget.js";

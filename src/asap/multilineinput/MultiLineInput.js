@@ -19,7 +19,11 @@ export default class MultiLineInput extends Component {
 			focused,
 			errored,
 			valid,
-			raised
+			raised,
+			
+			autoExpandX,
+			autoExpandY
+			
 		} = this.props;
 
 		let newProps = omit(this.props, [
@@ -42,7 +46,11 @@ export default class MultiLineInput extends Component {
 			focused: focused,
 			errored: errored,
 			valid: valid,
-			raised: raised
+			raised: raised,
+			
+			autoExpandX  : autoExpandX,
+			autoExpandY : autoExpandY
+			
 		});
 
 		//let onPassValidation = validation.validate ?  errored =  true
@@ -65,6 +73,9 @@ MultiLineInput.propTypes = {
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	cols: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
+	autoExpandY : PropTypes.bool ,
+	autoExpandX : PropTypes.bool ,
+	
 	autoFocus: PropTypes.bool,
 	disabled: PropTypes.bool,
 	hidden: PropTypes.bool,

@@ -5,8 +5,8 @@ import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructo
 import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Icon from './Icon';
-import style from './css/Pill.css';
+import { Icon } from '../asap/index';
+import style from './Pill.css';
 
 var Pill = function (_React$Component) {
   _inherits(Pill, _React$Component);
@@ -64,7 +64,7 @@ var Pill = function (_React$Component) {
           frontIcon && React.createElement(
             'span',
             { className: style.pillTypeIcon },
-            React.createElement(Icon, { icon: frontIcon.name, size: frontIcon.size })
+            React.createElement(Icon, { id: frontIcon.name, size: frontIcon.size })
           ),
           React.createElement(
             'span',
@@ -78,7 +78,7 @@ var Pill = function (_React$Component) {
           React.createElement(
             'span',
             null,
-            React.createElement(Icon, { icon: backIcon.name, size: backIcon.size, onClick: this.onBackIconClick })
+            React.createElement(Icon, { id: backIcon.name, size: backIcon.size, onClick: this.onBackIconClick })
           )
         )
       );

@@ -1,11 +1,11 @@
 export default {
   "default" :  {
-    fieldStyle : "default",
+    fieldStyle : "field_default",
     labelStyle : "default",
     messageStyle : "default"
   },
   "myfieldgroup" :   {
-    fieldStyle : "default",
+    fieldStyle : "field_default",
     labelStyle : "default",
     messageStyle : "default"
   }

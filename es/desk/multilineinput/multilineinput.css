@@ -1,5 +1,34 @@
 .default{
+	margin: 0;
+    display: block;
+    border: none;
+    border-bottom: solid 1px #e0e0e0;
+    -webkit-transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 99%, #f00000 4%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 99%, #f00000 4%);
+    background-position: -350px 0;
+    background-size: 350px 100%;
+    background-repeat: no-repeat;
+    color: #444;
+    outline: none;
+    width: 97%;
+    font-size: 16px;
+    padding: 10px 5px;	
+   
+}
 
+.default:focus{
+	background-position: 0 0;
+	border-bottom: 1px solid  #f00000;
+	box-shadow: none;
+	outline:none;
+}
+
+.default.autoExpandY{
+	 box-sizing: padding-box;
+	 resize:none;
+	 max-height:250px;
 }
 
 .default.focused {

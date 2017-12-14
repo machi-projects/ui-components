@@ -1,6 +1,6 @@
 import React from 'react';
 import style from './TimeField.css';
-import DropdownComponent from './DropdownComponent.js';
+import DropdownComponent from './DropdownComponent';
 
 export default class DateTime extends React.Component {
 	constructor(props){

@@ -1,12 +1,12 @@
 export default {
   "default": {
-    inputStyle: "default",
+    inputStyle: "default_checkbox",
     labelStyle: "default",
     itemStyle: "checkbox_item",
     activeStyle: "active_item"
   },
   "mycheckbox": {
-    inputStyle: "default",
+    inputStyle: "default_checkbox",
     labelStyle: "default",
     itemStyle: "checkbox_item",
     activeStyle: "active_item"

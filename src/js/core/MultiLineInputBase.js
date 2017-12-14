@@ -45,11 +45,22 @@ export default class MultiLineInputBase extends React.Component {
 
 	componentDidMount(){
 
+	    let textareaTag = this.elementRef;
 		if( this.props.validation != null && this.props.validation.validate ){
-			 let textareaTag = this.elementRef;
 			 this.validateInputBox(null, textareaTag , null ,extract( this.props , ["validation","onPassValidation","onFailValidation"] ) );
 		}
 
+		requestAnimationFrame(()=>{
+			if(this.props.autoExpandX || this.props.autoExpandY ){
+				this.setState({
+					minHeight : textareaTag.clientHeight , 
+					minWidth : textareaTag.clientWidth , 
+					xAutoExpand : (textareaTag.clientWidth == textareaTag.scrollWidth) , 
+					yAutoExpand : (textareaTag.clientHeight == textareaTag.scrollHeight)
+				})
+			}
+		})
+		
 	}
 
 	setTextValue(text){
@@ -63,8 +74,37 @@ export default class MultiLineInputBase extends React.Component {
 		}
 
 		this.setTextValue(ev.target.value);
+		
+		if(this.props.autoExpandX || this.props.autoExpandY ){
+			this.autoExpand(ev.target);
+		}
 	}
 
+	
+	autoExpand(el){
+
+		if(this.props.autoExpandY && this.state.yAutoExpand ){
+			requestAnimationFrame(()=>{
+			
+				if( this.state.minHeight < el.scrollHeight ){
+					el.style.height = "auto";
+					el.style.height = el.scrollHeight + 'px';
+				}
+				
+			 });
+		}
+		
+		if(this.props.autoExpandX && this.state.xAutoExpand ){
+			requestAnimationFrame(()=>{
+				if( this.state.minWidth < el.scrollWidth ){
+					 el.style.scrollWidth = "auto";
+					 el.style.width = el.scrollWidth + 'px';
+				}
+			 });
+		}
+	  
+	}
+	
 	validateInputBox(ev, targetTag , callback, validationProps){
 
 		if( callback ){
@@ -77,11 +117,11 @@ export default class MultiLineInputBase extends React.Component {
 
 	}
 
-  render() {
+    render() {
 
 		let validationObj = extract( this.props , ["validation","onPassValidation","onFailValidation"] );
 		let { validation } = validationObj || {};
-		let newProps = omit( this.props, ["validation","onPassValidation","onFailValidation"] );
+		let newProps = omit( this.props, ["autoExpandX","autoExpandY","validation","onPassValidation","onFailValidation"] );
 
 		let onChangeEventFunc = newProps.onChange;
 		newProps.onChange = (ev)=>{
@@ -90,7 +130,7 @@ export default class MultiLineInputBase extends React.Component {
 
 		if( validation.validateOn ) {
 
-				let tempFunc = newProps[ validation.validateOn ];
+			  let tempFunc = newProps[ validation.validateOn ];
 			  newProps[ validation.validateOn ] = (ev)=>{
 					this.validateInputBox(ev,
 						ev.target ,
@@ -116,6 +156,9 @@ MultiLineInputBase.propTypes = {
 	rows :  PropTypes.oneOfType( [PropTypes.string,PropTypes.number] ),
 	cols :  PropTypes.oneOfType( [PropTypes.string,PropTypes.number] ),
 
+	autoExpandY : PropTypes.bool ,
+	autoExpandX : PropTypes.bool ,
+	
 	autoFocus :  PropTypes.bool ,
 	disabled :  PropTypes.bool ,
 	required :  PropTypes.bool ,
@@ -133,7 +176,7 @@ MultiLineInputBase.propTypes = {
 			validateOn : PropTypes.string,
 			rulesOrder :  PropTypes.arrayOf(PropTypes.string),
 			rules : PropTypes.object,
-			messages : PropTypes.object,
+			messages : PropTypes.object
 	}),
 	onPassValidation: PropTypes.func,
 	onFailValidation: PropTypes.func

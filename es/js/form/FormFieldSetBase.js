@@ -60,6 +60,7 @@ export var FormFieldBase = function (_Component3) {
 		value: function render() {
 			var _props = this.props,
 			    fieldStyle = _props.fieldStyle,
+			    tabIndex = _props.tabIndex,
 			    required = _props.required,
 			    disabled = _props.disabled,
 			    readOnly = _props.readOnly,
@@ -76,7 +77,7 @@ export var FormFieldBase = function (_Component3) {
 
 			return React.createElement(
 				'div',
-				{ className: fieldStyle },
+				{ className: fieldStyle, tabIndex: tabIndex },
 				React.cloneElement(FieldChild, {
 					disabled: disabled,
 					readOnly: readOnly,
@@ -101,7 +102,8 @@ export var FormFieldBase = function (_Component3) {
 }(Component);
 
 FormFieldBase.propTypes = {
-	fieldStyle: PropTypes.string
+	fieldStyle: PropTypes.string,
+	tabIndex: PropTypes.string
 };
 
 var FormFieldSetBase = function (_React$Component) {
@@ -231,8 +233,6 @@ FormFieldSetBase.propTypes = {
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,
-
-	fireValidation: PropTypes.bool,
 
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

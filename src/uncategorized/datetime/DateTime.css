@@ -1,207 +1,231 @@
 /* $Id */
-.dateContainer
-{
-	background:#FFF;
-    border-radius: 3px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgba(0, 0, 0, 0.1);
-    padding: 10px 15px;
-    width: 310px;
+
+.timesection{
+	text-align: center;
+    padding: 15px 0;
+    border-top: 1px solid #f1f1f1;
 }
-.topArow
-{
-    width: 15px;
-    height: 15px;
-    background: white;
-    border-right: 1px solid #d2d3d2;
-    border-top: 1px solid #d2d3d2;
-    transform: rotate(-45deg);
-    composes:displayInB from "../../../css/CommonStyle.css";
-    composes:posAbsolute from "../../../css/CommonStyle.css";
+
+.DateNew{
+	padding: 10px 15px;
 }
-.topRightArowPos
-{
-    composes:topArow;
-    right:50px;
-    left:auto;
+.dateContainer {
+	background: #FFF;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+	width: 350px;
 }
-.topArowPos
-{
-    composes:topArow;
-    top:auto;
-    bottom:-8px;
-    transform:rotate(135deg);
+
+.topArow {
+	width: 15px;
+	height: 15px;
+	background: #f46e7b;
+	border-right: 1px solid #f46e7b;
+	border-top: 1px solid #f46e7b;
+	transform: rotate(-45deg);
+	display: inline-block;
+	position: absolute;
+	z-index: -1;
 }
-.topLeftArowPos
-{
-    composes:topArow;
+
+.topRightArowPos {
+	composes: topArow;
+	right: 50px;
+	left: auto;
 }
-.bottomLeftArowPos
-{
-    composes:topArow;
-    background-position: -335px -150px;
-    top: -8px;
-    right: 0;
-    left: 30px;
+
+.topArowPos {
+	composes: topArow;
+	top: auto;
+	bottom: -8px;
+	transform: rotate(135deg);
+	left: 15px;
 }
-.bottomArowPos
-{
-    composes:topArow;
-    top:-8px;
-    right:50px;
-    left:auto;
+
+.topLeftArowPos {
+	composes: topArow;
 }
-.rightArowPos
-{
-    composes:topArow;
-    height: 16px;
-    width: 16px;
-    background-position: -335px -150px;
-    left: 50px;
-    top: -9px;
-    transform: rotate(-45deg);
+
+.bottomLeftArowPos {
+	composes: topArow;
+	background-position: -335px -150px;
+	top: -8px;
+	right: 0;
+	left: 30px;
 }
-.commonStr
-{
-	color:#666;
-	composes:fontRegular from "../../../css/CommonStyle.css";
-  font-size:14px;
-	composes:talignCenter from "../../../css/CommonStyle.css";
-  composes:displayInB from "../../../css/CommonStyle.css";
+
+.bottomArowPos {
+	composes: topArow;
+	top: -8px;
+	right: 50px;
+	left: auto;
 }
-.sideArows
-{
-	composes:commonStr;
-  width:30px;
-  height:30px;
-  line-height:30px;
-  margin:0px 4px;
-  composes:curPointer from '../../../css/CommonStyle.css';
+
+.rightArowPos {
+	composes: topArow;
+	height: 16px;
+	width: 16px;
+	background-position: -335px -150px;
+	left: 50px;
+	top: -9px;
+	transform: rotate(-45deg);
 }
-.monthStr
-{
-	composes:commonStr;
-	width:119px;
+
+.commonStr {
+	color: #444;
+	font-family: 'San Francisco Display Regular', sans-serif;
+	font-size: 14px;
+	text-align: center;
+	display: inline-block;
 }
-.daysStr
-{
-	composes:commonStr;
-	width:39px;
-  font-size:12px;
-	composes:fontLight from "../../../css/CommonStyle.css";
-  text-transform:uppercase;
+
+.sideArows {
+	composes: commonStr;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	margin: 0px 10px;
+	cursor: pointer;
+	color: #fff;
 }
-.datesStr
-{
+
+.monthStr {
+	composes: commonStr;
+	width: 119px;
+	color: #fff;
+}
+
+.daysStr {
+	composes: commonStr;
+	width: 45px;
+	font-size: 12px;
+	font-family: 'San Francisco Display Light', sans-serif;
+	text-transform: uppercase;
+	color:#fff;
+}
+
+.datesStr {
 	width: 31px;
-	padding: 4px 0px;
-	composes:commonStr;
+	padding: 4px 3px;
+	composes: commonStr;
 	margin: 2px 4px;
-  composes:curPointer from '../../../css/CommonStyle.css';
+	cursor: pointer;
+	
 }
-.optionsTop
-{
-	margin: 8px 0px;
+
+.optionsTop {
+	/* margin: 8px 0px; */
+	background: #f46e7b;
+	padding: 10px;
 }
-.days
-{
-    margin: 2px 0px;
+
+.days {
+	background: #f46e7b;
+    padding: 10px 15px;
 }
-.sideArows:hover,.datesStr:hover
-{
-	color:#13a8df;
-    background: #f5f5f5;
-    border-radius: 100px;
+
+.sideArows:hover, .datesStr:hover {
+	color: #444;
+	background: #f5f5f5;
+	border-radius: 100px;
 }
-.datemain
-{
-	composes:w100per from "../../../css/CommonStyle.css";
+
+.datemain {
+	/* padding: 0 15px; */
+	
 }
-.sunday
-{
-	color: #ff0000;
+
+.sunday {
+	color: #f46e7b;
 }
-.today
-{
-	background:#0f7df0;
-    color:#FFF;
-    border-radius: 100px;
-    width: 31px;
-    margin: 2px 4px;
-    padding: 4px 0px;
-    composes:commonStr;
+
+.today{
+	background: #f46e7b;
+	color: #FFF;
+	border-radius: 100px;
+	width: 31px;
+	margin: 2px 4px;
+	padding: 4px 0px;
+	composes: commonStr;
 }
-.today:hover
-{
-	background:#0f7df0 ;
-    color: #fff;
+
+.today:hover {
+	background: #f46e7b;
+	color: #fff;
 }
-.emptySpan
-{
-	width: 39px;
-	composes:displayInB from "../../../css/CommonStyle.css";
+
+.emptySpan {
+	width: 45px;
+	display: inline-block;
 }
-.marTop
-{
-	margin-top: 18px;
+
+.marTop {
+	padding: 12px 0;
+    border-top: 1px solid #ebecec;
 }
-.blueBut
-{
-	background:#0f7df0;
-    color:#FFF;
-    border:1px solid #0f7df0;
-    padding:3px 20px;
-    letter-spacing: 0.04em;
-    border-radius: 3px;
-    composes:curPointer from '../../../css/CommonStyle.css';
-    font-size:14px;
-    composes:fontRegular from "../../../css/CommonStyle.css";
-    composes:outlineNone from '../../../css/CommonStyle.css';
-    margin-left: 50px;
-    max-width:100px;
-    text-overflow:ellipsis;
-    overflow:hidden;
+
+.marTop::after{
+	content: "";
+    position: absolute;
+    border-left: 1px solid #ebecec;
+    height: 43px;
+    left: 50%;
+    bottom: 0;
 }
-.blueBut:hover
-{
+
+.blueBut {
+	color: #999;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'San Francisco Display Regular', sans-serif;
+    outline: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background: transparent;
+    border: none;
+    padding: 0px 76px 0px;
+    transition: all 0.65s ease;
+}
+
+/* .blueBut:hover {
 	border: 1px solid #0085a9;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
-.canButton
-{
-	background:#FFF;
-	padding:3px 20px;
-  color:#888;
-  border:1px solid #ddd;
-  border-radius:3px;
-  composes:curPointer from '../../../css/CommonStyle.css';
-  font-size:14px;
-  composes:fontRegular from "../../../css/CommonStyle.css";
-  composes:outlineNone from '../../../css/CommonStyle.css';
-  margin-left:8px;
-  max-width:100px;
-  text-overflow:ellipsis;
-  overflow:hidden;
+ */
+.canButton {
+	color: #f46e7b;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'San Francisco Display Regular', sans-serif;
+    outline: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    background: transparent;
+    border: none;
+    padding: 0px 60px 0px;
+    transition: all 0.65s ease;
 }
-.canButton:hover
-{
-	border:1px solid #c6c6c6;
-  box-shadow:0 1px 1px rgba(0, 0, 0, 0.1);
+
+/* .canButton:hover {
+	border: 1px solid #c6c6c6;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+} */
+
+.timeStr {
+	color: #444;
+    margin: 0px 5px 0px 10px;
+    width: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    display: inline-block;
+    font: 15px/18px 'San Francisco Display Regular', sans-serif;
+    padding-top: 10px;
 }
-.timeStr
-{
-    color:#999;
-    margin:0px 5px 0px 10px;
-    width:40px;
-    composes:textOverHandle from '../../../css/CommonStyle.css';
-    composes:displayInB from "../../../css/CommonStyle.css";
-    font:14px/18px 'ProximaNovaRegular',sans-serif;
-    composes:verAlignMid from "../../../css/CommonStyle.css";
-    padding-top:10px;
-}
-.dropDown
-{
-    width:40px;
-    composes:displayInB from "../../../css/CommonStyle.css";
-    composes:verAlignTop from "../../../css/CommonStyle.css";
-    margin:0px 10px;
+
+.dropDown {
+	width: 40px;
+	display: inline-block;
+	vertical-align: top;
+	margin: 0px 10px;
 }

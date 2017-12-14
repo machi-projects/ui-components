@@ -14,8 +14,8 @@ export default class MultiLineInputBoxBase extends React.Component {
 
 			return true;
 	}
-
-  render() {
+	
+    render() {
 
 			let defaultCheckPropsRules = 	[ "required" , "minLength" , "maxLength" , "pattern" ]
 			let defaultValidateRules =   [ "required" , "minLength" , "maxLength"  ]
@@ -30,7 +30,7 @@ export default class MultiLineInputBoxBase extends React.Component {
 
     return ( <MultiLineInputBase {...this.props} validation={newValidation} />);
 
-  }
+   }
 
 }
 
@@ -44,6 +44,9 @@ MultiLineInputBoxBase.propTypes ={
 	rows :  PropTypes.oneOfType( [PropTypes.string,PropTypes.number] ),
 	cols :  PropTypes.oneOfType( [PropTypes.string,PropTypes.number] ),
 
+	autoExpandY : PropTypes.bool ,
+	autoExpandX : PropTypes.bool ,
+	
 	autoFocus :  PropTypes.bool ,
 	disabled :  PropTypes.bool ,
 	required :  PropTypes.bool ,
@@ -61,7 +64,7 @@ MultiLineInputBoxBase.propTypes ={
 			validateOn : PropTypes.string,
 			rulesOrder :  PropTypes.arrayOf(PropTypes.string),
 			rules : PropTypes.object,
-			messages : PropTypes.object,
+			messages : PropTypes.object
 	}),
 
 	onPassValidation : PropTypes.func,

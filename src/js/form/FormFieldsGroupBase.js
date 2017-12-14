@@ -63,14 +63,16 @@ export default class FormFieldsGroupBase extends Component {
 		return (
 			<div className={formFieldsGroupStyle} tabIndex="-1">
 				{React.Children.map(this.props.children, (child, i) => {
-					return React.cloneElement(child, {
-						key: i,
-						validation: Object.assign({}, child.props.validation, {
-							validate: this.state.validate
-						}),
-						onPassValidation: this.onPassValidationItem(child.props.onPassValidation),
-						onFailValidation: this.onFailValidationItem(child.props.onFailValidation)
-					});
+					return child
+						? React.cloneElement(child, {
+								key: i,
+								validation: Object.assign({}, child.props.validation, {
+									validate: this.state.validate
+								}),
+								onPassValidation: this.onPassValidationItem(child.props.onPassValidation),
+								onFailValidation: this.onFailValidationItem(child.props.onFailValidation)
+							})
+						: null;
 				})}
 			</div>
 		);

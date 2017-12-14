@@ -81,14 +81,14 @@ var FormFieldsGroupBase = function (_Component) {
 				'div',
 				{ className: formFieldsGroupStyle, tabIndex: '-1' },
 				React.Children.map(this.props.children, function (child, i) {
-					return React.cloneElement(child, {
+					return child ? React.cloneElement(child, {
 						key: i,
 						validation: _Object$assign({}, child.props.validation, {
 							validate: _this4.state.validate
 						}),
 						onPassValidation: _this4.onPassValidationItem(child.props.onPassValidation),
 						onFailValidation: _this4.onFailValidationItem(child.props.onFailValidation)
-					});
+					}) : null;
 				})
 			);
 		}

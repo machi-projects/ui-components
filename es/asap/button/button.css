@@ -1,0 +1,27 @@
+.default{
+	font: 600 16px 'San Francisco Display Light';
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    cursor:pointer;
+}
+
+
+
+.default:focus{
+	outline:none;
+}
+
+.createform_reset{
+	composes: default;
+	color: #999;
+}
+
+.createform_reset:hover{
+	color: #444;
+}
+
+.createform_submit{
+	composes: default;
+	color: #f00;
+}

@@ -56,11 +56,23 @@ var MultiLineInputBase = function (_React$Component) {
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			var _this2 = this;
 
+			var textareaTag = this.elementRef;
 			if (this.props.validation != null && this.props.validation.validate) {
-				var textareaTag = this.elementRef;
 				this.validateInputBox(null, textareaTag, null, extract(this.props, ["validation", "onPassValidation", "onFailValidation"]));
 			}
+
+			requestAnimationFrame(function () {
+				if (_this2.props.autoExpandX || _this2.props.autoExpandY) {
+					_this2.setState({
+						minHeight: textareaTag.clientHeight,
+						minWidth: textareaTag.clientWidth,
+						xAutoExpand: textareaTag.clientWidth == textareaTag.scrollWidth,
+						yAutoExpand: textareaTag.clientHeight == textareaTag.scrollHeight
+					});
+				}
+			});
 		}
 	}, {
 		key: 'setTextValue',
@@ -76,6 +88,34 @@ var MultiLineInputBase = function (_React$Component) {
 			}
 
 			this.setTextValue(ev.target.value);
+
+			if (this.props.autoExpandX || this.props.autoExpandY) {
+				this.autoExpand(ev.target);
+			}
+		}
+	}, {
+		key: 'autoExpand',
+		value: function autoExpand(el) {
+			var _this3 = this;
+
+			if (this.props.autoExpandY && this.state.yAutoExpand) {
+				requestAnimationFrame(function () {
+
+					if (_this3.state.minHeight < el.scrollHeight) {
+						el.style.height = "auto";
+						el.style.height = el.scrollHeight + 'px';
+					}
+				});
+			}
+
+			if (this.props.autoExpandX && this.state.xAutoExpand) {
+				requestAnimationFrame(function () {
+					if (_this3.state.minWidth < el.scrollWidth) {
+						el.style.scrollWidth = "auto";
+						el.style.width = el.scrollWidth + 'px';
+					}
+				});
+			}
 		}
 	}, {
 		key: 'validateInputBox',
@@ -92,25 +132,25 @@ var MultiLineInputBase = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this2 = this;
+			var _this4 = this;
 
 			var validationObj = extract(this.props, ["validation", "onPassValidation", "onFailValidation"]);
 
 			var _ref = validationObj || {},
 			    validation = _ref.validation;
 
-			var newProps = omit(this.props, ["validation", "onPassValidation", "onFailValidation"]);
+			var newProps = omit(this.props, ["autoExpandX", "autoExpandY", "validation", "onPassValidation", "onFailValidation"]);
 
 			var onChangeEventFunc = newProps.onChange;
 			newProps.onChange = function (ev) {
-				_this2.onChangeText(ev, onChangeEventFunc);
+				_this4.onChangeText(ev, onChangeEventFunc);
 			};
 
 			if (validation.validateOn) {
 
 				var tempFunc = newProps[validation.validateOn];
 				newProps[validation.validateOn] = function (ev) {
-					_this2.validateInputBox(ev, ev.target, tempFunc, validationObj);
+					_this4.validateInputBox(ev, ev.target, tempFunc, validationObj);
 				};
 			}
 
@@ -134,6 +174,9 @@ MultiLineInputBase.propTypes = {
 	maxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	cols: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+	autoExpandY: PropTypes.bool,
+	autoExpandX: PropTypes.bool,
 
 	autoFocus: PropTypes.bool,
 	disabled: PropTypes.bool,

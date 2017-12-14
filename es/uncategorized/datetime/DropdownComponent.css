@@ -1,8 +1,8 @@
 /* $Id$ */
 
 .main{
-	composes:posRel from "../../../css/CommonStyle.css";
-    composes:curPointer from '../../../css/CommonStyle.css';
+	position:relative;
+    cursor:pointer;;
 }
 .mainNot
 {
@@ -11,39 +11,42 @@
 }
 .middleAlign
 {
-    composes:displayInB from "../../../css/CommonStyle.css";
-    composes:verAlignMid from "../../../css/CommonStyle.css";
+    display:inline-block;
+    vertical-align:middle
 }
 .dropdown{
     padding:5px 0px;
     border-bottom:1px solid #e3e6eb;
-    color:rgb(0, 0, 0);
+    color:#444;
 }
 .dropdown:hover{
-	border-bottom:1px solid #8a8a8a;
+	border-bottom:1px solid #f46e7b;
 }
 .selectname{
-    composes:textOverHandle from "../../../css/CommonStyle.css";
+       overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
     width:calc(100% - 18px);
     composes:middleAlign;
-    font:14px ProximaNovaRegular, sans-serif;
+    font:14px "San Francisco Display Regular", sans-serif;
 }
 .listview{
-	composes:w100per from "../../../css/CommonStyle.css";
-    composes:boxSizing from "../../../css/CommonStyle.css";
-    composes:posAbsolute from "../../../css/CommonStyle.css";
-    top:29px;
-    left:0px;
-	box-shadow: 0 0 3px #0d6acc;
-    border: 1px solid #0f7df0;
-    border-radius:2px 2px 0px 0px;
-    background-color:white;
-    z-index:10;
+	width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    top: 29px;
+    left: 0px;
+    box-shadow: 0 0 3px #bdbdbd;
+    border: 1px solid #f46d7b;
+    border-radius: 2px 2px 0px 0px;
+    background-color: white;
+    z-index: 10;
 }
 .listmenu{
 	padding:4px 0px;
 	max-height:200px;
-	composes:overYAuto from '../../../css/CommonStyle.css';
+	overflow-y:auto;
     margin:0px;
 }
 .topListView
@@ -53,25 +56,28 @@
     top:auto;
 }
 .option{
-    composes:textOverHandle from "../../../css/CommonStyle.css";
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
 	padding:4px 7px;
-	font:14px "ProximaNovaRegular",sans-serif;
+	font:14px "San Francisco Display Regular",sans-serif;
 	color:#000;
 }
 .option:hover{
-	background:#0f7df0;
+	background:#f46e7b;
     color:#fff;
 }
 .hide{
-	composes:hide from '../../../css/CommonStyle.css';
+	display:none;
 }
 .searchicon{
     width:calc(100% - 18px);
     padding:0px 8px;
-    composes:borderNone from '../../../css/CommonStyle.css';
+   border:none;
     background-color:#fff;
     composes:middleAlign;
-    composes:boxSizing from "../../../css/CommonStyle.css";
+    box-sizing:border-box;;
 }
 .searchIcon
 {
@@ -86,7 +92,7 @@
     font-weight:700;
 }
 .bccolor{
-	background-color:#0f7df0;
+	background-color:#f46e7b;
 	composes:option;
 	color:#fff;
 }
@@ -95,15 +101,20 @@
 	composes:option;
 }
 .flexline{
-	composes:displayBlock from '../../../css/CommonStyle.css';
-    color:#666;
+	display: block;
+    color: #444;
+    position: relative;
+    left: -4px;
 }
 .notfound
 {
     background-color:#f4f4f4;
-    composes:textOverHandle from "../../../css/CommonStyle.css";
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
     padding:4px 7px;
-    font:14px "ProximaNovaRegular",sans-serif;
+    font:14px "San Francisco Display Regular",sans-serif;
     color:#000;
     cursor:default;
 }
@@ -117,31 +128,31 @@
 .dropSelectName
 {
     composes:middleAlign;
-    font:14px ProximaNovaRegular, sans-serif;
+    font:14px "San Francisco Display Regular", sans-serif;
 }
 .downArow:before
 {
-    content:"";
-    position:absolute;
-    right:2px;
-    bottom:13px;
-    width:6px;
-    height:6px;
-    border:1px solid #b5b5b5;
-    border-top-width:0;
-    border-right-width:0;
-    transform:rotate(-45deg);
+    content: "";
+    position: absolute;
+    right: -1px;
+    bottom: 7px;
+    width: 6px;
+    height: 6px;
+    border: 1px solid #b5b5b5;
+    border-top-width: 0;
+    border-right-width: 0;
+    transform: rotate(-45deg);
 }
 .topArow:before
 {
-    content:"";
-    position:absolute;
-    right:2px;
-    bottom:10px;
-    width:6px;
-    height:6px;
-    border:1px solid #b5b5b5;
-    border-top-width:0;
-    border-right-width:0;
-    transform:rotate(135deg);
+    content: "";
+    position: absolute;
+    right: -1px;
+    bottom: 4px;
+    width: 6px;
+    height: 6px;
+    border: 1px solid #b5b5b5;
+    border-top-width: 0;
+    border-right-width: 0;
+    transform: rotate(135deg);
 }

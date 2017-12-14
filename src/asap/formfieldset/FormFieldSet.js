@@ -60,19 +60,19 @@ export default class FormFieldSet extends Component {
 
 		let styleMappings = styleMapping[styleId];
 		let fieldStyle = styles[styleMappings.fieldStyle];
-
+		
+		//styleId={styleMappings.labelStyle}
+		//styleId={styleMappings.messageStyle}
+		
 		return (
 			<FormFieldSetBase {...newProps} fieldSetStyle={classNames}>
 				{React.Children.map(this.props.children, (childComponent, i) => {
 					if (childComponent.type.prototype === Label.prototype) {
 						return (
 							<FormFieldLabelBase
-								mandatory={required}
-								disabled={disabled}
-								focused={focused}
+								{...childComponent.props}	
+								disabled={disabled}								
 								errored={errored}
-								raised={raised}
-								styleId={styleMappings.labelStyle}
 							>
 								{childComponent}
 							</FormFieldLabelBase>
@@ -80,25 +80,20 @@ export default class FormFieldSet extends Component {
 					} else if (childComponent.type.prototype == FormField.prototype) {
 						return (
 							<FormFieldBase
-								{...childComponent.props}
-								required={required}
+								{...childComponent.props}								
 								disabled={disabled}
 								readOnly={readOnly}
 								focused={focused}
-								errored={errored}
-								raised={raised}
+								errored={errored}								
 								fieldStyle={fieldStyle}
 							/>
 						);
 					} else if (childComponent.type.prototype === Message.prototype) {
 						return (
 							<FormFieldMsgBase
-								required={required}
-								disabled={disabled}
-								focused={focused}
+								{...childComponent.props}	
+								disabled={disabled}								
 								errored={errored}
-								raised={raised}
-								styleId={styleMappings.messageStyle}
 							>
 								{childComponent}
 							</FormFieldMsgBase>

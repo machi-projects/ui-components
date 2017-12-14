@@ -3,3 +3,5 @@
 @value _green green;
 @value _transparent transparent;
 @value _black_alpha_half rgba(0,0,0,0.5);
+@value _grey_shade #aaa;
+@value _grey_shade2 #bbb;

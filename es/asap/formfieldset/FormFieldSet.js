@@ -67,6 +67,9 @@ var FormFieldSet = function (_Component2) {
 			var styleMappings = styleMapping[styleId];
 			var fieldStyle = styles[styleMappings.fieldStyle];
 
+			//styleId={styleMappings.labelStyle}
+			//styleId={styleMappings.messageStyle}
+
 			return React.createElement(
 				FormFieldSetBase,
 				_extends({}, newProps, { fieldSetStyle: classNames }),
@@ -74,37 +77,27 @@ var FormFieldSet = function (_Component2) {
 					if (childComponent.type.prototype === Label.prototype) {
 						return React.createElement(
 							FormFieldLabelBase,
-							{
-								mandatory: required,
+							_extends({}, childComponent.props, {
 								disabled: disabled,
-								focused: focused,
-								errored: errored,
-								raised: raised,
-								styleId: styleMappings.labelStyle
-							},
+								errored: errored
+							}),
 							childComponent
 						);
 					} else if (childComponent.type.prototype == FormField.prototype) {
 						return React.createElement(FormFieldBase, _extends({}, childComponent.props, {
-							required: required,
 							disabled: disabled,
 							readOnly: readOnly,
 							focused: focused,
 							errored: errored,
-							raised: raised,
 							fieldStyle: fieldStyle
 						}));
 					} else if (childComponent.type.prototype === Message.prototype) {
 						return React.createElement(
 							FormFieldMsgBase,
-							{
-								required: required,
+							_extends({}, childComponent.props, {
 								disabled: disabled,
-								focused: focused,
-								errored: errored,
-								raised: raised,
-								styleId: styleMappings.messageStyle
-							},
+								errored: errored
+							}),
 							childComponent
 						);
 					}

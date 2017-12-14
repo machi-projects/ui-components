@@ -18,6 +18,7 @@ export class FormFieldBase extends Component {
 	render() {
 		let {
 			fieldStyle,
+			tabIndex,
 			required,
 			disabled,
 			readOnly,
@@ -33,7 +34,7 @@ export class FormFieldBase extends Component {
 		let childOnFailValidation = FieldChild.props.onFailValidation;
 
 		return (
-			<div className={fieldStyle}>
+			<div className={fieldStyle} tabIndex={tabIndex}>
 				{React.cloneElement(FieldChild, {
 					disabled: disabled,
 					readOnly: readOnly,
@@ -56,7 +57,8 @@ export class FormFieldBase extends Component {
 }
 
 FormFieldBase.propTypes = {
-	fieldStyle: PropTypes.string
+	fieldStyle: PropTypes.string, 
+	tabIndex: PropTypes.string
 };
 
 export default class FormFieldSetBase extends React.Component {
@@ -178,8 +180,6 @@ FormFieldSetBase.propTypes = {
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,
-
-	fireValidation : PropTypes.bool,
 	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

@@ -222,7 +222,7 @@ var validator = {
 
 						return !defaultPatterns[rule].test(value) && condition;
 					};
-				} else if ((rule == 'date' || rule == 'datetime') && ruleInfo === true) {
+				} else if ((rule == 'timezonedate' || rule == 'datetimezone' || rule == "date" || rule == "datetime") && ruleInfo === true) {
 					newValidationRules[rule] = function (val, el) {
 						var value = (val || '').trim();
 
@@ -232,6 +232,9 @@ var validator = {
 
 						if (rule == 'datetime') {
 							value = value.split('T')[0];
+							//let timings = value[1].replace("Z","").split(":")
+							//let 
+							//if( !defaultPatterns[rule].test(value); )
 						}
 
 						value = value.replace('/', '-');
@@ -299,6 +302,7 @@ var validator = {
 		date: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])$/,
 		time: /^([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9]$/,
 		datetime: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])[T](([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9])$/,
+		datetimezone: /^(\d{4,6})[\/\-](1[0-2]|0[1-9])[\/\-\:](0[1-9]|1[0-9]|2[0-9]|3[0-1])[T](([0-9]|0[0-9]|1[0-9]|2[0-3])[\-\/\:][0-5][0-9][\-\/\:\.][0-9]{3}[Z])$/,
 		url: /^(ht|f)tp(s?)\:\/\/[\-\.\w]+[.][\w]+(\/?)([A-z0-9\-\.\?\,\:\'\/\\\+=\&%\$#_@]*)?$/,
 		cleartextpattern: /^([A-z0-9\_\-\.\$@\?\,\:\'\/\!\s]|[^\u0000-\u007F])+$/
 	}

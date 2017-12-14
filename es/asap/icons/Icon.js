@@ -4,16 +4,19 @@ import _createClass from 'babel-runtime/helpers/createClass';
 import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
 import _inherits from 'babel-runtime/helpers/inherits';
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import IconSvgBase from '../../js/IconSvgBase';
 
 import iconStyles from './icon.css';
-import fontsizesStyles from '../common-css/font-sizes/fontsizes.css';
+import sizesStyles from '../common-css/sizes/sizes.css';
 import colorsStyles from '../common-css/colors/colors.css';
 
 import iconIdsMapping from './iconIdsMapping';
 import cx from '../../utils/classNamesUtils/classNames';
+
+import IconContent from './IconContent';
 
 var Icon = function (_Component) {
 	_inherits(Icon, _Component);
@@ -25,6 +28,22 @@ var Icon = function (_Component) {
 	}
 
 	_createClass(Icon, [{
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			if (document.getElementById('zohohc-asap-common-icons-holder') == null) {
+				var child = document.createElement('div');
+				child.id = 'zohohc-asap-common-icons-holder';
+				document.body.appendChild(child);
+			}
+
+			if (document.getElementById('zohohc-asap-common-icons') == null) {
+				ReactDOM.render(React.createElement(IconContent, null), document.getElementById('zohohc-asap-common-icons-holder'));
+			}
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var _props = this.props,
@@ -35,13 +54,11 @@ var Icon = function (_Component) {
 			    bgColor = _props.bgColor,
 			    _props$onClick = _props.onClick,
 			    onClick = _props$onClick === undefined ? null : _props$onClick,
-			    className = _props.className;
+			    iconsMapping = _props.iconsMapping;
 
+			var classNames = cx(iconStyles['iconbase'], iconStyles[styleId], colorsStyles['clr_' + color], colorsStyles['bg_' + bgColor], sizesStyles[size], iconStyles[id + '_global']);
 
-			var classNames = cx(iconStyles[styleId], colorsStyles['clr_' + color], colorsStyles['bg_' + bgColor], fontsizesStyles['fs_' + size], iconStyles[id + '_global']);
-
-			//name={name}
-
+			var newIconsMapping = iconsMapping ? iconsMapping[id] : iconIdsMapping[id];
 			return React.createElement(IconSvgBase, { icon: iconIdsMapping[id], className: classNames, onClick: onClick });
 		}
 	}]);
@@ -58,6 +75,7 @@ Icon.propTypes = {
 	size: PropTypes.string,
 	color: PropTypes.string,
 	bgColor: PropTypes.string,
+	iconsMapping: PropTypes.object,
 	onClick: PropTypes.func
 };
 

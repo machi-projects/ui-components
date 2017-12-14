@@ -1,5 +1,54 @@
 .default {
+	display: block;
+    border: none;
+    padding: 5px 0px 5px 5px;
+    border-bottom: solid 1px #e0e0e0;
+    -webkit-transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 99%, #f00000 4%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 99%, #f00000 4%);
+    background-position: -350px 0;
+    background-size: 350px 100%;
+    background-repeat: no-repeat;
+    color: #444;
+    outline:none;
+    width: 97%;
+    font-size: 16px;
+    padding: 5px;
 }
+
+.default:focus{
+	background-position: 0 0;
+	border-bottom: 1px solid  #f00000;
+	box-shadow: none;
+	outline:none;
+}
+
+/* .default:focus::-webkit-input-placeholder, .default:valid::-webkit-input-placeholder{
+	color: #444;
+    font-size: 14px;
+    -webkit-transform: translateY(-20px);
+    transform: translateY(-20px);
+    visibility: visible;
+} */
+
+/* .default:before, .default:after{
+	content: '*';
+    height: 1px;
+    width: 0;
+    bottom: 0;
+    position: absolute;
+    background: #f00000;
+    transition: 0.2s ease all;
+}
+
+.default:before{
+	left: 50%;
+}
+
+.default:after{
+	right: 50%;
+} */
 
 .default.focused {
 	outline: 5px auto #7bb3f2;

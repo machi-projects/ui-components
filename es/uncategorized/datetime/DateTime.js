@@ -1,22 +1,21 @@
-import _Object$getPrototypeOf from "babel-runtime/core-js/object/get-prototype-of";
-import _classCallCheck from "babel-runtime/helpers/classCallCheck";
-import _createClass from "babel-runtime/helpers/createClass";
-import _possibleConstructorReturn from "babel-runtime/helpers/possibleConstructorReturn";
-import _inherits from "babel-runtime/helpers/inherits";
-import React from "react";
+import _Object$getPrototypeOf from 'babel-runtime/core-js/object/get-prototype-of';
+import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
+import _createClass from 'babel-runtime/helpers/createClass';
+import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
+import _inherits from 'babel-runtime/helpers/inherits';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import { i18NProviderUtils } from 'fz-i18n';
-import CalendarComponent from './CalendarComponent.js';
-import TimeField from './TimeField.js';
-import DropdownComponent from './DropdownComponent.js';
-import style from "./DateTime.css";
-import moment from "moment-timezone";
-import selectn from "selectn";
+import CalendarView from './CalendarView.js';
+import TimeField from './TimeField';
+import DropdownComponent from './DropdownComponent';
+import style from './DateTime.css';
+import moment from 'moment-timezone';
+import selectn from 'selectn';
 
 var monthend = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-var monthname = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var monthname = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 function title(dat, year, month) {
 	if (month == 1) {
@@ -46,7 +45,7 @@ var DateTime = function (_React$Component) {
 		_this.hourSuggestions = function () {
 			var hourArr = [];
 			for (var hour = 1; hour <= 12; hour++) {
-				var htxt = hour < 10 ? "0" + hour : hour;
+				var htxt = hour < 10 ? '0' + hour : hour;
 				hourArr.push(htxt);
 			}
 			return hourArr;
@@ -54,26 +53,26 @@ var DateTime = function (_React$Component) {
 		_this.minSuggestions = function () {
 			var minArr = [];
 			for (var minute = 0; minute <= 59; minute++) {
-				var mtxt = minute < 10 ? "0" + minute : minute;
+				var mtxt = minute < 10 ? '0' + minute : minute;
 				minArr.push(mtxt);
 			}
 			return minArr;
 		}();
-		_this.ampmSuggestions = [{ id: "AM", name: i18NProviderUtils.getI18NValue('AM') }, { id: "PM", name: i18NProviderUtils.getI18NValue('PM') }];
+		_this.ampmSuggestions = [{ id: 'AM', name: i18NProviderUtils.getI18NValue('AM') }, { id: 'PM', name: i18NProviderUtils.getI18NValue('PM') }];
 
 		_this.state = _this.getStateFromProps(props);
 		return _this;
 	}
 
 	_createClass(DateTime, [{
-		key: "componentWillReceiveProps",
+		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
 			if (nextProps.value !== this.props.value) {
 				this.setState(this.getStateFromProps(nextProps));
 			}
 		}
 	}, {
-		key: "getStateFromProps",
+		key: 'getStateFromProps',
 		value: function getStateFromProps(props) {
 			var date = void 0,
 			    month = void 0,
@@ -91,24 +90,24 @@ var DateTime = function (_React$Component) {
 			year = dateObj.get('year');
 			hours = dateObj.get('hour');
 			mins = dateObj.get('minute');
-			mins = mins < 10 ? "0" + mins : mins;
+			mins = mins < 10 ? '0' + mins : mins;
 			amPm = hours < 12 ? 'AM' : 'PM';
 			hours = this.getHours(hours);
 			return { date: date, month: month, year: year, mins: mins, hours: hours, amPm: amPm };
 		}
 	}, {
-		key: "getHours",
+		key: 'getHours',
 		value: function getHours(hours) {
 			if (hours == 0) {
 				hours = 12;
 			} else if (hours > 12) {
 				hours = hours - 12;
 			}
-			hours = hours < 10 ? "0" + hours : hours;
+			hours = hours < 10 ? '0' + hours : hours;
 			return hours;
 		}
 	}, {
-		key: "render",
+		key: 'render',
 		value: function render() {
 			var _state = this.state,
 			    date = _state.date,
@@ -126,135 +125,156 @@ var DateTime = function (_React$Component) {
 			    position = _props.position;
 
 			return React.createElement(
-				"div",
+				'div',
 				{ className: style.dateContainer, onClick: this.closePopup },
-				React.createElement("i", { className: position ? style[position + "ArowPos"] : style.topArow }),
+				React.createElement('i', { className: position ? style[position + 'ArowPos'] : style.topArow }),
 				React.createElement(
-					"div",
+					'div',
 					{ className: style.datemain },
 					React.createElement(
-						"div",
+						'div',
 						{ className: style.optionsTop },
 						React.createElement(
-							"span",
-							{ "data-testId": "prevYear", className: style.sideArows, onClick: this.modifyCalendar.bind(this, "ll") },
-							"<<"
+							'span',
+							{ 'data-testId': 'prevYear', className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'll') },
+							'<<'
 						),
 						React.createElement(
-							"span",
-							{ "data-testId": "prevMonth", className: style.sideArows, onClick: this.modifyCalendar.bind(this, "l") },
-							"<"
+							'span',
+							{ 'data-testId': 'prevMonth', className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'l') },
+							'<'
 						),
 						React.createElement(
-							"span",
-							{ "data-testId": "resultString", className: style.monthStr },
+							'span',
+							{ 'data-testId': 'resultString', className: style.monthStr },
 							showmonthtxt
 						),
 						React.createElement(
-							"span",
-							{ "data-testId": "nextMonth", className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'g') },
-							">"
+							'span',
+							{ 'data-testId': 'nextMonth', className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'g') },
+							'>'
 						),
 						React.createElement(
-							"span",
-							{ "data-testId": "nextyear", className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'gg') },
-							">>"
+							'span',
+							{ 'data-testId': 'nextyear', className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'gg') },
+							'>>'
 						)
 					),
 					React.createElement(
-						"div",
+						'div',
 						{ className: style.days },
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.daysStr },
-							"Sun"
+							'Sun'
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.daysStr },
-							"Mon"
+							'Mon'
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.daysStr },
-							"Tue"
+							'Tue'
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.daysStr },
-							"Wed"
+							'Wed'
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.daysStr },
-							"Thu"
+							'Thu'
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.daysStr },
-							"Fri"
+							'Fri'
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.daysStr },
-							"Sat"
+							'Sat'
 						)
 					),
-					React.createElement(CalendarComponent, { date: date, year: year, month: month, onSelect: this.dateSelect }),
+					React.createElement(CalendarView, { date: date, year: year, month: month, onSelect: this.dateSelect }),
 					isDateTimeField && React.createElement(
-						"div",
-						null,
+						'div',
+						{ className: style.timesection },
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.timeStr },
-							i18NProviderUtils.getI18NValue('crm.events.time')
+							i18NProviderUtils.getI18NValue('Time')
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.dropDown },
-							React.createElement(DropdownComponent, { id: "hours", suggestions: this.hourSuggestions, value: hours, valueField: "id", textField: "name", onSelect: this.hoursSelect })
+							React.createElement(DropdownComponent, {
+								id: 'hours',
+								suggestions: this.hourSuggestions,
+								value: hours,
+								valueField: 'id',
+								textField: 'name',
+								onSelect: this.hoursSelect
+							})
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.dropDown },
-							React.createElement(DropdownComponent, { id: "minutes", suggestions: this.minSuggestions, value: mins, valueField: "id", textField: "name", onSelect: this.minutesSelect })
+							React.createElement(DropdownComponent, {
+								id: 'minutes',
+								suggestions: this.minSuggestions,
+								value: mins,
+								valueField: 'id',
+								textField: 'name',
+								onSelect: this.minutesSelect
+							})
 						),
 						React.createElement(
-							"span",
+							'span',
 							{ className: style.dropDown },
-							React.createElement(DropdownComponent, { id: "amPm", suggestions: this.ampmSuggestions, value: amPm, valueField: "id", textField: "name", onSelect: this.amPmSelect })
+							React.createElement(DropdownComponent, {
+								id: 'amPm',
+								suggestions: this.ampmSuggestions,
+								value: amPm,
+								valueField: 'id',
+								textField: 'name',
+								onSelect: this.amPmSelect
+							})
 						)
 					),
 					React.createElement(
-						"div",
+						'div',
 						{ className: style.marTop },
 						React.createElement(
-							"button",
-							{ "data-testId": "submit", className: style.blueBut, onClick: this.handleSelect },
-							i18NProviderUtils.getI18NValue("support.request.history.value.update.set")
+							'button',
+							{ 'data-testId': 'submit', className: style.blueBut, onClick: this.handleSelect },
+							i18NProviderUtils.getI18NValue('Set')
 						),
 						React.createElement(
-							"button",
-							{ "data-testId": "clear", className: style.canButton, onClick: this.handleClear },
-							i18NProviderUtils.getI18NValue("support.request.clear")
+							'button',
+							{ 'data-testId': 'clear', className: style.canButton, onClick: this.handleClear },
+							i18NProviderUtils.getI18NValue('Clear')
 						)
 					)
 				)
 			);
 		}
 	}, {
-		key: "handleSelect",
+		key: 'handleSelect',
 		value: function handleSelect(e) {
 			e.preventDefault();
 			var _props2 = this.props,
 			    isDateTimeField = _props2.isDateTimeField,
-			    timeZone = _props2.timeZone,
 			    min = _props2.min,
 			    max = _props2.max,
 			    onError = _props2.onError,
 			    onSelect = _props2.onSelect,
 			    minErrorText = _props2.minErrorText,
-			    maxErrorText = _props2.maxErrorText;
+			    maxErrorText = _props2.maxErrorText,
+			    timeZone = _props2.timeZone;
 			var _state2 = this.state,
 			    year = _state2.year,
 			    month = _state2.month,
@@ -264,7 +284,7 @@ var DateTime = function (_React$Component) {
 			    amPm = _state2.amPm;
 
 			if (hours == 12) {
-				hours = amPm == "AM" ? 0 : 12;
+				hours = amPm == 'AM' ? 0 : 12;
 			}
 			if (amPm == 'PM') {
 				if (hours < 12) {
@@ -273,8 +293,8 @@ var DateTime = function (_React$Component) {
 			}
 			var minDateTimeObj = min && moment.tz(min, timeZone);
 			var maxDateTimeObj = max && moment.tz(max, timeZone);
-			var dateString = isDateTimeField ? year + " " + (month + 1) + " " + date + " " + hours + " " + mins + " " + amPm : year + " " + (month + 1) + " " + date;
-			var seletedDateObj = isDateTimeField ? moment.tz(dateString, "YYYY MM DD hh mm A", timeZone) : moment.tz(dateString, "YYYY MM DD", timeZone);
+			var dateString = isDateTimeField ? year + ' ' + (month + 1) + ' ' + date + ' ' + hours + ' ' + mins + ' ' + amPm : year + ' ' + (month + 1) + ' ' + date;
+			var seletedDateObj = isDateTimeField ? moment.tz(dateString, 'YYYY MM DD hh mm A', timeZone) : moment.tz(dateString, 'YYYY MM DD', timeZone);
 			if (minDateTimeObj && seletedDateObj.isBefore(minDateTimeObj)) {
 				onError(minErrorText, true);
 			} else if (maxDateTimeObj && seletedDateObj.isAfter(maxDateTimeObj)) {
@@ -284,56 +304,56 @@ var DateTime = function (_React$Component) {
 			}
 		}
 	}, {
-		key: "handleClear",
+		key: 'handleClear',
 		value: function handleClear(e) {
-			this.props.onSelect("", e);
+			this.props.onSelect('', e);
 		}
 	}, {
-		key: "dateSelect",
+		key: 'dateSelect',
 		value: function dateSelect(date, month, year) {
 			this.setState({ date: date, month: month, year: year });
 		}
 	}, {
-		key: "timeSelect",
+		key: 'timeSelect',
 		value: function timeSelect(hours, mins, amPm) {
 			this.setState({ hours: hours, mins: mins, amPm: amPm });
 		}
 	}, {
-		key: "hoursSelect",
+		key: 'hoursSelect',
 		value: function hoursSelect(value) {
 			var hours = value.id;
 			this.setState({ hours: hours });
 		}
 	}, {
-		key: "minutesSelect",
+		key: 'minutesSelect',
 		value: function minutesSelect(value) {
 			var mins = value.id;
 			this.setState({ mins: mins });
 		}
 	}, {
-		key: "amPmSelect",
+		key: 'amPmSelect',
 		value: function amPmSelect(value) {
 			var amPm = value.id;
 			this.setState({ amPm: amPm });
 		}
 	}, {
-		key: "closePopup",
+		key: 'closePopup',
 		value: function closePopup() {
-			closeGroupPopups("dropdown");
+			closeGroupPopups('dropdown');
 		}
 	}, {
-		key: "modifyCalendar",
+		key: 'modifyCalendar',
 		value: function modifyCalendar(type) {
 			var _state3 = this.state,
 			    date = _state3.date,
 			    year = _state3.year,
 			    month = _state3.month;
 
-			if (type === "gg") {
+			if (type === 'gg') {
 				this.setState({ year: year + 1 });
-			} else if (type === "ll") {
+			} else if (type === 'll') {
 				this.setState({ year: year - 1 });
-			} else if (type === "g") {
+			} else if (type === 'g') {
 				if (month == 11) {
 					month = 0;
 					year++;
@@ -356,9 +376,4 @@ var DateTime = function (_React$Component) {
 	return DateTime;
 }(React.Component);
 
-function mapStateToProps(state, props) {
-	var timeZone = selectn("userDetails.timeZone", state);
-	return { timeZone: timeZone };
-}
-
-export default connect(mapStateToProps)(DateTime);
+export default DateTime;

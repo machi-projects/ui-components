@@ -1,34 +1,34 @@
 /* $Id */
-/* $Id$ */
 .date
 {
-	border-bottom: 1px solid #e3e6eb ;
-	padding:2px 0px;
-	composes:w100per from '../../../css/CommonStyle.css';
+	border-bottom: 1px solid #e0e0e0 ;
+	width:100%;
 	transition: border 0.2s linear 0s;
 	color: #333;
-	min-height:2em;
+    font-size: 16px;
+    min-height: 24px;
+    padding: 10px 5px 0 5px;
 }
-.date:hover
+/* .date:hover
 {
 	border-bottom: 1px solid #8a8a8a ;
-}
+} */
 .dateFocus
 {
-	border-bottom: 1px solid #0f7df0;
-	padding:2px 0px;
-	composes:w100per from '../../../css/CommonStyle.css';
-	min-height:2em;
+	border-bottom: 1px solid #f00000;
+	padding: 10px 5px 0 5px;
+	width:100%;
+	min-height:24px;
 	transition: border 0.2s linear 0s;
-	composes:posRel from '../../../css/CommonStyle.css';
+	position:relative;
 	color: #333;
+	font-size: 16px;
 }
 .absolute
 {
-	composes:posAbsolute from '../../../css/CommonStyle.css';
-	top:44px;
-	z-index:3;
-	left:0px;
+	position:absolute;
+	top:35px;
+	z-index:9999;
 }
 .dateTop
 {

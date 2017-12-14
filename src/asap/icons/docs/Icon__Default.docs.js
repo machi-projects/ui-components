@@ -10,7 +10,7 @@ export default class Icon__Default extends Component {
 
 				<div>
 
-						<Icon id="plusIcon" color="green" size="small_2" />
+						<Icon id="searchIcon" color="green" size="small" />
 
 				</div>
 		)
