@@ -28,3 +28,10 @@ export { default as FormFieldsGroup__Default } from './formfieldsgroup/docs/Form
 
 export { default as Tabs__Default } from './tabs/docs/Tabs__Default.docs';
 export { default as FreezeLayer__Default } from './freezelayer/docs/FreezeLayer__Default.docs.js';
+
+export { default as Layout__Responsive } from './layout/docs/Layout__default.docs';
+export { default as Layout__Offset } from './layout/docs/Layout__Offset.docs';
+export { default as Layout__AutoWidth } from './layout/docs/Layout__AutoWidth.docs';
+export { default as Layout__Hidden } from './layout/docs/Layout__Hidden.docs';
+export { default as Layout__FixedLeftPanel } from './layout/docs/Layout__FixedLeftPanel.docs';
+export { default as Layout__RowAutoHeight } from './layout/docs/Layout__ViewAutoHeight.docs';

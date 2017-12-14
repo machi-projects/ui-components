@@ -21,3 +21,5 @@ export * from './freezelayer/index';
 export * from './tabs/index';
 
 export * from './docs.js';
+
+export * from './layout/index';

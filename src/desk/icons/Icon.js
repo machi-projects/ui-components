@@ -17,14 +17,14 @@ export default class Icon extends Component {
 	componentWillUnmount() {}
 
 	componentDidMount() {
-		if (document.getElementById('zohodesk-common-icons-holder') == null) {
+		if (document.getElementById('zohohc-asap-common-icons-holder') == null) {
 			let child = document.createElement('div');
-			child.id = 'zohodesk-common-icons-holder';
+			child.id = 'zohohc-asap-common-icons-holder';
 			document.body.appendChild(child);
 		}
 
-		if (document.getElementById('zohodesk-common-icons') == null) {
-			ReactDOM.render(<IconContent />, document.getElementById('zohodesk-common-icons-holder'));
+		if (document.getElementById('zohohc-asap-common-icons') == null) {
+			ReactDOM.render(<IconContent />, document.getElementById('zohohc-asap-common-icons-holder'));
 		}
 	}
 
