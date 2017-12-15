@@ -29,7 +29,7 @@
     padding: 5px;
     margin: 7px 0 6px;
 }
-.inputFocus:focus{
+.inputFocus:focus{ 
   border-color:#e3e6eb;
   box-shadow:none;
 }

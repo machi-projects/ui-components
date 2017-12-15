@@ -13,6 +13,12 @@
 {
 	border-bottom: 1px solid #8a8a8a ;
 } */
+
+.posrel
+{
+	position:relative;
+}
+
 .dateFocus
 {
 	border-bottom: 1px solid #f00000;
@@ -35,4 +41,17 @@
 	composes:absolute;
 	bottom: 100%;
 	top:auto;
+}
+
+.droppopup{
+	display:none;
+}
+
+.droppopup.opened{
+	display:block;
+	visibility:hidden;
+}
+
+.droppopup.ready{
+	visibility:visible;
 }

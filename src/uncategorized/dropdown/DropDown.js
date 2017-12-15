@@ -50,12 +50,17 @@ class DropDown extends React.Component {
 		this.togglePopup = this.togglePopup.bind(this);
 
 		this.setRef = this.setRef.bind(this);
+		this.setDropPopupRef = this.setDropPopupRef.bind(this);
 	}
 
 	setRef(el) {
 		this.elementRef = el;
 	}
 
+	setDropPopupRef(el) {
+		this.dropPopupRef = el;
+	}
+	
 	textidchange(id, opt, count, e) {
 		this.setState({ selected: id, selectedOptName: opt, count: count }, () => {
 			this.props.onSelect && this.props.onSelect(this.state.selected, this.props.groupName, e);
@@ -141,7 +146,7 @@ class DropDown extends React.Component {
 				}
 				this.setState({ selected: val });
 				onSelect && onSelect(val, id, e);
-				togglePopup(e);
+				togglePopup && togglePopup(e);
 			}
 		}
 	}
@@ -149,8 +154,8 @@ class DropDown extends React.Component {
 		this.setState({ searchStr: '' });
 		let con = this.refs.suggestionContainer;
 		let elem = this.refs['suggestion_' + this.state.count];
-		con.scrollTop = elem.offsetTop - 33;
-		this.props.togglePopup(e);
+		elem && ( con.scrollTop = elem.offsetTop - 33 )
+		this.props.togglePopup(e, this.dropPopupRef);
 		requestAnimationFrame(() => {
 			this.refs.input && this.refs.input.focus();
 		});
@@ -226,7 +231,7 @@ class DropDown extends React.Component {
 						</span>
 					</div>
 				</div>
-				<div className={isPopupOpen ? (position == 'top' ? style.listViewTop : style.listview) : style.hide}>
+				<div ref={this.setDropPopupRef} className={isPopupOpen ? (position == 'top' ? style.listViewTop : style.listview) : style.hide}>
 					{enableSearch &&
 						<div className={style.posRel}>
 							<input

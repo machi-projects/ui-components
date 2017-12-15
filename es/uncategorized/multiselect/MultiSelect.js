@@ -35,6 +35,7 @@ var MultiSelect = function (_React$Component) {
 		};
 
 		_this.setRef = _this.setRef.bind(_this);
+		_this.setDropPopupRef = _this.setDropPopupRef.bind(_this);
 		return _this;
 	}
 
@@ -42,6 +43,11 @@ var MultiSelect = function (_React$Component) {
 		key: 'setRef',
 		value: function setRef(el) {
 			this.elementRef = el;
+		}
+	}, {
+		key: 'setDropPopupRef',
+		value: function setDropPopupRef(el) {
+			this.dropPopupRef = el;
 		}
 	}, {
 		key: 'componentWillReceiveProps',
@@ -114,7 +120,7 @@ var MultiSelect = function (_React$Component) {
 			    togglePopup = _props2.togglePopup;
 
 			ReactDOM.findDOMNode(this.refs.nameInput).focus();
-			!isPopupOpen && togglePopup(e);
+			!isPopupOpen && togglePopup(e, this.dropPopupRef);
 		}
 	}, {
 		key: 'handleSelect',
@@ -230,7 +236,6 @@ var MultiSelect = function (_React$Component) {
 
 			var suggestionList = this.filterSuggestions(searchString, suggestions, selectedValues, searchKeys, searchType, valueField);
 			var suggestionLength = suggestionList.length;
-
 			switch (keyCode) {
 				case 40:
 				case 34:
@@ -261,14 +266,14 @@ var MultiSelect = function (_React$Component) {
 						if (isPopupOpen) {
 							focusedSuggestion = 0;
 							searchString = '';
+							closePopupOnly(e);
+						} else {
+							togglePopup(e);
 						}
 						this.setState({ focusedSuggestion: focusedSuggestion, searchString: searchString, selectedValues: newSelectedSuggestions }, function () {
 							if (isPopupOpen) {
 								_this5.onSelectedItem();
-								closePopupOnly(e);
 								_this5.handleFocus();
-							} else {
-								togglePopup(e);
 							}
 						});
 
@@ -398,7 +403,7 @@ var MultiSelect = function (_React$Component) {
 				),
 				React.createElement(
 					'div',
-					{ className: isPopupOpen ? style.ListAds : style.hide, onClick: removeClose },
+					{ ref: this.setDropPopupRef, className: isPopupOpen ? style.ListAds : style.hide, onClick: removeClose },
 					suggestionList
 				),
 				React.createElement('div', { className: style.clr })

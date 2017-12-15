@@ -22,7 +22,7 @@ export default class Icon extends Component {
 			child.id = 'zohohc-asap-common-icons-holder';
 			document.body.appendChild(child);
 		}
-
+		
 		if (document.getElementById('zohohc-asap-common-icons') == null) {
 			ReactDOM.render(<IconContent />, document.getElementById('zohohc-asap-common-icons-holder'));
 		}

@@ -8,6 +8,7 @@ import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import hoistStatics from 'hoist-non-react-statics';
+import viewPort from '../utils/viewport';
 
 var popups = {};
 global.closeGroupPopups = function (groupName) {
@@ -30,7 +31,7 @@ var Popup = function Popup(Component) {
 
 			var _this = _possibleConstructorReturn(this, (Popup.__proto__ || _Object$getPrototypeOf(Popup)).call(this, props));
 
-			_this.state = { isPopupOpen: false, position: 'bottom', height: '0px' };
+			_this.state = { isPopupOpen: false, position: 'bottom', height: '0px', isPopupReady: false };
 			_this.togglePopup = _this.togglePopup.bind(_this);
 			_this.documentClickHandler = _this.documentClickHandler.bind(_this);
 			_this.removeClose = _this.removeClose.bind(_this);
@@ -80,7 +81,7 @@ var Popup = function Popup(Component) {
 			}
 		}, {
 			key: 'togglePopup',
-			value: function togglePopup(e) {
+			value: function togglePopup(e, dropElement) {
 				var _this3 = this;
 
 				this.removeClose(e);
@@ -94,30 +95,39 @@ var Popup = function Popup(Component) {
 					}
 				});
 
-				requestAnimationFrame(function () {
+				this.setState({ isPopupOpen: !this.state.isPopupOpen, isPopupReady: false, position: 'bottom' }, function () {
 
-					var element = ReactDOM.findDOMNode(_this3.elementRef).getBoundingClientRect();
-					var frame = _this3.props.frameId ? document.getElementById(_this3.props.frameId) : null;
-					frame = frame || document.documentElement;
-					var frameRects = frame.getBoundingClientRect();
-					if (frameRects.height < element.bottom) {
-						_this3.setState({ isPopupOpen: !_this3.state.isPopupOpen, position: 'top', height: element.height });
-					} else {
-						_this3.setState({ isPopupOpen: !_this3.state.isPopupOpen, position: 'bottom' });
-					}
+					if (!dropElement) {
+						return;
+					};
+
+					requestAnimationFrame(function () {
+
+						var frame = _this3.props.frameId ? document.getElementById(_this3.props.frameId) : null;
+						var viewReacts = viewPort.frameRelativeRects(dropElement, frame);
+						var elementRects = viewReacts.rect;
+						var frameRects = viewReacts.frameRect;
+						if (frameRects.height >= elementRects.bottom) {
+
+							_this3.setState({ isPopupReady: true, position: 'bottom' });
+						} else {
+
+							_this3.setState({ isPopupReady: true, position: 'top' });
+						}
+					});
 				});
 			}
 		}, {
 			key: 'openPopupOnly',
 			value: function openPopupOnly(e) {
 				this.removeClose(e);
-				this.setState({ isPopupOpen: true });
+				this.setState({ isPopupOpen: true, isPopupReady: true });
 			}
 		}, {
 			key: 'closePopupOnly',
 			value: function closePopupOnly(e) {
 				this.removeClose(e);
-				this.setState({ isPopupOpen: false });
+				this.setState({ isPopupOpen: false, isPopupReady: false });
 			}
 		}, {
 			key: 'documentClickHandler',

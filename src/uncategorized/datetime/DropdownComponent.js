@@ -11,7 +11,7 @@ class DropdownComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    bind.apply(this,["handleFocus","handleSelect","handleKeyUp","handleToggle","handleChange"]);
+    bind.apply(this,["handleFocus","handleSelect","handleKeyUp","handleToggle","handleChange" ,"setInputRef"]);
 
     let { value,suggestions,valueField,textField }= props;
     suggestions= suggestions? formatValue(suggestions): [];
@@ -19,14 +19,18 @@ class DropdownComponent extends React.Component {
     let selectedValue= value? formatValue([value])[0]: null;
     
     let focusedSuggestion= this.getFocussedSuggestion(suggestions,selectedValue,valueField);
-    this.state = { searchString: "",focusedSuggestion }
+    this.state = { searchString: "",focusedSuggestion };
+    
   }
 
+  setInputRef(el) {
+		this.inputRef = el;
+	}
+  
   handleFocus(){
-    setTimeout(()=>{
-      this.refs.inputField.focus();
-    },0)
-      
+	  requestAnimationFrame(()=>{
+		  this.inputRef && this.inputRef.focus();
+	  })
   }
 
   getFocussedSuggestion(suggestions=[],value={},valueField){
@@ -54,7 +58,7 @@ class DropdownComponent extends React.Component {
 
   handleKeyUp(e){
     let keyCode= e.keyCode;
-    let searchString= this.refs.inputField.value;
+    let searchString= this.state.searchString;
 
     let { textField,valueField,searchKeys,searchType,suggestions,onSelect,value,
           togglePopup,closePopupOnly }= this.props;
@@ -173,14 +177,14 @@ class DropdownComponent extends React.Component {
 	                  <span className={isPopupOpen?style.topArow :style.downArow}> {/*<FontIcon name="rightArow" size="size16" color="color5"/>*/} </span>
 	             </span>
               </div>
-              <div className={isPopupOpen? position == "top"? style.topListView:style.listview: style.hide} >
-                <div className={searchField? style.searchinp: style.hide} onClick={ removeClose }>
-                  <input type="text" id="testtest" className={style.searchicon} onChange={ this.handleChange}
-                    value={ searchString } onKeyUp= { this.handleKeyUp} ref="inputField" ></input>
+              <div className={isPopupOpen? position == "top"? style.topListView:style.topListView: style.hide} >
+              { searchField && (<div className={searchField? style.searchinp: style.hide} onClick={ removeClose }>
+                <input type="text" id="testtest" className={style.searchicon} onChange={ this.handleChange}
+                    value={ this.state.searchString } onKeyUp={this.handleKeyUp} ref={this.setInputRef} />
                   <span className={style.searchIcon}>
                    {/* <FontIcon name="search" color="color5" size="size14"/> */}
                   </span>
-                </div>
+                </div>) }
                 <ul className={style.listmenu} data-testid="suggestionContainer">
                   { suggestionsListElements }
                 </ul>

@@ -26,12 +26,20 @@ var DateWidget = function (_React$Component) {
 
 		_this.handleSelect = _this.handleSelect.bind(_this);
 		_this.state = { selected: props.value, timeZone: props.timeZone || moment.tz.guess() };
+		_this.setDropPopupRef = _this.setDropPopupRef.bind(_this);
 		return _this;
 	}
 
 	_createClass(DateWidget, [{
+		key: 'setDropPopupRef',
+		value: function setDropPopupRef(el) {
+			this.dropPopupRef = el;
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+			var _this2 = this;
+
 			var _props = this.props,
 			    togglePopup = _props.togglePopup,
 			    removeClose = _props.removeClose,
@@ -44,6 +52,7 @@ var DateWidget = function (_React$Component) {
 			    max = _props.max,
 			    placeholder = _props.placeholder,
 			    isPopupOpen = _props.isPopupOpen,
+			    isPopupReady = _props.isPopupReady,
 			    isDateTime = _props.isDateTime,
 			    dtPtn = _props.dtPtn,
 			    position = _props.position,
@@ -56,35 +65,39 @@ var DateWidget = function (_React$Component) {
 
 			return React.createElement(
 				'div',
-				null,
+				{ className: style.posrel },
 				React.createElement(
 					'div',
 					{
 						className: isPopupOpen ? style.dateFocus : style.date,
 						'data-testid': 'remindMeOnDueDate',
-						onClick: togglePopup,
+						onClick: function onClick(e) {
+							togglePopup(e, _this2.dropPopupRef);
+						},
 						'data-testId': name
 					},
 					React.createElement(
 						'span',
 						null,
 						value ? displayText : placeholder
-					),
-					isPopupOpen && React.createElement(
-						'div',
-						{ className: position == 'top' ? style.dateTop : style.absolute, onClick: removeClose },
-						React.createElement(DateTime, {
-							value: value,
-							isDateTimeField: isDateTime,
-							onSelect: this.handleSelect,
-							timeZone: this.state.timeZone,
-							position: position == 'top' ? 'top' : arrowPosition,
-							min: min,
-							max: max,
-							maxErrorText: maxErrorText,
-							minErrorText: minErrorText
-						})
 					)
+				),
+				React.createElement(
+					'div',
+					{ ref: this.setDropPopupRef,
+						className: style.droppopup + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'top' ? style.dateTop : style.absolute),
+						onClick: removeClose },
+					React.createElement(DateTime, {
+						value: value,
+						isDateTimeField: isDateTime,
+						onSelect: this.handleSelect,
+						timeZone: this.state.timeZone,
+						position: position == 'top' ? 'top' : arrowPosition,
+						min: min,
+						max: max,
+						maxErrorText: maxErrorText,
+						minErrorText: minErrorText
+					})
 				)
 			);
 		}
@@ -98,7 +111,7 @@ var DateWidget = function (_React$Component) {
 	}, {
 		key: 'handleSelect',
 		value: function handleSelect(userZoneSelectedTime, e) {
-			var _this2 = this;
+			var _this3 = this;
 
 			var _props2 = this.props,
 			    id = _props2.id,
@@ -106,8 +119,8 @@ var DateWidget = function (_React$Component) {
 			    togglePopup = _props2.togglePopup;
 
 			this.setState({ selected: userZoneSelectedTime }, function () {
-				if (_this2.props.validation && _this2.props.validation.validateOn) {
-					_this2.validateOnSelect(_this2.state.selected, _this2.props);
+				if (_this3.props.validation && _this3.props.validation.validateOn) {
+					_this3.validateOnSelect(_this3.state.selected, _this3.props);
 				}
 				onSelect(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
 			});

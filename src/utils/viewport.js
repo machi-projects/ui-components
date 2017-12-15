@@ -9,11 +9,12 @@ let viewPort = {
 		let newReact = {
 			top: rect.top - customFrameRect.top,
 			left: rect.left - customFrameRect.left,
-			bottom: rect.bottom - customFrameRect.top,
-			right: rect.right - customFrameRect.left,
 			height: rect.height,
 			width: rect.width
 		};
+		
+		newReact.bottom = newReact.top + newReact.height;
+		newReact.right = newReact.left + newReact.width;
 
 		newReact.x = newReact.left;
 		newReact.y = newReact.top;
@@ -193,7 +194,10 @@ let viewPort = {
 	}
 };
 
-export default viewPort.betterView;
+export default {
+	betterView : viewPort.betterView,
+	frameRelativeRects : viewPort.frameRelativeRects
+};
 
 /*
 	let frameWidth = window.innerHeight || document.documentElement.clientHeight;

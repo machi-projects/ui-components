@@ -63,6 +63,7 @@ var DropDown = function (_React$Component) {
 		_this.togglePopup = _this.togglePopup.bind(_this);
 
 		_this.setRef = _this.setRef.bind(_this);
+		_this.setDropPopupRef = _this.setDropPopupRef.bind(_this);
 		return _this;
 	}
 
@@ -70,6 +71,11 @@ var DropDown = function (_React$Component) {
 		key: 'setRef',
 		value: function setRef(el) {
 			this.elementRef = el;
+		}
+	}, {
+		key: 'setDropPopupRef',
+		value: function setDropPopupRef(el) {
+			this.dropPopupRef = el;
 		}
 	}, {
 		key: 'textidchange',
@@ -162,7 +168,7 @@ var DropDown = function (_React$Component) {
 					}
 					this.setState({ selected: val });
 					onSelect && onSelect(val, id, e);
-					togglePopup(e);
+					togglePopup && togglePopup(e);
 				}
 			}
 		}
@@ -174,8 +180,8 @@ var DropDown = function (_React$Component) {
 			this.setState({ searchStr: '' });
 			var con = this.refs.suggestionContainer;
 			var elem = this.refs['suggestion_' + this.state.count];
-			con.scrollTop = elem.offsetTop - 33;
-			this.props.togglePopup(e);
+			elem && (con.scrollTop = elem.offsetTop - 33);
+			this.props.togglePopup(e, this.dropPopupRef);
 			requestAnimationFrame(function () {
 				_this3.refs.input && _this3.refs.input.focus();
 			});
@@ -269,7 +275,7 @@ var DropDown = function (_React$Component) {
 				),
 				React.createElement(
 					'div',
-					{ className: isPopupOpen ? position == 'top' ? style.listViewTop : style.listview : style.hide },
+					{ ref: this.setDropPopupRef, className: isPopupOpen ? position == 'top' ? style.listViewTop : style.listview : style.hide },
 					enableSearch && React.createElement(
 						'div',
 						{ className: style.posRel },

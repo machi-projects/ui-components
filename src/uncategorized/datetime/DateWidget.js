@@ -12,8 +12,13 @@ class DateWidget extends React.Component {
 		super(props);
 		this.handleSelect = this.handleSelect.bind(this);
 		this.state = { selected: props.value, timeZone: props.timeZone || moment.tz.guess() };
+		this.setDropPopupRef = this.setDropPopupRef.bind(this);
 	}
-
+	
+	setDropPopupRef(el){
+		this.dropPopupRef = el;
+	}
+	
 	render() {
 		let {
 			togglePopup,
@@ -27,6 +32,7 @@ class DateWidget extends React.Component {
 			max,
 			placeholder,
 			isPopupOpen,
+			isPopupReady,
 			isDateTime,
 			dtPtn,
 			position,
@@ -38,30 +44,36 @@ class DateWidget extends React.Component {
 		let displayText = value ? (!isDateTime ? value.format(dtPtn) : value.format(dtPtn + ' hh:mm A')) : '';
 		
 		return (
-			<div>
+			<div className={style.posrel} >
 				<div
 					className={isPopupOpen ? style.dateFocus : style.date}
 					data-testid="remindMeOnDueDate"
-					onClick={togglePopup}
+					onClick={(e)=>{ togglePopup(e,this.dropPopupRef) }}
 					data-testId={name}
 				>
 					<span>
 						{value ? displayText : placeholder}
 					</span>
-					{isPopupOpen &&
-						<div className={position == 'top' ? style.dateTop : style.absolute} onClick={removeClose}>
-							<DateTime
-								value={value}
-								isDateTimeField={isDateTime}
-								onSelect={this.handleSelect}
-								timeZone={this.state.timeZone}
-								position={position == 'top' ? 'top' : arrowPosition}
-								min={min}
-								max={max}
-								maxErrorText={maxErrorText}
-								minErrorText={minErrorText}
-							/>
-						</div>}
+					
+				</div> 
+				<div ref={this.setDropPopupRef}
+						className={
+							style.droppopup+' '+ ( isPopupReady ? style.ready : '' ) +' '+ 
+							( isPopupOpen ? style.opened : '')  +' '+
+							(position == 'top' ? style.dateTop : style.absolute)
+						}
+						onClick={removeClose}>
+						<DateTime
+							value={value}
+							isDateTimeField={isDateTime}
+							onSelect={this.handleSelect}
+							timeZone={this.state.timeZone}
+							position={position == 'top' ? 'top' : arrowPosition}
+							min={min}
+							max={max}
+							maxErrorText={maxErrorText}
+							minErrorText={minErrorText}
+						/>
 				</div>
 			</div>
 		);

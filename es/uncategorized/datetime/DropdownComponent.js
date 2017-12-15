@@ -23,7 +23,7 @@ var DropdownComponent = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (DropdownComponent.__proto__ || _Object$getPrototypeOf(DropdownComponent)).call(this, props));
 
-    bind.apply(_this, ["handleFocus", "handleSelect", "handleKeyUp", "handleToggle", "handleChange"]);
+    bind.apply(_this, ["handleFocus", "handleSelect", "handleKeyUp", "handleToggle", "handleChange", "setInputRef"]);
 
     var value = props.value,
         suggestions = props.suggestions,
@@ -36,17 +36,23 @@ var DropdownComponent = function (_React$Component) {
 
     var focusedSuggestion = _this.getFocussedSuggestion(suggestions, selectedValue, valueField);
     _this.state = { searchString: "", focusedSuggestion: focusedSuggestion };
+
     return _this;
   }
 
   _createClass(DropdownComponent, [{
+    key: 'setInputRef',
+    value: function setInputRef(el) {
+      this.inputRef = el;
+    }
+  }, {
     key: 'handleFocus',
     value: function handleFocus() {
       var _this2 = this;
 
-      setTimeout(function () {
-        _this2.refs.inputField.focus();
-      }, 0);
+      requestAnimationFrame(function () {
+        _this2.inputRef && _this2.inputRef.focus();
+      });
     }
   }, {
     key: 'getFocussedSuggestion',
@@ -81,7 +87,7 @@ var DropdownComponent = function (_React$Component) {
     key: 'handleKeyUp',
     value: function handleKeyUp(e) {
       var keyCode = e.keyCode;
-      var searchString = this.refs.inputField.value;
+      var searchString = this.state.searchString;
 
       var _props = this.props,
           textField = _props.textField,
@@ -263,12 +269,12 @@ var DropdownComponent = function (_React$Component) {
         ),
         React.createElement(
           'div',
-          { className: isPopupOpen ? position == "top" ? style.topListView : style.listview : style.hide },
-          React.createElement(
+          { className: isPopupOpen ? position == "top" ? style.topListView : style.topListView : style.hide },
+          searchField && React.createElement(
             'div',
             { className: searchField ? style.searchinp : style.hide, onClick: removeClose },
             React.createElement('input', { type: 'text', id: 'testtest', className: style.searchicon, onChange: this.handleChange,
-              value: searchString, onKeyUp: this.handleKeyUp, ref: 'inputField' }),
+              value: this.state.searchString, onKeyUp: this.handleKeyUp, ref: this.setInputRef }),
             React.createElement('span', { className: style.searchIcon })
           ),
           React.createElement(

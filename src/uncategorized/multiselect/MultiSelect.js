@@ -34,12 +34,17 @@ class MultiSelect extends React.Component {
 		};
 
 		this.setRef = this.setRef.bind(this);
+		this.setDropPopupRef = this.setDropPopupRef.bind(this);
 	}
 
 	setRef(el) {
 		this.elementRef = el;
 	}
 
+	setDropPopupRef(el) {
+		this.dropPopupRef = el;
+	}
+	
 	componentWillReceiveProps(nextprops) {
 		if (
 			(nextprops.selectedValues && nextprops.selectedValues !== this.props.defaultSelectedValues) ||
@@ -106,7 +111,7 @@ class MultiSelect extends React.Component {
 		e.nativeEvent && e.nativeEvent.stopImmediatePropagation && e.nativeEvent.stopImmediatePropagation();
 		let { isPopupOpen, togglePopup } = this.props;
 		ReactDOM.findDOMNode(this.refs.nameInput).focus();
-		!isPopupOpen && togglePopup(e);
+		!isPopupOpen && togglePopup(e, this.dropPopupRef);
 	}
 
 	handleSelect(selectedValue, e) {
@@ -200,7 +205,6 @@ class MultiSelect extends React.Component {
 			valueField
 		);
 		let suggestionLength = suggestionList.length;
-
 		switch (keyCode) {
 			case 40:
 			case 34:
@@ -231,14 +235,15 @@ class MultiSelect extends React.Component {
 					if (isPopupOpen) {
 						focusedSuggestion = 0;
 						searchString = '';
+						closePopupOnly(e);
+					}
+					else{
+						togglePopup(e);
 					}
 					this.setState({ focusedSuggestion, searchString, selectedValues: newSelectedSuggestions }, () => {
 						if (isPopupOpen) {
 							this.onSelectedItem();
-							closePopupOnly(e);
 							this.handleFocus();
-						} else {
-							togglePopup(e);
 						}
 					});
 
@@ -368,7 +373,7 @@ class MultiSelect extends React.Component {
 					</span>
 					<div className={style.clr} />
 				</div>
-				<div className={isPopupOpen ? style.ListAds : style.hide} onClick={removeClose}>
+				<div ref={this.setDropPopupRef} className={isPopupOpen ? style.ListAds : style.hide} onClick={removeClose}>
 					{suggestionList}
 				</div>
 				<div className={style.clr} />

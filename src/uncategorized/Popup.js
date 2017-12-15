@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import hoistStatics from 'hoist-non-react-statics';
+import viewPort from '../utils/viewport'
 
 var popups = {};
 global.closeGroupPopups = function(groupName) {
@@ -17,7 +18,7 @@ var Popup = function(Component, group = 'global') {
 	class Popup extends React.Component {
 		constructor(props) {
 			super(props);
-			this.state = { isPopupOpen: false, position: 'bottom', height: '0px' };
+			this.state = { isPopupOpen: false, position: 'bottom', height: '0px' , isPopupReady : false };
 			this.togglePopup = this.togglePopup.bind(this);
 			this.documentClickHandler = this.documentClickHandler.bind(this);
 			this.removeClose = this.removeClose.bind(this);
@@ -59,7 +60,7 @@ var Popup = function(Component, group = 'global') {
 			}
 		}
 
-		togglePopup(e) {
+		togglePopup(e,dropElement) {
 			this.removeClose(e);
 			let groupPopups = popups[group];
 			groupPopups.forEach(popup => {
@@ -71,31 +72,42 @@ var Popup = function(Component, group = 'global') {
 						});
 				}
 			});
+				
 			
-			requestAnimationFrame(()=>{
+			this.setState({ isPopupOpen: !this.state.isPopupOpen , isPopupReady : false , position: 'bottom' },()=>{
 				
-				var element = ReactDOM.findDOMNode(this.elementRef).getBoundingClientRect();
-				var  frame = this.props.frameId ? document.getElementById(this.props.frameId) : null;
-				frame = frame || document.documentElement
-				var frameRects  = frame.getBoundingClientRect()
-				if ( frameRects.height < element.bottom ) {
-					this.setState({ isPopupOpen: !this.state.isPopupOpen, position: 'top', height: element.height });
-				} else {
-					this.setState({ isPopupOpen: !this.state.isPopupOpen, position: 'bottom' });
-				}
+				if( !dropElement ){ return; };
 				
-			})
+				requestAnimationFrame(()=>{
+
+					var  frame = this.props.frameId ? document.getElementById(this.props.frameId) : null;
+					let viewReacts = viewPort.frameRelativeRects( dropElement ,  frame);
+					let elementRects = viewReacts.rect;
+					let frameRects = viewReacts.frameRect;		
+					if( frameRects.height >= elementRects.bottom ) {
+						
+						this.setState({ isPopupReady : true  , position: 'bottom' });
+					}
+					else{
+						
+						this.setState({ isPopupReady : true , position: 'top'  });
+					}
+					
+				})
+				
+			});
+
 			
 		}
 
 		openPopupOnly(e) {
 			this.removeClose(e);
-			this.setState({ isPopupOpen: true });
+			this.setState({ isPopupOpen: true, isPopupReady : true  });
 		}
 
 		closePopupOnly(e) {
 			this.removeClose(e);
-			this.setState({ isPopupOpen: false });
+			this.setState({ isPopupOpen: false , isPopupReady : false });
 		}
 
 		documentClickHandler(e) {
