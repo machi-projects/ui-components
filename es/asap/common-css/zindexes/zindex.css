@@ -19,6 +19,14 @@
 	z-index: 9995;
 }
 
+.max_level_8 {
+	z-index: 9998;
+}
+
+.max_level_9 {
+	z-index: 9999;
+}
+
 /* Min levels */
 .min_level_1 {
 	z-index: 1;

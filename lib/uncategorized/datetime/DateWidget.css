@@ -1,17 +1,19 @@
 /* $Id */
+@value _alto,_gray,_red_1 from '../../asap/common-css/variables/colors.css';
+
 .date
 {
-	border-bottom: 1px solid #e0e0e0 ;
+	border-bottom: 1px solid _alto ;
 	width:100%;
 	transition: border 0.2s linear 0s;
-	color: #333;
+	composes: _mineShaft from '../../asap/common-css/colors/colors.css';
     font-size: 16px;
     min-height: 24px;
     padding: 10px 5px 0 5px;
 }
 /* .date:hover
 {
-	border-bottom: 1px solid #8a8a8a ;
+	border-bottom: 1px solid _gray ;
 } */
 
 .posrel
@@ -21,20 +23,20 @@
 
 .dateFocus
 {
-	border-bottom: 1px solid #f00000;
+	border-bottom: 1px solid _red_1;
 	padding: 10px 5px 0 5px;
 	width:100%;
 	min-height:24px;
 	transition: border 0.2s linear 0s;
 	position:relative;
-	color: #333;
+	composes: _mineShaft from '../../asap/common-css/colors/colors.css';
 	font-size: 16px;
 }
 .absolute
 {
 	position:absolute;
 	top:35px;
-	z-index:9999;
+	composes: max_level_8 from '../../asap/common-css/zindexes/zindex.css';
 }
 .dateTop
 {

@@ -55,7 +55,7 @@ class MultiSelect extends React.Component {
 				selectedValues: formatValue(nextprops.selectedValues)
 			});
 		}
-
+		
 		if (nextprops.validation != null && nextprops.validation.validate) {
 			this.validateOnSelect(this.state.selectedValues, nextprops);
 		}
@@ -63,7 +63,7 @@ class MultiSelect extends React.Component {
 
 	validateOnSelect(value, props) {
 		let defaultCheckPropsRules = ['required'];
-		let defaultValidateRules = ['required'];
+		let defaultValidateRules = ['required','minLength','maxLength'];
 		let defaultType = 'multigroup';
 
 		const { validation, onPassValidation, onFailValidation } = props;
@@ -85,8 +85,8 @@ class MultiSelect extends React.Component {
 				onPassValidation: onPassValidation,
 				onFailValidation: onFailValidation
 			};
-
-			validator.executeValidation(value, targetTag, validationObj);
+			
+			validator.executeValidation(value, targetTag, validationObj, defaultType);
 		} else {
 			onPassValidation && onPassValidation(value, targetTag);
 		}
@@ -115,7 +115,7 @@ class MultiSelect extends React.Component {
 	}
 
 	handleSelect(selectedValue, e) {
-		let { closePopupOnly, isPopupOpen, groupName } = this.props;
+		let { closePopupOnly, isPopupOpen } = this.props;
 
 		let selectedValues = this.state.selectedValues;
 		let newSelectedSuggestions = [...selectedValues, selectedValue];
@@ -127,6 +127,7 @@ class MultiSelect extends React.Component {
 	}
 
 	onSelectedItem() {
+		
 		this.props.onSelect && this.props.onSelect(this.state.selectedValues, this.props.groupName);
 		if (this.props.validation && this.props.validation.validateOn) {
 			this.validateOnSelect(this.state.selectedValues, this.props);

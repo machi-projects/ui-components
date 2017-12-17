@@ -99,7 +99,7 @@ export default class PickMultiGroupBase extends React.Component {
 				onFailValidation: onFailValidation
 			};
 
-			validator.executeValidation(values, targetTag, validationObj);
+			validator.executeValidation(values, targetTag, validationObj, defaultType );
 		} else {
 			onPassValidation && onPassValidation(values, targetTag);
 		}

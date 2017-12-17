@@ -91,7 +91,7 @@ class DateWidget extends React.Component {
 			if (this.props.validation && this.props.validation.validateOn) {
 				this.validateOnSelect(this.state.selected, this.props);
 			}
-			onSelect(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
+			onSelect && onSelect(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
 		});
 
 		togglePopup(e);
@@ -122,7 +122,7 @@ class DateWidget extends React.Component {
 				onFailValidation: onFailValidation
 			};
 
-			validator.executeValidation(value, targetTag, validationObj);
+			validator.executeValidation(value, targetTag, validationObj , defaultType);
 		} else {
 			onPassValidation && onPassValidation(value, targetTag);
 		}

@@ -1,4 +1,4 @@
-@value _blue, _green, _transparent, _black_alpha_half, _grey_shade, _grey_shade2 from "../variables/colors.css";
+@value _cerulean,_red,_red_1,_azureRadiance,_gallery,_wildSand,_wildSand_1,_mineShaft,_alabaster,_froly,_white,_black,_dustyGray,_tundora,_blue, _green, _transparent, _black_alpha_half, _grey_shade, _grey_shade2 from "../variables/colors.css";
 
 .clr_red {
 	color: _blue;
@@ -14,14 +14,60 @@
 .clr_greyshade2{
     color: _grey_shade2;
 }
+.clr_tundora{
+	color: _tundora;
+}
+.clr_dustyGray{
+	color: _dustyGray;
+}
+.clr_black{
+	color: _black;
+}
+.clr_white{
+	color: _white;
+}
+.clr_froly{
+	color: _froly;
+}
+.clr_mineShaft{
+	color: _mineShaft;
+}
+.clr_red_1{
+	color: _red_1;
+}
+.clr_cerulean{
+	color: _cerulean;
+}
 
 
+.bg_wildSand{
+	background-color: _wildSand;
+}
+.bg_wildSand_1{
+	background-color: _wildSand_1;
+}
+.bg_froly{
+	background-color: _froly;
+}
+.bg_white{
+	background-color: _white;
+}
 
+.bg_alabaster{
+	background-color: _alabaster;
+}
+
+.bg_gallery{
+	background-color: _gallery;
+}
+
+.bg_azureRadiance{
+	background-color: _azureRadiance;
+}
 
 .bg_red {
 	background-color: _blue;
 }
-
 
 .bg_green {
 	background-color: _green;
@@ -33,5 +79,9 @@
 
 .bg_black_alpha_half {
 	background-color: _black_alpha_half;
+}
+
+.bg_red_1{
+	background-color: _red_1;
 }
 

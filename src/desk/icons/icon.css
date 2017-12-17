@@ -1,4 +1,4 @@
-@value _red from "../common-css/variables/colors.css";
+@value _red,_tundora from "../common-css/variables/colors.css";
 
 .iconbase {
     position:relative;
@@ -14,7 +14,7 @@
 
 /* icon hover */
 .attachIcon:hover {
-	color : #444;
+	color : _tundora;
 }
 /* icon hover */
 

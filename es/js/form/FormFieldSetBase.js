@@ -128,6 +128,14 @@ var FormFieldSetBase = function (_React$Component) {
 	}
 
 	_createClass(FormFieldSetBase, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+
+			if (nextProps.validate !== this.props.validate) {
+				this.setState({ validate: nextProps.validate });
+			}
+		}
+	}, {
 		key: 'onPassValidationItem',
 		value: function onPassValidationItem(val, el) {
 			var _this5 = this;
@@ -234,8 +242,9 @@ FormFieldSetBase.propTypes = {
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,
 
+	validate: PropTypes.bool,
+
 	validation: PropTypes.shape({
-		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
 		rulesOrder: PropTypes.arrayOf(PropTypes.string),
 		rules: PropTypes.object,

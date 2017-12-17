@@ -35,13 +35,13 @@ const validator = {
 
 		return {
 			validate: newValidation.validate,
-			validateOn: newValidation.validateOn || validateOn,
+			validateOn: newValidation.hasOwnProperty('validateOn') ? newValidation.validateOn : validateOn,
 			validationRules: newValidationRules,
 			validationRulesOrder: newValidationRulesOrder,
 			validationMessages: validationMessages
 		};
 	},
-	executeValidation: (text, inputTag, validationObj) => {
+	executeValidation: (text, inputTag, validationObj, fieldType) => {
 		let validation = validationObj.validation;
 		let validationRulesOrder = validation.validationRulesOrder || [];
 		let validationRules = validation.validationRules || {};
@@ -49,32 +49,51 @@ const validator = {
 
 		let onPassValidation = validationObj.onPassValidation;
 		let onFailValidation = validationObj.onFailValidation;
-
-		for (var i = 0, len = validationRulesOrder.length; i < len; i++) {
-			var rule = validationRulesOrder[i];
-			if (!validationRules[rule] || !typeChecker.isFunction(validationRules[rule])) {
-				continue;
-			}
-
-			let isInValid = validationRules[rule](text, inputTag);
-
-			if (isInValid) {
-				let message = validationMessages[rule] && typeChecker.isFunction(validationMessages[rule]) ? validationMessages[rule](text, inputTag) : validationMessages[rule];
-				onFailValidation && onFailValidation(rule, message, inputTag);
-				return;
+		
+		
+		let skipIfEmptyField = null;
+		if( validationRules.required == false && (fieldType !== 'radio' || fieldType !== 'checkbox') ){
+			 skipIfEmptyField = (val)=>{
+				 
+				if (fieldType == 'onegroup' || fieldType == 'multigroup') {
+					return !val || !(val.length > 0);
+				}
+				 
+				let value = (val || '').trim();
+				return (value.length < 1);
 			}
 		}
+		
+		if( skipIfEmptyField == null || skipIfEmptyField(text) == false ){
+			
+			for (var i = 0, len = validationRulesOrder.length; i < len; i++) {
+				var rule = validationRulesOrder[i];
+				if (!validationRules[rule] || !typeChecker.isFunction(validationRules[rule])) {
+					continue;
+				}
+
+				let isInValid = validationRules[rule](text, inputTag);
+
+				if (isInValid) {
+					let message = validationMessages[rule] && typeChecker.isFunction(validationMessages[rule]) ? validationMessages[rule](text, inputTag) : validationMessages[rule];
+					onFailValidation && onFailValidation(rule, message, inputTag);
+					return;
+				}
+			}
+			
+		}
+		
 
 		onPassValidation && onPassValidation(text, inputTag);
 	},
 
 	composeRulesForValidation: (type, defaultValidateRules, newValidationRules) => {
 		let defaultPatterns = validator.regexs;
-
+		
 		for (let i = 0, len = defaultValidateRules.length; i < len; i++) {
 			let rule = defaultValidateRules[i];
 			let ruleInfo = newValidationRules[rule] || '';
-
+			
 			if (ruleInfo && !typeChecker.isFunction(ruleInfo)) {
 				if (rule == 'required' && ruleInfo === true) {
 					newValidationRules[rule] = (val, el) => {
@@ -83,30 +102,40 @@ const validator = {
 						}
 
 						if (type == 'radio' || type == 'checkbox') {
-							return !el.checked;
+							return (el.checked == false);
 						}
 
 						if (type == 'onegroup' || type == 'multigroup') {
-							return !val || !(val.length > 0);
+							return (!val || val.length < 1);
 						}
 
 						let value = (val || '').replace(/\s{2,}/g, ' ').trim();
-						return !value;
+						return (value.length < 1);
 					};
-				} else if (rule == 'maxLength' && !Number.isNaN(ruleInfo) && Number.isFinite(ruleInfo) ) {
+				} 
+				else if (rule == 'maxLength' && !Number.isNaN(ruleInfo) && Number.isFinite(ruleInfo) ) {
 					let maxLength = Number(ruleInfo);
 					newValidationRules[rule] = (val, el) => {
 						if (el.willValidate && el.validity.tooLong) {
 							return true;
 						}
 
-						let value = (val || '').trim();
+						let value = (val || '');
+						if (type !== 'multigroup') {
+							value = val.trim();
+						}
+						
 						return !(value.length <= maxLength);
 					};
 				} else if (rule == 'minLength' && !Number.isNaN(ruleInfo) && Number.isFinite(ruleInfo) ) {
 					let minLength = Number(ruleInfo);
 					newValidationRules[rule] = (val, el) => {
-						let value = (val || '').trim();
+						
+						let value = (val || '');
+						if (type !== 'multigroup') {
+							value = val.trim();
+						}
+						
 						return !(value.length >= minLength);
 					};
 				} else if (rule == 'rangeLength' && /^([\-\+\d]+)*([\,]{1,1}([\-\+\d]+))$/.test(ruleInfo) == true) {

@@ -1,7 +1,7 @@
 /* $Id$ */
 .timeStr
 {
-	color:#999 ;
+	composes: clr_dustyGray from '../../asap/common-css/colors/colors.css';
 	margin:0px 0px 0px 10px;
 	width:40px;
 	display:inline-block;

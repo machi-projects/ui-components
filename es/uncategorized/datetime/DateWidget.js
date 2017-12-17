@@ -122,7 +122,7 @@ var DateWidget = function (_React$Component) {
 				if (_this3.props.validation && _this3.props.validation.validateOn) {
 					_this3.validateOnSelect(_this3.state.selected, _this3.props);
 				}
-				onSelect(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
+				onSelect && onSelect(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
 			});
 
 			togglePopup(e);
@@ -150,7 +150,7 @@ var DateWidget = function (_React$Component) {
 					onFailValidation: onFailValidation
 				};
 
-				validator.executeValidation(value, targetTag, validationObj);
+				validator.executeValidation(value, targetTag, validationObj, defaultType);
 			} else {
 				onPassValidation && onPassValidation(value, targetTag);
 			}

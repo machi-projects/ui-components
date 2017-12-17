@@ -69,7 +69,6 @@ var FormFieldSet = function (_Component2) {
 
 			//styleId={styleMappings.labelStyle}
 			//styleId={styleMappings.messageStyle}
-
 			return React.createElement(
 				FormFieldSetBase,
 				_extends({}, newProps, { fieldSetStyle: classNames }),
@@ -131,10 +130,9 @@ FormFieldSet.propTypes = {
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,
 
-	fireValidation: PropTypes.bool,
+	validate: PropTypes.bool,
 
 	validation: PropTypes.shape({
-		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
 		rulesOrder: PropTypes.arrayOf(PropTypes.string),
 		rules: PropTypes.object,

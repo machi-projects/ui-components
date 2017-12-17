@@ -40,13 +40,13 @@ var validator = {
 
 		return {
 			validate: newValidation.validate,
-			validateOn: newValidation.validateOn || validateOn,
+			validateOn: newValidation.hasOwnProperty('validateOn') ? newValidation.validateOn : validateOn,
 			validationRules: newValidationRules,
 			validationRulesOrder: newValidationRulesOrder,
 			validationMessages: validationMessages
 		};
 	},
-	executeValidation: function executeValidation(text, inputTag, validationObj) {
+	executeValidation: function executeValidation(text, inputTag, validationObj, fieldType) {
 		var validation = validationObj.validation;
 		var validationRulesOrder = validation.validationRulesOrder || [];
 		var validationRules = validation.validationRules || {};
@@ -55,18 +55,34 @@ var validator = {
 		var onPassValidation = validationObj.onPassValidation;
 		var onFailValidation = validationObj.onFailValidation;
 
-		for (var i = 0, len = validationRulesOrder.length; i < len; i++) {
-			var rule = validationRulesOrder[i];
-			if (!validationRules[rule] || !typeChecker.isFunction(validationRules[rule])) {
-				continue;
-			}
+		var skipIfEmptyField = null;
+		if (validationRules.required == false && (fieldType !== 'radio' || fieldType !== 'checkbox')) {
+			skipIfEmptyField = function skipIfEmptyField(val) {
 
-			var isInValid = validationRules[rule](text, inputTag);
+				if (fieldType == 'onegroup' || fieldType == 'multigroup') {
+					return !val || !(val.length > 0);
+				}
 
-			if (isInValid) {
-				var message = validationMessages[rule] && typeChecker.isFunction(validationMessages[rule]) ? validationMessages[rule](text, inputTag) : validationMessages[rule];
-				onFailValidation && onFailValidation(rule, message, inputTag);
-				return;
+				var value = (val || '').trim();
+				return value.length < 1;
+			};
+		}
+
+		if (skipIfEmptyField == null || skipIfEmptyField(text) == false) {
+
+			for (var i = 0, len = validationRulesOrder.length; i < len; i++) {
+				var rule = validationRulesOrder[i];
+				if (!validationRules[rule] || !typeChecker.isFunction(validationRules[rule])) {
+					continue;
+				}
+
+				var isInValid = validationRules[rule](text, inputTag);
+
+				if (isInValid) {
+					var message = validationMessages[rule] && typeChecker.isFunction(validationMessages[rule]) ? validationMessages[rule](text, inputTag) : validationMessages[rule];
+					onFailValidation && onFailValidation(rule, message, inputTag);
+					return;
+				}
 			}
 		}
 
@@ -88,15 +104,15 @@ var validator = {
 						}
 
 						if (type == 'radio' || type == 'checkbox') {
-							return !el.checked;
+							return el.checked == false;
 						}
 
 						if (type == 'onegroup' || type == 'multigroup') {
-							return !val || !(val.length > 0);
+							return !val || val.length < 1;
 						}
 
 						var value = (val || '').replace(/\s{2,}/g, ' ').trim();
-						return !value;
+						return value.length < 1;
 					};
 				} else if (rule == 'maxLength' && !_Number$isNaN(ruleInfo) && _Number$isFinite(ruleInfo)) {
 					var maxLength = Number(ruleInfo);
@@ -105,13 +121,22 @@ var validator = {
 							return true;
 						}
 
-						var value = (val || '').trim();
+						var value = val || '';
+						if (type !== 'multigroup') {
+							value = val.trim();
+						}
+
 						return !(value.length <= maxLength);
 					};
 				} else if (rule == 'minLength' && !_Number$isNaN(ruleInfo) && _Number$isFinite(ruleInfo)) {
 					var minLength = Number(ruleInfo);
 					newValidationRules[rule] = function (val, el) {
-						var value = (val || '').trim();
+
+						var value = val || '';
+						if (type !== 'multigroup') {
+							value = val.trim();
+						}
+
 						return !(value.length >= minLength);
 					};
 				} else if (rule == 'rangeLength' && /^([\-\+\d]+)*([\,]{1,1}([\-\+\d]+))$/.test(ruleInfo) == true) {

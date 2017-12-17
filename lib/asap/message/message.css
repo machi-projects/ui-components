@@ -5,8 +5,8 @@
 
 .default {
 	display: block;
-    background: #f7f7f7;
-    color: #999;
+    composes: bg_alabaster from '../common-css/colors/colors.css';
+    composes: clr_dustyGray from '../common-css/colors/colors.css';
     font: 400 14px 'San Francisco Display Light';
     padding: 10px 15px;
 }

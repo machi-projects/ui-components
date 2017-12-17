@@ -112,7 +112,8 @@ export default class MultiLineInputBase extends React.Component {
 		}
 
 		if( validationProps != null ){
-			validator.executeValidation(targetTag.value  , targetTag , validationProps );
+			let defaultType = "textarea";
+			validator.executeValidation(targetTag.value  , targetTag , validationProps , defaultType );
 		}
 
 	}

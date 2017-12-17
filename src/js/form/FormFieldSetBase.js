@@ -62,12 +62,13 @@ FormFieldBase.propTypes = {
 };
 
 export default class FormFieldSetBase extends React.Component {
+	
 	constructor(props) {
 		super(props);
 		this.state = {
 			errored: false,
 			errMessage: null,
-			validate: props.validation && props.validation.validate ? true : false
+			validate: ((props.validation && props.validation.validate) ? true : false)
 		};
 
 		//Bind the method to the component context
@@ -75,7 +76,14 @@ export default class FormFieldSetBase extends React.Component {
 		this.onFailValidationItem = this.onFailValidationItem.bind(this);
 		this.focusErrorFieldSet = this.focusErrorFieldSet.bind(this);
 	}
-
+	
+	componentWillReceiveProps(nextProps){
+		
+		if( nextProps.validate !== this.props.validate  ){
+			this.setState({ validate : nextProps.validate });
+		}
+	}
+	
 	onPassValidationItem(val, el) {
 		this.setState(
 			state => {
@@ -124,6 +132,8 @@ export default class FormFieldSetBase extends React.Component {
 			onFailValidation
 		} = this.props;
 
+		
+		
 		return (
 			<div className={fieldSetStyle} tabIndex="-1">
 				{React.Children.map(this.props.children, (childComponent, i) => {
@@ -181,8 +191,9 @@ FormFieldSetBase.propTypes = {
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,
 	
+	validate: PropTypes.bool,
+	
 	validation: PropTypes.shape({
-		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
 		rulesOrder: PropTypes.arrayOf(PropTypes.string),
 		rules: PropTypes.object,

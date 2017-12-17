@@ -67,7 +67,7 @@ var MultiSelect = function (_React$Component) {
 		key: 'validateOnSelect',
 		value: function validateOnSelect(value, props) {
 			var defaultCheckPropsRules = ['required'];
-			var defaultValidateRules = ['required'];
+			var defaultValidateRules = ['required', 'minLength', 'maxLength'];
 			var defaultType = 'multigroup';
 
 			var validation = props.validation,
@@ -86,7 +86,7 @@ var MultiSelect = function (_React$Component) {
 					onFailValidation: onFailValidation
 				};
 
-				validator.executeValidation(value, targetTag, validationObj);
+				validator.executeValidation(value, targetTag, validationObj, defaultType);
 			} else {
 				onPassValidation && onPassValidation(value, targetTag);
 			}
@@ -129,8 +129,7 @@ var MultiSelect = function (_React$Component) {
 
 			var _props3 = this.props,
 			    closePopupOnly = _props3.closePopupOnly,
-			    isPopupOpen = _props3.isPopupOpen,
-			    groupName = _props3.groupName;
+			    isPopupOpen = _props3.isPopupOpen;
 
 
 			var selectedValues = this.state.selectedValues;
@@ -144,6 +143,7 @@ var MultiSelect = function (_React$Component) {
 	}, {
 		key: 'onSelectedItem',
 		value: function onSelectedItem() {
+
 			this.props.onSelect && this.props.onSelect(this.state.selectedValues, this.props.groupName);
 			if (this.props.validation && this.props.validation.validateOn) {
 				this.validateOnSelect(this.state.selectedValues, this.props);

@@ -114,7 +114,7 @@ var PickOneGroupBase = function (_React$Component2) {
 					onFailValidation: onFailValidation
 				};
 
-				validator.executeValidation(value, targetTag, validationObj);
+				validator.executeValidation(value, targetTag, validationObj, defaultType);
 			} else {
 				onPassValidation && onPassValidation(value, targetTag);
 			}

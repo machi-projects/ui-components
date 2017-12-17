@@ -1,11 +1,15 @@
+@value _froly from '../common-css/variables/colors.css';
+@value _none from '../common-css/variables/units.css';
+
 .default {
-	color: #999;
+	composes: clr_dustyGray from '../common-css/colors/colors.css';
     cursor: text;
     transition: .2s ease-out;
     font: 600 14px 'San Francisco Display Thin';
     display: inline-block;
     position: relative;
     left: 5px;
+   	outline: none;
 }
 
 .default:focus {
@@ -16,11 +20,12 @@
     outline:none;
 }
 
+ 
 .default.mandatory::before{
 	content: "*";
-    color: #f46e7b;
+    color: _froly;
     font: bold 15px/18px 'San Francisco Display Regular';
-    background: none;
+    background: _none;
     width: auto;
     height: auto;
     position: relative;

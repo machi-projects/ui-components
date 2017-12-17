@@ -1,30 +1,31 @@
 /* $Id */
+@value _froly,_tundora,_white,_seashell,_transparent_alpha,_wildSand_1,_blackHaze,_silver,_deepCerulean from '../../asap/common-css/variables/colors.css';
 
 .timesection{
 	text-align: center;
     padding: 15px 0;
-    border-top: 1px solid #f1f1f1;
+    border-top: 1px solid _seashell;
 }
 
 .DateNew{
 	padding: 10px 15px;
 }
 .dateContainer {
-	background: #FFF;
-	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+	composes: bg_white from '../../asap/common-css/colors/colors.css';
+	box-shadow: 0px 2px 5px _transparent_alpha;
 	width: 350px;
 }
 
 .topArow {
 	width: 15px;
 	height: 15px;
-	background: #f46e7b;
-	border-right: 1px solid #f46e7b;
-	border-top: 1px solid #f46e7b;
+	composes: bg_froly from '../../asap/common-css/colors/colors.css';
+	border-right: 1px solid _froly;
+	border-top: 1px solid _froly;
 	transform: rotate(-45deg);
 	display: inline-block;
 	position: absolute;
-	z-index: -1;
+	
 }
 
 .topRightArowPos {
@@ -71,7 +72,7 @@
 }
 
 .commonStr {
-	color: #444;
+	composes: clr_tundora from '../../asap/common-css/colors/colors.css';
 	font-family: 'San Francisco Display Regular', sans-serif;
 	font-size: 14px;
 	text-align: center;
@@ -85,13 +86,13 @@
 	line-height: 30px;
 	margin: 0px 10px;
 	cursor: pointer;
-	color: #fff;
+	composes: clr_white from '../../asap/common-css/colors/colors.css';
 }
 
 .monthStr {
 	composes: commonStr;
 	width: 119px;
-	color: #fff;
+	composes: clr_white from '../../asap/common-css/colors/colors.css';
 }
 
 .daysStr {
@@ -100,7 +101,7 @@
 	font-size: 12px;
 	font-family: 'San Francisco Display Light', sans-serif;
 	text-transform: uppercase;
-	color:#fff;
+	composes: clr_white from '../../asap/common-css/colors/colors.css';
 }
 
 .datesStr {
@@ -114,18 +115,18 @@
 
 .optionsTop {
 	/* margin: 8px 0px; */
-	background: #f46e7b;
+	composes: bg_froly from '../../asap/common-css/colors/colors.css';
 	padding: 10px;
 }
 
 .days {
-	background: #f46e7b;
+	composes: bg_froly from '../../asap/common-css/colors/colors.css';
     padding: 10px 15px;
 }
 
 .sideArows:hover, .datesStr:hover {
-	color: #444;
-	background: #f5f5f5;
+	color: _tundora;
+	background: _wildSand_1;
 	border-radius: 100px;
 }
 
@@ -135,12 +136,12 @@
 }
 
 .sunday {
-	color: #f46e7b;
+	composes: clr_froly from '../../asap/common-css/colors/colors.css';
 }
 
 .today{
-	background: #f46e7b;
-	color: #FFF;
+	composes: bg_froly from '../../asap/common-css/colors/colors.css';
+	composes: clr_tundora from '../../asap/common-css/colors/colors.css';
 	border-radius: 100px;
 	width: 31px;
 	margin: 2px 4px;
@@ -149,8 +150,8 @@
 }
 
 .today:hover {
-	background: #f46e7b;
-	color: #fff;
+	background: _froly;
+	color: _white;
 }
 
 .emptySpan {
@@ -160,58 +161,58 @@
 
 .marTop {
 	padding: 12px 0;
-    border-top: 1px solid #ebecec;
+    border-top: 1px solid _blackHaze;
 }
 
 .marTop::after{
 	content: "";
     position: absolute;
-    border-left: 1px solid #ebecec;
+    border-left: 1px solid _blackHaze;
     height: 43px;
     left: 50%;
     bottom: 0;
 }
 
 .blueBut {
-	color: #999;
+	composes: clr_dustyGray from '../../asap/common-css/colors/colors.css';
     cursor: pointer;
     font-size: 16px;
     font-family: 'San Francisco Display Regular', sans-serif;
     outline: none;
     text-overflow: ellipsis;
     overflow: hidden;
-    background: transparent;
+    composes: bg_transparent from '../../asap/common-css/colors/colors.css'; 
     border: none;
     padding: 0px 76px 0px;
     transition: all 0.65s ease;
 }
 
 /* .blueBut:hover {
-	border: 1px solid #0085a9;
+	border: 1px solid _deepCerulean;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
  */
 .canButton {
-	color: #f46e7b;
+	composes: clr_froly from '../../asap/common-css/colors/colors.css';
     cursor: pointer;
     font-size: 16px;
     font-family: 'San Francisco Display Regular', sans-serif;
     outline: none;
     text-overflow: ellipsis;
     overflow: hidden;
-    background: transparent;
+    composes: bg_transparent from '../../asap/common-css/colors/colors.css'; 
     border: none;
     padding: 0px 60px 0px;
     transition: all 0.65s ease;
 }
 
 /* .canButton:hover {
-	border: 1px solid #c6c6c6;
+	border: 1px solid _silver;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 } */
 
 .timeStr {
-	color: #444;
+	composes: clr_tundora from '../../asap/common-css/colors/colors.css';
     margin: 0px 5px 0px 10px;
     width: 40px;
     overflow: hidden;

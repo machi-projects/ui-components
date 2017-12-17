@@ -63,6 +63,8 @@ FormFieldsGroup.propTypes = {
 	onFailValidation: PropTypes.func,
 	onPassValidation: PropTypes.func,
 
+	totalFieldsCount: PropTypes.number,
+
 	children: PropTypes.oneOfType([PropTypes.shape({ name: PropTypes.oneOf(['FormFieldSet']) }), PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.oneOf(['FormFieldSet']) }))]),
 
 	styleId: PropTypes.string,

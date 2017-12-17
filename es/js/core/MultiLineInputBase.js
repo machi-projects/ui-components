@@ -126,7 +126,8 @@ var MultiLineInputBase = function (_React$Component) {
 			}
 
 			if (validationProps != null) {
-				validator.executeValidation(targetTag.value, targetTag, validationProps);
+				var defaultType = "textarea";
+				validator.executeValidation(targetTag.value, targetTag, validationProps, defaultType);
 			}
 		}
 	}, {

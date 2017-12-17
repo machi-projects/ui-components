@@ -20,6 +20,7 @@ export class FormField extends Component {
 }
 
 export default class FormFieldSet extends Component {
+
 	render() {
 		const {
 			styleId,
@@ -63,7 +64,6 @@ export default class FormFieldSet extends Component {
 		
 		//styleId={styleMappings.labelStyle}
 		//styleId={styleMappings.messageStyle}
-		
 		return (
 			<FormFieldSetBase {...newProps} fieldSetStyle={classNames}>
 				{React.Children.map(this.props.children, (childComponent, i) => {
@@ -123,11 +123,10 @@ FormFieldSet.propTypes = {
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,
-	
-	fireValidation : PropTypes.bool,
 
+	validate: PropTypes.bool,
+	
 	validation: PropTypes.shape({
-		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
 		rulesOrder: PropTypes.arrayOf(PropTypes.string),
 		rules: PropTypes.object,

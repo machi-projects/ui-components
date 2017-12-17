@@ -90,7 +90,7 @@ export default class PickOneGroupBase extends React.Component {
 				onFailValidation: onFailValidation
 			};
 
-			validator.executeValidation(value, targetTag, validationObj);
+			validator.executeValidation(value, targetTag, validationObj, defaultType);
 		} else {
 			onPassValidation && onPassValidation(value, targetTag);
 		}

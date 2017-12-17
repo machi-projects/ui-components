@@ -84,7 +84,7 @@ var InputBase = function (_React$Component) {
 			}
 
 			if (validationProps != null) {
-				validator.executeValidation(targetTag.value, targetTag, validationProps);
+				validator.executeValidation(targetTag.value, targetTag, validationProps, this.props.type);
 			}
 		}
 	}, {

@@ -1,4 +1,6 @@
 /* $Id$ */
+@value _alto,_tundora,_athensGray,_gallery_alpha_6,_red_1 from '../../asap/common-css/variables/colors.css';
+
 .notfound{
     padding:0 7px;
 }
@@ -6,12 +8,12 @@
     position:relative;
 }
 .mainBorder{
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid _alto;
     margin:5px 0 0;
 }
 .mainFlexWrap{
     composes:mainBorder;
-    border-bottom: 1px solid #f00000;
+    border-bottom: 1px solid _red_1;
 }
 .inputAdjust{
     display:block;
@@ -22,7 +24,7 @@
 .inputFocus{
     width: 100%;
     box-sizing: border-box;
-    color: #444;
+   	composes: clr_tundora from '../../asap/common-css/colors/colors.css';
     outline: 0;
     font: 14px "San Francisco Display Light",sans-serif;
     border: none;
@@ -30,16 +32,15 @@
     margin: 7px 0 6px;
 }
 .inputFocus:focus{ 
-  border-color:#e3e6eb;
+  border-color: _athensGray;
   box-shadow:none;
 }
 .ListAds{
     width: 100%;
     border-radius: 2px;
-    background-color: #FFF;
+    composes: bg_white from '../../asap/common-css/colors/colors.css';
     top: 0px;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-    z-index: 9999;
     will-change: width, height;
     min-width: 100px;
     max-height: 650px;
@@ -50,36 +51,36 @@
 .suggestion{
    	width:100%;
     box-sizing:border-box;
-    background-color: #fff;
+    composes: bg_white from '../../asap/common-css/colors/colors.css';
     clear: both;
     cursor: pointer;
     text-align: left;
     text-transform: none;
     font-size: 16px;
-    color: #444;
+    composes: clr_tundora from '../../asap/common-css/colors/colors.css';
     display: block;
     padding: 14px 16px;
 }
 .suggestionFocus{
     composes:suggestion;
-    background-color: #eee;
+    composes: bg_gallery from '../../asap/common-css/colors/colors.css';
     clear: both;
     cursor: pointer;
     text-align: left;
     text-transform: none;
     font-size: 16px;
-    color: #444;
+    composes: clr_tundora from '../../asap/common-css/colors/colors.css';
     display: block;
     padding: 14px 16px;
 }
 .suggestionFocus:hover{
-	background-color: rgba(238, 238, 238, 0.6);
+	background-color: _gallery_alpha_6;
     clear: both;
     cursor: pointer;
     text-align: left;
     text-transform: none;
     font-size: 16px;
-    color: #444;
+    color: _tundora;
     display: block;
     padding: 14px 16px;
 }

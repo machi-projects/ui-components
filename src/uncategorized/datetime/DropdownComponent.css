@@ -1,4 +1,5 @@
 /* $Id$ */
+@value _froly,_white,_athensGray,_froly_1,_silver_1,_mercury,_nobel,_cerulean from '../../asap/common-css/variables/colors.css';
 
 .main{
 	position:relative;
@@ -16,11 +17,11 @@
 }
 .dropdown{
     padding:5px 0px;
-    border-bottom:1px solid #e3e6eb;
-    color:#444;
+    border-bottom:1px solid _athensGray;
+    composes: clr_tundora from '../../asap/common-css/colors/colors.css';
 }
 .dropdown:hover{
-	border-bottom:1px solid #f46e7b;
+	border-bottom:1px solid _froly;
 }
 .selectname{
        overflow:hidden;
@@ -37,11 +38,11 @@
     position: absolute;
     top: 29px;
     left: 0px;
-    box-shadow: 0 0 3px #bdbdbd;
-    border: 1px solid #f46d7b;
+    box-shadow: 0 0 3px _silver_1;
+    border: 1px solid _froly_1;
     border-radius: 2px 2px 0px 0px;
-    background-color: white;
-    z-index: 10;
+   	composes: bg_white from '../../asap/common-css/colors/colors.css';
+   	composes: max_level_9 from '../../asap/common-css/zindexes/zindex.css';
 }
 .listmenu{
 	padding:4px 0px;
@@ -62,11 +63,11 @@
     word-wrap:normal;
 	padding:4px 7px;
 	font:14px "San Francisco Display Regular",sans-serif;
-	color:#000;
+	composes: clr_black from '../../asap/common-css/colors/colors.css';
 }
 .option:hover{
-	background:#f46e7b;
-    color:#fff;
+	background: _froly;
+    color: _white;
 }
 .hide{
 	display:none;
@@ -75,7 +76,7 @@
     width:calc(100% - 18px);
     padding:0px 8px;
    border:none;
-    background-color:#fff;
+    composes: bg_black from '../../asap/common-css/colors/colors.css';
     composes:middleAlign;
     box-sizing:border-box;;
 }
@@ -85,44 +86,44 @@
 }
 .searchinp{
     padding:5px 0px;
-    border-bottom:1px solid #e5e5e5;
+    border-bottom:1px solid _mercury;
 }
 .searchinp span i
 {
     font-weight:700;
 }
 .bccolor{
-	background-color:#f46e7b;
+	composes: bg_froly from '../../asap/common-css/colors/colors.css';
 	composes:option;
-	color:#fff;
+	composes: clr_white from '../../asap/common-css/colors/colors.css';
 }
 .normal{
-	background-color:white;
+	composes: bg_white from '../../asap/common-css/colors/colors.css';
 	composes:option;
 }
 .flexline{
 	display: block;
-    color: #444;
+    composes: clr_tundora from '../../asap/common-css/colors/colors.css';
     position: relative;
     left: -4px;
 }
 .notfound
 {
-    background-color:#f4f4f4;
+    composes: bg_wildSand from '../../asap/common-css/colors/colors.css';
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
     word-wrap:normal;
     padding:4px 7px;
     font:14px "San Francisco Display Regular",sans-serif;
-    color:#000;
+    composes: clr_black from '../../asap/common-css/colors/colors.css';
     cursor:default;
 }
 .dropStyle
 {
-    border:1px solid #00acda;
+    border:1px solid _cerulean;
     padding:5px 3px;
-    color:#00acda;
+    composes: clr_cerulean from '../../asap/common-css/colors/colors.css';
     border-radius:2px;
 }
 .dropSelectName
@@ -138,7 +139,7 @@
     bottom: 7px;
     width: 6px;
     height: 6px;
-    border: 1px solid #b5b5b5;
+    border: 1px solid _nobel;
     border-top-width: 0;
     border-right-width: 0;
     transform: rotate(-45deg);
@@ -151,7 +152,7 @@
     bottom: 4px;
     width: 6px;
     height: 6px;
-    border: 1px solid #b5b5b5;
+    border: 1px solid _nobel;
     border-top-width: 0;
     border-right-width: 0;
     transform: rotate(135deg);

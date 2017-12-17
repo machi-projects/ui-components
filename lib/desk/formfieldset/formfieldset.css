@@ -1,3 +1,5 @@
+@value _red_1 from '../common-css/variables/colors.css';
+
 .default {
 	outline: none; 	
 	margin-bottom: 30px;	
@@ -22,7 +24,7 @@
     width: 0;
     bottom: 0;
     position: absolute;
-    background: #f00000;
+    background: _red_1;
     transition: 0.2s ease all;
 }
 

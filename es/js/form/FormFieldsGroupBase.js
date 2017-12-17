@@ -1,4 +1,3 @@
-import _Object$assign from 'babel-runtime/core-js/object/assign';
 import _defineProperty from 'babel-runtime/helpers/defineProperty';
 import _Object$keys from 'babel-runtime/core-js/object/keys';
 import _Object$getPrototypeOf from 'babel-runtime/core-js/object/get-prototype-of';
@@ -9,6 +8,18 @@ import _inherits from 'babel-runtime/helpers/inherits';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { omit } from '../../utils/objectUtils';
+
+var getTotalFieldsCount = function getTotalFieldsCount(fieldChildren) {
+
+	var count = 0;
+	React.Children.map(fieldChildren, function (child, i) {
+		if (child) {
+			count += 1;
+		}
+	});
+
+	return count;
+};
 
 var FormFieldsGroupBase = function (_Component) {
 	_inherits(FormFieldsGroupBase, _Component);
@@ -22,52 +33,97 @@ var FormFieldsGroupBase = function (_Component) {
 			errored: false,
 			validate: props.validate,
 			validFields: {},
-			inValidFields: {}
+			inValidFields: {},
+			totalFieldsCount: props.totalFieldsCount ? nextProps.totalFieldsCount : getTotalFieldsCount(props.children)
 		};
+
+		_this.reseSetDoneFieldsCount();
+		_this.onValidationDone = _this.onValidationDone.bind(_this);
+		_this.getDoneFieldsCount = _this.getDoneFieldsCount.bind(_this);
+		_this.reseSetDoneFieldsCount = _this.reseSetDoneFieldsCount.bind(_this);
+		_this.addDoneFieldsCount = _this.addDoneFieldsCount.bind(_this);
+
 		return _this;
 	}
 
 	_createClass(FormFieldsGroupBase, [{
+		key: 'getDoneFieldsCount',
+		value: function getDoneFieldsCount() {
+			return this.doneFieldsCount;
+		}
+	}, {
+		key: 'reseSetDoneFieldsCount',
+		value: function reseSetDoneFieldsCount() {
+			this.doneFieldsCount = 0;
+		}
+	}, {
+		key: 'addDoneFieldsCount',
+		value: function addDoneFieldsCount() {
+			this.doneFieldsCount = this.doneFieldsCount + 1;
+		}
+	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+
+			if (nextProps.validate !== this.state.validate) {
+				this.setState({
+					validate: nextProps.validate,
+					totalFieldsCount: nextProps.totalFieldsCount ? nextProps.totalFieldsCount : getTotalFieldsCount(nextProps.children)
+				});
+			}
+		}
+	}, {
+		key: 'onValidationDone',
+		value: function onValidationDone() {
+
+			var numOfInvalidFields = _Object$keys(this.state.inValidFields).length;
+			var numOfValidFields = _Object$keys(this.state.validFields).length;
+			if (numOfInvalidFields > 0) {
+				this.props.onFailValidation && this.props.onFailValidation(this.state.inValidFields);
+			} else {
+				this.props.onPassValidation && this.props.onPassValidation(this.state.validatedFields);
+			}
+			this.reseSetDoneFieldsCount();
+		}
+	}, {
 		key: 'onPassValidationItem',
-		value: function onPassValidationItem(onPassValidationCallback) {
+		value: function onPassValidationItem(fieldId, fieldVal, el) {
 			var _this2 = this;
 
-			return function (fieldId, fieldVal, el) {
-				onPassValidationCallback && onPassValidationCallback(fieldId, fieldVal, el);
+			this.setState(function (state) {
+				state.validFields[fieldId] = fieldVal;
+				state.inValidFields = omit(state.inValidFields, fieldId);
+				state.validate = false;
+				state.errored = false;
+				return state;
+			}, function () {
 
-				if (_this2.state.validate) {
-					_this2.setState(function (state) {
-						state.validFields[fieldId] = fieldVal;
-						state.inValidFields = omit(state.inValidFields, fieldId);
-						state.validate = false;
-						state.errored = false;
-
-						return state;
-					}, function () {
-						_Object$keys(state.inValidFields).length == 0 && _this2.props.onPassValidation && _this2.props.onPassValidation(_this2.state.validatedFields);
-					});
+				_this2.addDoneFieldsCount();
+				console.log(_this2.getDoneFieldsCount());
+				if (_this2.getDoneFieldsCount() === _this2.state.totalFieldsCount) {
+					_this2.onValidationDone();
 				}
-			};
+			});
 		}
 	}, {
 		key: 'onFailValidationItem',
-		value: function onFailValidationItem(onFailValidationCallback) {
+		value: function onFailValidationItem(fieldId, rule, message, el) {
 			var _this3 = this;
 
-			return function (fieldId, rule, message, el) {
-				onFailValidationCallback && onFailValidationCallback(fieldId, rule, message, el);
-				if (_this3.state.validate) {
-					_this3.setState(function (state) {
-						state.inValidFields[fieldId] = _defineProperty({}, rule, message);
-						state.validFields = omit(state.validFields, fieldId);
-						state.validate = false;
-						state.errored = true;
-						return state;
-					}, function () {
-						_this3.props.onFailValidation && _this3.props.onFailValidation(_this3.state.inValidFields);
-					});
+			this.setState(function (state) {
+				state.inValidFields[fieldId] = _defineProperty({}, rule, message);
+				state.validFields = omit(state.validFields, fieldId);
+				state.validate = false;
+				state.errored = true;
+				return state;
+			}, function () {
+
+				_this3.addDoneFieldsCount();
+				console.log(_this3.getDoneFieldsCount());
+				if (_this3.getDoneFieldsCount() === _this3.state.totalFieldsCount) {
+					_this3.onValidationDone();
 				}
-			};
+			});
 		}
 	}, {
 		key: 'render',
@@ -83,11 +139,15 @@ var FormFieldsGroupBase = function (_Component) {
 				React.Children.map(this.props.children, function (child, i) {
 					return child ? React.cloneElement(child, {
 						key: i,
-						validation: _Object$assign({}, child.props.validation, {
-							validate: _this4.state.validate
-						}),
-						onPassValidation: _this4.onPassValidationItem(child.props.onPassValidation),
-						onFailValidation: _this4.onFailValidationItem(child.props.onFailValidation)
+						validate: _this4.state.validate,
+						onPassValidation: function onPassValidation(fieldId, fieldVal, el) {
+							child.props.onPassValidation && child.props.onPassValidation(fieldId, fieldVal, el);
+							_this4.state.validate && _this4.onPassValidationItem(fieldId, fieldVal, el);
+						},
+						onFailValidation: function onFailValidation(fieldId, rule, message, el) {
+							child.props.onFailValidation && child.props.onFailValidation(fieldId, rule, message, el);
+							_this4.state.validate && _this4.onFailValidationItem(fieldId, rule, message, el);
+						}
 					}) : null;
 				})
 			);
@@ -107,5 +167,6 @@ FormFieldsGroupBase.propTypes = {
 	onFailValidation: PropTypes.func,
 	onPassValidation: PropTypes.func,
 
+	totalFieldsCount: PropTypes.number,
 	children: PropTypes.oneOfType([PropTypes.shape({ name: PropTypes.oneOf(['FormFieldSetBase']) }), PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.oneOf(['FormFieldSetBase']) }))])
 };

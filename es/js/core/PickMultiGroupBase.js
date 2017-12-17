@@ -123,7 +123,7 @@ var PickMultiGroupBase = function (_React$Component2) {
 					onFailValidation: onFailValidation
 				};
 
-				validator.executeValidation(values, targetTag, validationObj);
+				validator.executeValidation(values, targetTag, validationObj, defaultType);
 			} else {
 				onPassValidation && onPassValidation(values, targetTag);
 			}

@@ -13,6 +13,7 @@ const getSelectedValue = function(options, value) {
 	var selected = value,
 		count = 0,
 		selectedOptName = value;
+
 	options.forEach((opt, index) => {
 		let val = opt,
 			name = opt;
@@ -44,6 +45,7 @@ class DropDown extends React.Component {
 			count,
 			searchStr: ''
 		};
+		
 		this.textidchange = this.textidchange.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.filterSuggestion = this.filterSuggestion.bind(this);
@@ -85,7 +87,7 @@ class DropDown extends React.Component {
 
 	validateOnSelect(value, props) {
 		let defaultCheckPropsRules = ['required'];
-		let defaultValidateRules = ['required'];
+		let defaultValidateRules = ['required','minLength','maxLength'];
 		let defaultType = 'onegroup';
 
 		const { validation, onPassValidation, onFailValidation } = props;
@@ -108,7 +110,7 @@ class DropDown extends React.Component {
 				onFailValidation: onFailValidation
 			};
 
-			validator.executeValidation(value, targetTag, validationObj);
+			validator.executeValidation(value, targetTag, validationObj, defaultType);
 		} else {
 			onPassValidation && onPassValidation(value, targetTag);
 		}

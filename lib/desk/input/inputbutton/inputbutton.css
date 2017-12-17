@@ -1,3 +1,5 @@
+@value _froly,_white,_mercury,_transparent_alpha from '../../common-css/variables/colors.css';
+
 .default{
 	
 }
@@ -20,13 +22,13 @@
     position: relative;
     bottom: 2px;
     left: 0;
-    background-color: rgb(255,255,255);
-    border: 1px solid rgb(229,229,229);
+    background-color: _white;
+    border: 1px solid _mercury;
 }
 
 .default_checkbox[type="checkbox"]:checked::before{
-	background: #f46e7b;
-    border: 1px solid #f46e7b 
+	background: _froly;
+    border: 1px solid _froly;
 }
 
 .default_checkbox[type="checkbox"]:checked::after{
@@ -34,10 +36,10 @@
     position: absolute;
     width: 8px;
     height: 4px;
-    background: rgba(0, 0, 0, 0);
+    background: _transparent_alpha;
     left: 0px;
     top:0px;
-    border: 2px solid rgb(255,255,255);
+    border: 2px solid _white;
     border-top: none;
     border-right: none;
     -webkit-transform: rotate(-50deg);

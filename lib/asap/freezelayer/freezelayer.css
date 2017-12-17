@@ -1,4 +1,5 @@
 @value _per_100 from "../common-css/variables/units.css";
+@value _red from '../common-css/variables/colors.css';
 
 .base {
 	position: fixed;
@@ -13,7 +14,7 @@
 }
 
 .default:focus {
-	border: 10px solid red;
+	border: 10px solid _red;
 }
 .myfreeze {
 	composes: base;
