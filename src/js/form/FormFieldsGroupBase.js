@@ -84,7 +84,6 @@ export default class FormFieldsGroupBase extends Component {
 			()=>{
 				
 				this.addDoneFieldsCount();
-				console.log( this.getDoneFieldsCount() );
 				if( this.getDoneFieldsCount() === this.state.totalFieldsCount ){
 					this.onValidationDone();
 				}
@@ -107,7 +106,6 @@ export default class FormFieldsGroupBase extends Component {
 			()=>{
 				
 				this.addDoneFieldsCount();
-				console.log( this.getDoneFieldsCount() );
 				if( this.getDoneFieldsCount() === this.state.totalFieldsCount ){
 					this.onValidationDone();
 				}

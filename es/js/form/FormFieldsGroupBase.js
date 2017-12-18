@@ -99,7 +99,6 @@ var FormFieldsGroupBase = function (_Component) {
 			}, function () {
 
 				_this2.addDoneFieldsCount();
-				console.log(_this2.getDoneFieldsCount());
 				if (_this2.getDoneFieldsCount() === _this2.state.totalFieldsCount) {
 					_this2.onValidationDone();
 				}
@@ -119,7 +118,6 @@ var FormFieldsGroupBase = function (_Component) {
 			}, function () {
 
 				_this3.addDoneFieldsCount();
-				console.log(_this3.getDoneFieldsCount());
 				if (_this3.getDoneFieldsCount() === _this3.state.totalFieldsCount) {
 					_this3.onValidationDone();
 				}

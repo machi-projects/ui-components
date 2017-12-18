@@ -1,7 +1,7 @@
 {
 	"name": "machi-ui-components",
 	"umdVar": "Library",
-	"version": "1.0.18",
+	"version": "1.0.19",
 	"description": "common ui components library for all",
 	"main": "lib/index",
 	"module": "es/index.js",
