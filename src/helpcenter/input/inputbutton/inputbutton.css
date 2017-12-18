@@ -1,0 +1,85 @@
+@value _froly,_white,_mercury,_transparent_alpha from '../../common-css/variables/colors.css';
+
+.default{
+	
+}
+
+.default_checkbox[type="checkbox"]
+{
+	position:relative;
+}
+
+.default_checkbox[type="checkbox"]::before{
+	content: "";
+    display: inline-block;
+    vertical-align: -25%;
+    height: 14px;
+    width: 14px;
+    margin-right: 10px;
+    transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    border-radius: 2px;
+    position: relative;
+    bottom: 2px;
+    left: 0;
+    background-color: _white;
+    border: 1px solid _mercury;
+}
+
+.default_checkbox[type="checkbox"]:checked::before{
+	background: _froly;
+    border: 1px solid _froly;
+}
+
+.default_checkbox[type="checkbox"]:checked::after{
+	content: '';
+    position: absolute;
+    width: 8px;
+    height: 4px;
+    background: _transparent_alpha;
+    left: 0px;
+    top:0px;
+    border: 2px solid _white;
+    border-top: none;
+    border-right: none;
+    -webkit-transform: rotate(-50deg);
+    -moz-transform: rotate(-50deg);
+    -o-transform: rotate(-50deg);
+    -ms-transform: rotate(-50deg);
+    transform: rotate(-50deg);
+    border-radius: 0;
+   margin-left: 3px;
+    margin-top: 2px;
+}
+
+.default.optional , .default:optional{
+
+}
+.default.required , .default:required{
+
+}
+
+.default.enabled , .default:enabled {
+
+}
+.default.disabled ,  .default:disabled {
+
+}
+
+.default.readOnly, .default:read-only {
+
+}
+.default.readwrite, .default:read-write {
+
+}
+
+.default.invalid , .default:invalid  {
+
+}
+.default.valid ,  .default.valid {
+
+}
+
+.default.raised{
+
+}

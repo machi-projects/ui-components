@@ -1,0 +1,23 @@
+
+.dis_block{
+	display: block;
+}
+
+.default {
+	display: block;
+    composes: bg_alabaster from '../common-css/colors/colors.css';
+    composes: clr_dustyGray from '../common-css/colors/colors.css';
+    font: 400 14px 'San Francisco Display Light';
+    padding: 10px 15px;
+}
+
+.default.valid {
+	display: none;
+}
+
+.default.errored {
+	display: block;
+}
+
+
+

@@ -1,0 +1,72 @@
+
+/*icon size*/
+.small {
+    width:13px;
+    height:13px
+}
+.large {
+    width:32px;
+    height:32px
+}
+.medium{
+    width:25px;
+    height:25px
+}
+.size11
+{
+    width:11px;
+    height:11px
+}
+.size14
+{
+    width:14px;
+    height:14px
+}
+.size15
+{
+    width:15px;
+    height:15px
+}
+.size18
+{
+    width:18px;
+    height:18px
+}
+.size36
+{
+    width:36px;
+    height:36px
+}
+.size20
+{
+    width:20px;
+    height:20px
+}
+.size22
+{
+    width:22px;
+    height:22px
+}
+.size42
+{
+    width:3rem;
+    height:3rem
+}
+.size55
+{
+    width:55px;
+    height:55px
+}
+.size70
+{
+    width:70px;
+    height:70px
+}
+.size100{
+    width:100px;
+    height:100px
+}
+.size130{
+    width:130px;
+    height:130px
+}

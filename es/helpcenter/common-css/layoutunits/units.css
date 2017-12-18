@@ -1,0 +1,29 @@
+@value _per_100, _per_80, _auto, _px_30 from "../variables/units.css";
+
+.dm_wh_80per{
+    width: _per_80;
+}
+
+.dm_wh_ht_100per{
+  width: _per_100;
+  height: _per_100;
+}
+
+.dm_wh_100per_ht_auto{
+  width: _per_100;
+  height: _auto;
+}
+
+
+
+/*
+
+  weight - wh
+  height - ht
+  dimension - dm
+
+    dimension - properties - numberPer
+    dimension - properties - numberPx
+
+    dimension - properties - numberPx
+*/

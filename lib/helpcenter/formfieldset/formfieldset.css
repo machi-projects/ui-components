@@ -1,0 +1,37 @@
+@value _red_1 from '../common-css/variables/colors.css';
+
+.default {
+	outline: none; 	
+	margin-bottom: 30px;	
+}
+
+.default:focus{
+	
+	outline: none;
+}
+
+
+.default .field_default{
+	
+	/* child item  */
+}
+
+
+
+/* .default .field_default::before, .default .field_default::after{
+	content: '';
+    height: 1px;
+    width: 0;
+    bottom: 0;
+    position: absolute;
+    background: _red_1;
+    transition: 0.2s ease all;
+}
+
+.default .field_default::before{
+	left: 50%;
+}
+
+.default .field_default::after{
+	right: 50%;
+} */

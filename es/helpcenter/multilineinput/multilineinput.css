@@ -1,0 +1,56 @@
+@value _alto,_jordyBlue,_red_1,_green from '../common-css/variables/colors.css';
+
+.default{
+	margin: 0;
+    display: block;
+    border: none;
+    border-bottom: solid 1px _alto;
+    -webkit-transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    background: -webkit-linear-gradient(top, _white_alpha 99%, _red_1 4%);
+    background: linear-gradient(to bottom, _white_alpha 99%, _red_1 4%);
+    background-position: -350px 0;
+    background-size: 350px 100%;
+    background-repeat: no-repeat;
+    composes: clr_tundora from '../common-css/colors/colors.css';
+    outline: none;
+    width: 97%;
+    font-size: 16px;
+    padding: 10px 5px;	
+   
+}
+
+.default:focus{
+	background-position: 0 0;
+	border-bottom: 1px solid  _red_1;
+	box-shadow: none;
+	outline:none;
+}
+
+.default.autoExpandY{
+	 box-sizing: padding-box;
+	 resize:none;
+	 max-height:250px;
+}
+
+.default.focused {
+  outline: 5px auto _jordyBlue;
+}
+
+.default.raised {
+  outline: 5px auto _green;
+}
+
+
+
+.myinput{
+
+}
+
+.myinput.focused {
+  outline: 5px auto _jordyBlue;
+}
+
+.myinput.raised {
+  outline: 5px auto _green;
+}
