@@ -1,0 +1,59 @@
+/* $Id */
+@value _alto,_gray,_red_1 from '../../common-css/variables/colors.css';
+
+.date
+{
+	border-bottom: 1px solid _alto ;
+	width:100%;
+	transition: border 0.2s linear 0s;
+	composes: _mineShaft from '../../common-css/colors/colors.css';
+    font-size: 16px;
+    min-height: 24px;
+    padding: 10px 5px 0 5px;
+}
+/* .date:hover
+{
+	border-bottom: 1px solid _gray ;
+} */
+
+.posrel
+{
+	position:relative;
+}
+
+.dateFocus
+{
+	border-bottom: 1px solid _red_1;
+	padding: 10px 5px 0 5px;
+	width:100%;
+	min-height:24px;
+	transition: border 0.2s linear 0s;
+	position:relative;
+	composes: _mineShaft from '../../common-css/colors/colors.css';
+	font-size: 16px;
+}
+.absolute
+{
+	position:absolute;
+	top:35px;
+	composes: max_level_8 from '../../common-css/zindexes/zindex.css';
+}
+.dateTop
+{
+	composes:absolute;
+	bottom: 100%;
+	top:auto;
+}
+
+.droppopup{
+	display:none;
+}
+
+.droppopup.opened{
+	display:block;
+	visibility:hidden;
+}
+
+.droppopup.ready{
+	visibility:visible;
+}

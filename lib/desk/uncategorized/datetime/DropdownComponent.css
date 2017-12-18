@@ -1,0 +1,159 @@
+/* $Id$ */
+@value _froly,_white,_athensGray,_froly_1,_silver_1,_mercury,_nobel,_cerulean from '../../common-css/variables/colors.css';
+
+.main{
+	position:relative;
+    cursor:pointer;;
+}
+.mainNot
+{
+    composes:main;
+    cursor:not-allowed;
+}
+.middleAlign
+{
+    display:inline-block;
+    vertical-align:middle
+}
+.dropdown{
+    padding:5px 0px;
+    border-bottom:1px solid _athensGray;
+    composes: clr_tundora from '../../common-css/colors/colors.css';
+}
+.dropdown:hover{
+	border-bottom:1px solid _froly;
+}
+.selectname{
+       overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
+    width:calc(100% - 18px);
+    composes:middleAlign;
+    font:14px "San Francisco Display Regular", sans-serif;
+}
+.listview{
+	width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    top: 29px;
+    left: 0px;
+    box-shadow: 0 0 3px _silver_1;
+    border: 1px solid _froly_1;
+    border-radius: 2px 2px 0px 0px;
+   	composes: bg_white from '../../common-css/colors/colors.css';
+   	composes: max_level_9 from '../../common-css/zindexes/zindex.css';
+}
+.listmenu{
+	padding:4px 0px;
+	max-height:200px;
+	overflow-y:auto;
+    margin:0px;
+}
+.topListView
+{
+    composes:listview;
+    bottom:100%;
+    top:auto;
+}
+.option{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
+	padding:4px 7px;
+	font:14px "San Francisco Display Regular",sans-serif;
+	composes: clr_black from '../../common-css/colors/colors.css';
+}
+.option:hover{
+	background: _froly;
+    color: _white;
+}
+.hide{
+	display:none;
+}
+.searchicon{
+    width:calc(100% - 18px);
+    padding:0px 8px;
+   border:none;
+    composes: bg_black from '../../common-css/colors/colors.css';
+    composes:middleAlign;
+    box-sizing:border-box;;
+}
+.searchIcon
+{
+    composes:middleAlign;
+}
+.searchinp{
+    padding:5px 0px;
+    border-bottom:1px solid _mercury;
+}
+.searchinp span i
+{
+    font-weight:700;
+}
+.bccolor{
+	composes: bg_froly from '../../common-css/colors/colors.css';
+	composes:option;
+	composes: clr_white from '../../common-css/colors/colors.css';
+}
+.normal{
+	composes: bg_white from '../../common-css/colors/colors.css';
+	composes:option;
+}
+.flexline{
+	display: block;
+    composes: clr_tundora from '../../common-css/colors/colors.css';
+    position: relative;
+    left: -4px;
+}
+.notfound
+{
+    composes: bg_wildSand from '../../common-css/colors/colors.css';
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-wrap:normal;
+    padding:4px 7px;
+    font:14px "San Francisco Display Regular",sans-serif;
+    composes: clr_black from '../../common-css/colors/colors.css';
+    cursor:default;
+}
+.dropStyle
+{
+    border:1px solid _cerulean;
+    padding:5px 3px;
+    composes: clr_cerulean from '../../common-css/colors/colors.css';
+    border-radius:2px;
+}
+.dropSelectName
+{
+    composes:middleAlign;
+    font:14px "San Francisco Display Regular", sans-serif;
+}
+.downArow:before
+{
+    content: "";
+    position: absolute;
+    right: -1px;
+    bottom: 7px;
+    width: 6px;
+    height: 6px;
+    border: 1px solid _nobel;
+    border-top-width: 0;
+    border-right-width: 0;
+    transform: rotate(-45deg);
+}
+.topArow:before
+{
+    content: "";
+    position: absolute;
+    right: -1px;
+    bottom: 4px;
+    width: 6px;
+    height: 6px;
+    border: 1px solid _nobel;
+    border-top-width: 0;
+    border-right-width: 0;
+    transform: rotate(135deg);
+}

@@ -1,0 +1,20 @@
+/* $Id$ */
+.timeStr
+{
+	composes: clr_dustyGray from '../../common-css/colors/colors.css';
+	margin:0px 0px 0px 10px;
+	width:40px;
+	display:inline-block;
+    font:14px/18px 'ProximaNovaRegular',sans-serif;
+}
+.drop
+{
+	width:30px;
+	display:inline-block;
+}
+.dropdown
+{
+	width:40px;
+	display:inline-block;
+	margin:0px 5px;
+}
