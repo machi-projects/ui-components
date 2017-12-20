@@ -35,7 +35,10 @@ export var PickItem = function (_Component) {
 }(Component);
 
 PickItem.propTypes = {
-  pickId: PropTypes.string.isRequired
+  pickId: PropTypes.string.isRequired,
+  tabIndex: PropTypes.string,
+  focusIn: PropTypes.func,
+  focusOut: PropTypes.func
 };
 
 var PickMultiGroup = function (_Component2) {
@@ -102,10 +105,16 @@ PickMultiGroup.propTypes = {
   required: PropTypes.bool,
   hidden: PropTypes.bool,
 
+  fireEvent: PropTypes.string,
   itemsControls: PropTypes.bool,
   selectedItems: PropTypes.arrayOf(PropTypes.string),
   onSelect: PropTypes.func,
   pickOn: PropTypes.string,
+
+  tabIndex: PropTypes.string,
+  focusIn: PropTypes.func,
+  focusOut: PropTypes.func,
+  onClick: PropTypes.func,
 
   validation: PropTypes.shape({
     validate: PropTypes.bool,

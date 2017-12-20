@@ -14,6 +14,7 @@ import { Icon } from '../../index';
 import { formatValue } from '../common';
 
 import validator from '../../../utils/validator';
+import { equals } from '../../../utils/objectUtils';
 
 var getSelectedValue = function getSelectedValue(options, value) {
 	var selected = value,
@@ -66,6 +67,8 @@ var DropDown = function (_React$Component) {
 
 		_this.setRef = _this.setRef.bind(_this);
 		_this.setDropPopupRef = _this.setDropPopupRef.bind(_this);
+		_this.setPlaceHolderRef = _this.setPlaceHolderRef.bind(_this);
+
 		return _this;
 	}
 
@@ -80,12 +83,17 @@ var DropDown = function (_React$Component) {
 			this.dropPopupRef = el;
 		}
 	}, {
+		key: 'setPlaceHolderRef',
+		value: function setPlaceHolderRef(el) {
+			this.placeHolderRef = el;
+		}
+	}, {
 		key: 'textidchange',
 		value: function textidchange(id, opt, count, e) {
 			var _this2 = this;
 
 			this.setState({ selected: id, selectedOptName: opt, count: count }, function () {
-				_this2.props.onSelect && _this2.props.onSelect(_this2.state.selected, _this2.props.groupName, e);
+				_this2.props.onChange && _this2.props.onChange(_this2.state.selected, _this2.props.groupName, e);
 				if (_this2.props.validation && _this2.props.validation.validateOn) {
 					_this2.validateOnSelect(_this2.state.selected, _this2.props);
 				}
@@ -94,7 +102,9 @@ var DropDown = function (_React$Component) {
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextprops) {
-			if (nextprops.value && nextprops.value !== this.props.defaultValue || nextprops.options && nextprops.options !== this.props.defaultOptions) {
+
+			if (nextprops.value && nextprops.value !== this.props.value || nextprops.options && !equals(nextprops.options, this.props.options)) {
+
 				this.setState(getSelectedValue(formatValue(nextprops.options), nextprops.value));
 			}
 
@@ -117,7 +127,7 @@ var DropDown = function (_React$Component) {
 			var targetTag = this.elementRef;
 			if (validation != null) {
 				//validateOn won't work here ...
-				var newValidation = validator.combinePropsValidation(this.props, defaultType, 'onSelect', validation, defaultCheckPropsRules, defaultValidateRules);
+				var newValidation = validator.combinePropsValidation(this.props, defaultType, 'onChange', validation, defaultCheckPropsRules, defaultValidateRules);
 
 				var validationObj = {
 					validation: newValidation,
@@ -135,7 +145,7 @@ var DropDown = function (_React$Component) {
 		value: function keyPress(e) {
 			var keyCode = e.keyCode;
 			var _props = this.props,
-			    onSelect = _props.onSelect,
+			    onChange = _props.onChange,
 			    id = _props.id,
 			    togglePopup = _props.togglePopup;
 			var _state = this.state,
@@ -169,21 +179,21 @@ var DropDown = function (_React$Component) {
 						val = opt.id;
 					}
 					this.setState({ selected: val });
-					onSelect && onSelect(val, id, e);
+					onChange && onChange(val, id, e);
 					togglePopup && togglePopup(e);
 				}
 			}
 		}
 	}, {
 		key: 'togglePopup',
-		value: function togglePopup(e) {
+		value: function togglePopup(e, dropRef, placeHolderRef) {
 			var _this3 = this;
 
 			this.setState({ searchStr: '' });
 			var con = this.refs.suggestionContainer;
 			var elem = this.refs['suggestion_' + this.state.count];
 			elem && (con.scrollTop = elem.offsetTop - 33);
-			this.props.togglePopup(e, this.dropPopupRef);
+			this.props.togglePopup(e, dropRef, placeHolderRef);
 			requestAnimationFrame(function () {
 				_this3.refs.input && _this3.refs.input.focus();
 			});
@@ -215,7 +225,15 @@ var DropDown = function (_React$Component) {
 		}
 	}, {
 		key: 'componentDidUpdate',
-		value: function componentDidUpdate() {
+		value: function componentDidUpdate(prevProps) {
+			var _this4 = this;
+
+			if (this.props.fireEvent !== prevProps.fireEvent && this.props.fireEvent) {
+				requestAnimationFrame(function () {
+					_this4.elementRef && _this4.elementRef[_this4.props.fireEvent] && _this4.elementRef[_this4.props.fireEvent]();
+				});
+			}
+
 			var suggestionContainer = ReactDom.findDOMNode(this.refs.suggestionContainer);
 			var selSuggestion = ReactDom.findDOMNode(this.refs['suggestion_' + this.state.count]);
 			if (selSuggestion && suggestionContainer) {
@@ -233,23 +251,35 @@ var DropDown = function (_React$Component) {
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			var _this5 = this;
+
 			if (this.props.validation != null && this.props.validation.validate) {
 				this.validateOnSelect(this.state.selected, this.props);
+			}
+			if (this.props.fireEvent != null) {
+				requestAnimationFrame(function () {
+					_this5.elementRef && _this5.elementRef[_this5.props.fireEvent] && _this5.elementRef[_this5.props.fireEvent]();
+				});
 			}
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this4 = this;
+			var _this6 = this;
 
 			var _props2 = this.props,
+			    isPopupReady = _props2.isPopupReady,
 			    isPopupOpen = _props2.isPopupOpen,
 			    position = _props2.position,
 			    removeClose = _props2.removeClose,
 			    isError = _props2.isError,
 			    placeholder = _props2.placeholder,
 			    minimumResultsForSearch = _props2.minimumResultsForSearch,
-			    enableSeachOptionsCount = _props2.enableSeachOptionsCount;
+			    enableSeachOptionsCount = _props2.enableSeachOptionsCount,
+			    tabIndex = _props2.tabIndex,
+			    focusIn = _props2.focusIn,
+			    focusOut = _props2.focusOut,
+			    onClick = _props2.onClick;
 
 			var options = this.state.options;
 
@@ -259,10 +289,13 @@ var DropDown = function (_React$Component) {
 			var enableSearch = minimumResultsForSearch > 0 && options.length >= enableSeachOptionsCount;
 			return React.createElement(
 				'div',
-				{ className: style.main, ref: this.setRef },
+				{ className: style.main, ref: this.setRef, tabIndex: tabIndex, onFocus: focusIn, onBlur: focusOut, onClick: onClick },
 				React.createElement(
 					'div',
-					{ onClick: this.togglePopup },
+					{ onClick: function onClick(e) {
+							_this6.togglePopup(e, _this6.dropPopupRef, _this6.placeHolderRef);
+						},
+						ref: this.setPlaceHolderRef },
 					React.createElement(
 						'div',
 						{
@@ -277,7 +310,8 @@ var DropDown = function (_React$Component) {
 				),
 				React.createElement(
 					'div',
-					{ ref: this.setDropPopupRef, className: isPopupOpen ? position == 'top' ? style.listViewTop : style.listview : style.hide },
+					{ ref: this.setDropPopupRef,
+						className: style.droppopup + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'top' ? style.listViewTop : style.listview) },
 					enableSearch && React.createElement(
 						'div',
 						{ className: style.posRel },
@@ -311,8 +345,8 @@ var DropDown = function (_React$Component) {
 								{
 									key: index + 'opt',
 									ref: 'suggestion_' + index,
-									className: _this4.state.count == index ? style.bccolor : style.normal,
-									onClick: _this4.textidchange.bind(_this4, val, name, index)
+									className: _this6.state.count == index ? style.bccolor : style.normal,
+									onClick: _this6.textidchange.bind(_this6, val, name, index)
 								},
 								name
 							);
@@ -341,11 +375,20 @@ DropDown.propTypes = {
 	position: PropTypes.string,
 	removeClose: PropTypes.func,
 	isError: PropTypes.bool,
-	onSelect: PropTypes.func,
+	onChange: PropTypes.func,
 	groupName: PropTypes.string,
 	defaultValue: PropTypes.string,
 	value: PropTypes.string,
 	togglePopup: PropTypes.func,
+
+	fireEvent: PropTypes.string,
+	tabIndex: PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut: PropTypes.func,
+	onClick: PropTypes.func,
+
+	raised: PropTypes.bool,
+	focused: PropTypes.bool,
 
 	minimumResultsForSearch: PropTypes.number,
 	enableSeachOptionsCount: PropTypes.number,

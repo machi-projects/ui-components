@@ -20,7 +20,10 @@ export class CheckBoxItem extends Component {
 }
 
 CheckBoxItem.propTypes = {
-	value: PropTypes.string.isRequired
+	value: PropTypes.string.isRequired,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func
 };
 
 export default class CheckBoxGroup extends Component {
@@ -106,6 +109,12 @@ CheckBoxGroup.propTypes = {
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
 
+	fireEvent : PropTypes.string,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,
 		validateOn : PropTypes.string,

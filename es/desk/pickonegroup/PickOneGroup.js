@@ -35,7 +35,10 @@ export var PickOneItem = function (_Component) {
 }(Component);
 
 PickOneItem.propTypes = {
-  pickId: PropTypes.string.isRequired
+  pickId: PropTypes.string.isRequired,
+  tabIndex: PropTypes.string,
+  focusIn: PropTypes.func,
+  focusOut: PropTypes.func
 };
 
 var PickOneGroup = function (_Component2) {
@@ -106,6 +109,12 @@ PickOneGroup.propTypes = {
   selectedItem: PropTypes.string,
   onSelect: PropTypes.func,
   pickOn: PropTypes.string,
+
+  fireEvent: PropTypes.string,
+  tabIndex: PropTypes.string,
+  focusIn: PropTypes.func,
+  focusOut: PropTypes.func,
+  onClick: PropTypes.func,
 
   validation: PropTypes.shape({
     validate: PropTypes.bool,

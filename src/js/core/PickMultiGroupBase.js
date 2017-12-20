@@ -27,7 +27,7 @@ export class PickItemBase extends React.Component {
 				};
 
 		return itemPid
-			? <div className={itemStyles} {...events} tabIndex={this.props.tabIndex}>
+			? <div className={itemStyles} {...events} tabIndex={this.props.tabIndex} onFocus={this.props.focusIn} onBlur={this.props.focusOut}>
 					{this.props.children}
 				</div>
 			: null;
@@ -36,7 +36,9 @@ export class PickItemBase extends React.Component {
 
 PickItemBase.propTypes = {
 	pickId: PropTypes.string.isRequired,
-	tabIndex: PropTypes.string
+	tabIndex: PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func
 };
 
 export default class PickMultiGroupBase extends React.Component {
@@ -69,9 +71,24 @@ export default class PickMultiGroupBase extends React.Component {
 		}
 	}
 
+	componentDidUpdate(prevProps, prevState)
+	{
+		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
+			requestAnimationFrame(()=>{				
+				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			})
+		}
+	}
+	
 	componentDidMount() {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selectedItems, this.props);
+		}
+		
+		if(this.props.fireEvent!=null){
+			requestAnimationFrame(()=>{			
+				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			});
 		}
 	}
 
@@ -154,8 +171,12 @@ export default class PickMultiGroupBase extends React.Component {
 	}
 
 	render() {
+
 		return (
-			<div className={this.props.styles.group}  ref={this.setRef}  tabIndex={this.props.tabIndex}>
+			<div className={this.props.styles.group}  ref={this.setRef}  tabIndex={this.props.tabIndex} 
+				onFocus={this.props.focusIn}
+				onBlur={this.props.focusOut}
+				onClick={this.props.onClick} >
 				{this.renderChildren()}
 			</div>
 		);
@@ -176,12 +197,18 @@ PickMultiGroupBase.propTypes = {
 	}),
 	required: PropTypes.bool,
 
-	tabIndex: PropTypes.string,
+	
 	itemsControls: PropTypes.bool,
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
 	pickOn: PropTypes.string,
 
+	fireEvent : PropTypes.string,
+	tabIndex: PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,
 		validateOn: PropTypes.string,

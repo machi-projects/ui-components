@@ -73,6 +73,7 @@ export default class FormFieldSet extends Component {
 								{...childComponent.props}	
 								disabled={disabled}								
 								errored={errored}
+								focused={focused}
 							>
 								{childComponent}
 							</FormFieldLabelBase>
@@ -94,6 +95,7 @@ export default class FormFieldSet extends Component {
 								{...childComponent.props}	
 								disabled={disabled}								
 								errored={errored}
+								focused={focused}
 							>
 								{childComponent}
 							</FormFieldMsgBase>
@@ -115,11 +117,14 @@ FormFieldSet.propTypes = {
 
 	fieldSetErrorStyle: PropTypes.string,
 
+	tabIndex : PropTypes.string,
 	fieldId: PropTypes.string.isRequired,
 	value: PropTypes.any,
 
+	fireFocusIn :  PropTypes.bool,
 	hideMessageOnValid: PropTypes.bool,
-	focusFieldOnError: PropTypes.bool,
+	focusFieldOnChange : PropTypes.bool,
+	raiseLabelOnChange : PropTypes.bool,
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,

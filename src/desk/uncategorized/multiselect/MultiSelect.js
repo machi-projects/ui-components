@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import style from './MultiSelect.css';
 import { formatValue, bind } from '../common';
 
+import {  equals } from '../../../utils/objectUtils';
 import validator from '../../../utils/validator';
 import Popup from '../Popup';
 import Pill from '../Pill';
@@ -22,6 +23,7 @@ class MultiSelect extends React.Component {
 			'handleRemove',
 			'handleHover',
 			'handleToggle',
+			'handleToggleClick',
 			'handleKeyDown',
 			'onSelectedItem'
 		]);
@@ -35,6 +37,7 @@ class MultiSelect extends React.Component {
 
 		this.setRef = this.setRef.bind(this);
 		this.setDropPopupRef = this.setDropPopupRef.bind(this);
+		this.setPlaceHolderRef = this.setPlaceHolderRef.bind(this);
 	}
 
 	setRef(el) {
@@ -45,15 +48,19 @@ class MultiSelect extends React.Component {
 		this.dropPopupRef = el;
 	}
 	
+	setPlaceHolderRef(el) {
+		this.placeHolderRef = el;
+	}
+
 	componentWillReceiveProps(nextprops) {
-		if (
-			(nextprops.selectedValues && nextprops.selectedValues !== this.props.defaultSelectedValues) ||
-			(nextprops.suggestions && nextprops.suggestions !== this.props.defaultSuggestions)
-		) {
+		if ( (nextprops.selectedValues &&  !equals(nextprops.selectedValues !== this.props.selectedValues) ) || 
+				(nextprops.suggestions && !equals(nextprops.suggestions , this.props.suggestions) )) {
+			
 			this.setState({
 				suggestions: formatValue(nextprops.suggestions),
 				selectedValues: formatValue(nextprops.selectedValues)
 			});
+			
 		}
 		
 		if (nextprops.validation != null && nextprops.validation.validate) {
@@ -74,7 +81,7 @@ class MultiSelect extends React.Component {
 			let newValidation = validator.combinePropsValidation(
 				this.props,
 				defaultType,
-				'onSelect',
+				'onChange',
 				validation,
 				defaultCheckPropsRules,
 				defaultValidateRules
@@ -92,9 +99,24 @@ class MultiSelect extends React.Component {
 		}
 	}
 
+	componentDidUpdate(prevProps, prevState)
+	{
+		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
+			requestAnimationFrame(()=>{
+				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			});
+		}
+	}
+	
 	componentDidMount() {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selectedValues, this.props);
+		}
+		
+		if(this.props.fireEvent!=null){
+			requestAnimationFrame(()=>{
+				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			})
 		}
 	}
 
@@ -106,12 +128,12 @@ class MultiSelect extends React.Component {
 		}
 	}
 
-	handleToggle(e) {
+	handleToggle(e,dropRef,placeHolderRef) {
 		e.stopPropagation && e.stopPropagation();
 		e.nativeEvent && e.nativeEvent.stopImmediatePropagation && e.nativeEvent.stopImmediatePropagation();
 		let { isPopupOpen, togglePopup } = this.props;
 		ReactDOM.findDOMNode(this.refs.nameInput).focus();
-		!isPopupOpen && togglePopup(e, this.dropPopupRef);
+		!isPopupOpen && togglePopup(e, dropRef, placeHolderRef);
 	}
 
 	handleSelect(selectedValue, e) {
@@ -128,7 +150,7 @@ class MultiSelect extends React.Component {
 
 	onSelectedItem() {
 		
-		this.props.onSelect && this.props.onSelect(this.state.selectedValues, this.props.groupName);
+		this.props.onChange && this.props.onChange(this.state.selectedValues, this.props.groupName);
 		if (this.props.validation && this.props.validation.validateOn) {
 			this.validateOnSelect(this.state.selectedValues, this.props);
 		}
@@ -293,6 +315,11 @@ class MultiSelect extends React.Component {
 		this.state.focusedSuggestion !== focusedSuggestion && this.setState({ focusedSuggestion });
 	}
 
+	handleToggleClick(ev){
+
+		this.handleToggle(ev,this.dropPopupRef,this.placeHolderRef)
+	}
+	
 	render() {
 		let { searchString, focusedSuggestion, inputFocus } = this.state;
 
@@ -304,11 +331,19 @@ class MultiSelect extends React.Component {
 			valueField,
 			styles = {},
 			isReadOnly,
+			isPopupReady,
 			isPopupOpen,
+			position,
 			togglePopup,
 			removeClose,
 			placeholder,
-			allowClear
+			allowClear,
+			
+			tabIndex,
+			focusIn,
+			focusOut,
+			onClick
+			
 		} = this.props;
 
 		let stateSuggestions = this.state.suggestions;
@@ -347,7 +382,7 @@ class MultiSelect extends React.Component {
 						valueField={valueField}
 						onHover={this.handleHover}
 						value={suggestion}
-						onSelect={this.handleSelect}
+						onChange={this.handleSelect}
 						focus={focus}
 					/>
 				);
@@ -357,8 +392,9 @@ class MultiSelect extends React.Component {
 		}
 
 		return (
-			<div className={style.mainrel} ref={this.setRef}>
-				<div className={isPopupOpen ? style.mainFlexWrap : style.mainBorder} onClick={!isReadOnly && this.handleToggle}>
+			<div className={style.mainrel} ref={this.setRef}  tabIndex={tabIndex} onFocus={focusIn} onBlur={focusOut} onClick={onClick} >
+				<div ref={this.setPlaceHolderRef} className={isPopupOpen ? style.mainFlexWrap : style.mainBorder} 
+						onClick={!isReadOnly && this.handleToggleClick }>
 					{selectedValues}
 					<span className={style.inputAdjust}>
 						<input
@@ -374,7 +410,12 @@ class MultiSelect extends React.Component {
 					</span>
 					<div className={style.clr} />
 				</div>
-				<div ref={this.setDropPopupRef} className={isPopupOpen ? style.ListAds : style.hide} onClick={removeClose}>
+				<div ref={this.setDropPopupRef}  onClick={removeClose}
+				className={
+						style.droppopup+' '+ ( isPopupReady ? style.ready : '' ) +' '+ 
+						( isPopupOpen ? style.opened : '')  +' '+
+						(position == 'top' ? style.ListAdsTop : style.ListAds)
+				}>
 					{suggestionList}
 				</div>
 				<div className={style.clr} />
@@ -406,9 +447,15 @@ MultiSelect.propTypes = {
 	isPopupOpen: PropTypes.bool,
 	togglePopup: PropTypes.func,
 	removeClose: PropTypes.func,
-	onSelect: PropTypes.func,
+	onChange: PropTypes.func,
 	closePopupOnly: PropTypes.func,
 
+	fireEvent : PropTypes.string,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
@@ -434,8 +481,8 @@ class SuggestionItem extends React.Component {
 	}
 
 	handleSelect(e) {
-		let { onSelect, value } = this.props;
-		onSelect && onSelect(value, e);
+		let { onChange, value } = this.props;
+		onChange && onChange(value, e);
 	}
 
 	render() {
@@ -454,7 +501,7 @@ SuggestionItem.propTypes = {
 	value: PropTypes.object,
 	textField: PropTypes.string,
 	onHover: PropTypes.func,
-	onSelect: PropTypes.func
+	onChange: PropTypes.func
 };
 
 class SelectedItem extends React.Component {

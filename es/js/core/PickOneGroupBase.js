@@ -42,7 +42,7 @@ export var PickOneItemBase = function (_React$Component) {
 
 			return itemPid ? React.createElement(
 				'div',
-				_extends({ className: itemStyles }, events, { tabIndex: this.props.tabIndex }),
+				_extends({ className: itemStyles }, events, { tabIndex: this.props.tabIndex, onFocus: this.props.focusIn, onBlur: this.props.focusOut }),
 				this.props.children
 			) : null;
 		}
@@ -53,7 +53,9 @@ export var PickOneItemBase = function (_React$Component) {
 
 PickOneItemBase.propTypes = {
 	pickId: PropTypes.string.isRequired,
-	tabIndex: PropTypes.string
+	tabIndex: PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut: PropTypes.func
 };
 
 var PickOneGroupBase = function (_React$Component2) {
@@ -92,6 +94,17 @@ var PickOneGroupBase = function (_React$Component2) {
 			}
 		}
 	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate(prevProps, prevState) {
+			var _this4 = this;
+
+			if (this.props.fireEvent !== prevProps.fireEvent && this.props.fireEvent) {
+				requestAnimationFrame(function () {
+					_this4.elementRef && _this4.elementRef[_this4.props.fireEvent] && _this4.elementRef[_this4.props.fireEvent]();
+				});
+			}
+		}
+	}, {
 		key: 'validateOnSelect',
 		value: function validateOnSelect(value, props) {
 			var defaultCheckPropsRules = ['required'];
@@ -122,8 +135,16 @@ var PickOneGroupBase = function (_React$Component2) {
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			var _this5 = this;
+
 			if (this.props.validation != null && this.props.validation.validate) {
 				this.validateOnSelect(this.state.selectedItem, this.props);
+			}
+
+			if (this.props.fireEvent != null) {
+				requestAnimationFrame(function () {
+					_this5.elementRef && _this5.elementRef[_this5.props.fireEvent] && _this5.elementRef[_this5.props.fireEvent]();
+				});
 			}
 		}
 	}, {
@@ -140,17 +161,17 @@ var PickOneGroupBase = function (_React$Component2) {
 	}, {
 		key: 'renderChildren',
 		value: function renderChildren() {
-			var _this4 = this;
+			var _this6 = this;
 
 			return React.Children.map(this.props.children, function (child, i) {
 				return React.cloneElement(child, {
 					key: i,
-					selectedItem: _this4.state.selectedItem,
-					onSelectItem: _this4.onSelectItem,
-					selectedItemStyle: _this4.props.styles.active,
-					normalItemStyle: _this4.props.styles.item,
-					itemsControls: _this4.props.itemsControls,
-					pickOn: _this4.props.pickOn
+					selectedItem: _this6.state.selectedItem,
+					onSelectItem: _this6.onSelectItem,
+					selectedItemStyle: _this6.props.styles.active,
+					normalItemStyle: _this6.props.styles.item,
+					itemsControls: _this6.props.itemsControls,
+					pickOn: _this6.props.pickOn
 				});
 			});
 		}
@@ -159,7 +180,10 @@ var PickOneGroupBase = function (_React$Component2) {
 		value: function render() {
 			return React.createElement(
 				'div',
-				{ className: this.props.styles.group, ref: this.setRef, tabIndex: this.props.tabIndex },
+				{ className: this.props.styles.group, ref: this.setRef, tabIndex: this.props.tabIndex,
+					onFocus: this.props.focusIn,
+					onBlur: this.props.focusOut,
+					onClick: this.props.onClick },
 				this.renderChildren()
 			);
 		}
@@ -185,7 +209,12 @@ PickOneGroupBase.propTypes = {
 	}),
 	required: PropTypes.bool,
 
+	fireEvent: PropTypes.string,
 	tabIndex: PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut: PropTypes.func,
+	onClick: PropTypes.func,
+
 	itemsControls: PropTypes.bool,
 	selectedItem: PropTypes.string,
 	onSelect: PropTypes.func,

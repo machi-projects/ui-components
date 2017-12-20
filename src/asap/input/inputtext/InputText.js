@@ -19,7 +19,11 @@ export default class InputText extends Component {
 			focused,
 			errored,
 			valid,
-			raised
+			raised,
+			
+			focusIn,
+			focusOut
+			
 		} = this.props;
 
 		let newProps = omit(this.props, [
@@ -28,7 +32,10 @@ export default class InputText extends Component {
 			'focused',
 			'errored',
 			'valid',
-			'raised'
+			'raised',
+			
+			'focusIn',
+			'focusOut'
 		]);
 
 		let classNames = cx(styles, {
@@ -46,8 +53,7 @@ export default class InputText extends Component {
 		});
 
 		//let onPassValidation = validation.validate ?  errored =  true
-
-		return <InputTextBoxBase {...newProps} className={classNames} />;
+		return <InputTextBoxBase {...newProps} onFocus={focusIn} onBlur={focusOut} className={classNames} />;
 	}
 }
 InputText.defaultProps = {
@@ -76,8 +82,9 @@ InputText.propTypes = {
 	value: PropTypes.string,
 	hidden: PropTypes.bool,
 
-	onFocus: PropTypes.func,
-	onBlur: PropTypes.func,
+	fireEvent :  PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut : PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onKeyUp: PropTypes.func,
 	onChange: PropTypes.func,

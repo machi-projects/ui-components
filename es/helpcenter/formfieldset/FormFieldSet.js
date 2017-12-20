@@ -78,7 +78,8 @@ var FormFieldSet = function (_Component2) {
 							FormFieldLabelBase,
 							_extends({}, childComponent.props, {
 								disabled: disabled,
-								errored: errored
+								errored: errored,
+								focused: focused
 							}),
 							childComponent
 						);
@@ -95,7 +96,8 @@ var FormFieldSet = function (_Component2) {
 							FormFieldMsgBase,
 							_extends({}, childComponent.props, {
 								disabled: disabled,
-								errored: errored
+								errored: errored,
+								focused: focused
 							}),
 							childComponent
 						);
@@ -121,11 +123,14 @@ FormFieldSet.propTypes = {
 
 	fieldSetErrorStyle: PropTypes.string,
 
+	tabIndex: PropTypes.string,
 	fieldId: PropTypes.string.isRequired,
 	value: PropTypes.any,
 
+	fireFocusIn: PropTypes.bool,
 	hideMessageOnValid: PropTypes.bool,
-	focusFieldOnError: PropTypes.bool,
+	focusFieldOnChange: PropTypes.bool,
+	raiseLabelOnChange: PropTypes.bool,
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,

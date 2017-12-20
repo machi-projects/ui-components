@@ -8,6 +8,7 @@ import { Icon } from '../../index';
 import { formatValue } from '../common';
 
 import validator from '../../../utils/validator';
+import {  equals } from '../../../utils/objectUtils';
 
 const getSelectedValue = function(options, value) {
 	var selected = value,
@@ -53,6 +54,8 @@ class DropDown extends React.Component {
 
 		this.setRef = this.setRef.bind(this);
 		this.setDropPopupRef = this.setDropPopupRef.bind(this);
+		this.setPlaceHolderRef = this.setPlaceHolderRef.bind(this);
+		
 	}
 
 	setRef(el) {
@@ -63,9 +66,13 @@ class DropDown extends React.Component {
 		this.dropPopupRef = el;
 	}
 	
+	setPlaceHolderRef(el) {
+		this.placeHolderRef = el;
+	}
+
 	textidchange(id, opt, count, e) {
 		this.setState({ selected: id, selectedOptName: opt, count: count }, () => {
-			this.props.onSelect && this.props.onSelect(this.state.selected, this.props.groupName, e);
+			this.props.onChange && this.props.onChange(this.state.selected, this.props.groupName, e);
 			if (this.props.validation && this.props.validation.validateOn) {
 				this.validateOnSelect(this.state.selected, this.props);
 			}
@@ -73,10 +80,9 @@ class DropDown extends React.Component {
 	}
 
 	componentWillReceiveProps(nextprops) {
-		if (
-			(nextprops.value && nextprops.value !== this.props.defaultValue) ||
-			(nextprops.options && nextprops.options !== this.props.defaultOptions)
-		) {
+		
+		if ( (nextprops.value && nextprops.value !== this.props.value) || (nextprops.options && !equals(nextprops.options , this.props.options) )) {
+
 			this.setState(getSelectedValue(formatValue(nextprops.options), nextprops.value));
 		}
 
@@ -98,7 +104,7 @@ class DropDown extends React.Component {
 			let newValidation = validator.combinePropsValidation(
 				this.props,
 				defaultType,
-				'onSelect',
+				'onChange',
 				validation,
 				defaultCheckPropsRules,
 				defaultValidateRules
@@ -118,7 +124,7 @@ class DropDown extends React.Component {
 
 	keyPress(e) {
 		let keyCode = e.keyCode;
-		let { onSelect, id, togglePopup } = this.props;
+		let { onChange, id, togglePopup } = this.props;
 		let { count, searchStr } = this.state;
 		let options = this.filterSuggestion(this.state.options, searchStr);
 		if (options.length) {
@@ -147,17 +153,17 @@ class DropDown extends React.Component {
 					val = opt.id;
 				}
 				this.setState({ selected: val });
-				onSelect && onSelect(val, id, e);
+				onChange && onChange(val, id, e);
 				togglePopup && togglePopup(e);
 			}
 		}
 	}
-	togglePopup(e) {
+	togglePopup(e, dropRef , placeHolderRef ) {
 		this.setState({ searchStr: '' });
 		let con = this.refs.suggestionContainer;
 		let elem = this.refs['suggestion_' + this.state.count];
 		elem && ( con.scrollTop = elem.offsetTop - 33 )
-		this.props.togglePopup(e, this.dropPopupRef);
+		this.props.togglePopup(e, dropRef , placeHolderRef);
 		requestAnimationFrame(() => {
 			this.refs.input && this.refs.input.focus();
 		});
@@ -182,7 +188,14 @@ class DropDown extends React.Component {
 		return suggestions;
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
+		
+		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
+			requestAnimationFrame(()=>{
+				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			})
+		}
+		
 		var suggestionContainer = ReactDom.findDOMNode(this.refs.suggestionContainer);
 		var selSuggestion = ReactDom.findDOMNode(this.refs['suggestion_' + this.state.count]);
 		if (selSuggestion && suggestionContainer) {
@@ -196,23 +209,36 @@ class DropDown extends React.Component {
 				suggestionContainer.scrollTop = selSuggestion.offsetTop - 30;
 			}
 		}
+		
 	}
 
 	componentDidMount() {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selected, this.props);
 		}
+		if(this.props.fireEvent!=null){
+			requestAnimationFrame(()=>{
+				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			});
+		}
 	}
 
 	render() {
 		let {
+			isPopupReady,
 			isPopupOpen,
 			position,
 			removeClose,
 			isError,
 			placeholder,
 			minimumResultsForSearch,
-			enableSeachOptionsCount
+			enableSeachOptionsCount,
+			
+			tabIndex,
+			focusIn,
+			focusOut,
+			onClick
+			
 		} = this.props;
 		let options = this.state.options;
 
@@ -221,8 +247,9 @@ class DropDown extends React.Component {
 
 		let enableSearch = minimumResultsForSearch > 0 && options.length >= enableSeachOptionsCount;
 		return (
-			<div className={style.main} ref={this.setRef}>
-				<div onClick={this.togglePopup}>
+			<div className={style.main} ref={this.setRef} tabIndex={tabIndex} onFocus={focusIn} onBlur={focusOut} onClick={onClick} >
+				<div onClick={(e)=>{ this.togglePopup(e , this.dropPopupRef , this.placeHolderRef ) }} 
+				ref={this.setPlaceHolderRef}>
 					<div
 						className={
 							isError ? style.isError + ' ' + style.dropdown + ' ' + arrowopen : style.dropdown + ' ' + arrowopen
@@ -233,7 +260,14 @@ class DropDown extends React.Component {
 						</span>
 					</div>
 				</div>
-				<div ref={this.setDropPopupRef} className={isPopupOpen ? (position == 'top' ? style.listViewTop : style.listview) : style.hide}>
+				<div ref={this.setDropPopupRef} 
+				className={
+						style.droppopup+' '+ ( isPopupReady ? style.ready : '' ) +' '+ 
+						( isPopupOpen ? style.opened : '')  +' '+
+						(position == 'top' ? style.listViewTop : style.listview) 
+				} >
+				
+				
 					{enableSearch &&
 						<div className={style.posRel}>
 							<input
@@ -292,12 +326,21 @@ DropDown.propTypes = {
 	position: PropTypes.string,
 	removeClose: PropTypes.func,
 	isError: PropTypes.bool,
-	onSelect: PropTypes.func,
+	onChange: PropTypes.func,
 	groupName: PropTypes.string,
 	defaultValue: PropTypes.string,
 	value: PropTypes.string,
 	togglePopup: PropTypes.func,
 
+	fireEvent : PropTypes.string,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
+	raised : PropTypes.bool,
+	focused : PropTypes.bool,
+	
 	minimumResultsForSearch: PropTypes.number,
 	enableSeachOptionsCount: PropTypes.number,
 

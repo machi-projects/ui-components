@@ -43,6 +43,15 @@ export default class MultiLineInputBase extends React.Component {
 
 	}
 
+	componentDidUpdate(prevProps, prevState)
+	{
+		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
+			requestAnimationFrame(()=>{
+				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			})
+		}
+	}
+	
 	componentDidMount(){
 
 	    let textareaTag = this.elementRef;
@@ -50,6 +59,12 @@ export default class MultiLineInputBase extends React.Component {
 			 this.validateInputBox(null, textareaTag , null ,extract( this.props , ["validation","onPassValidation","onFailValidation"] ) );
 		}
 
+		if(this.props.fireEvent!=null){
+			requestAnimationFrame(()=>{
+				textareaTag && textareaTag[this.props.fireEvent] && textareaTag[this.props.fireEvent]();
+			})
+		}
+		
 		requestAnimationFrame(()=>{
 			if(this.props.autoExpandX || this.props.autoExpandY ){
 				this.setState({
@@ -122,7 +137,7 @@ export default class MultiLineInputBase extends React.Component {
 
 		let validationObj = extract( this.props , ["validation","onPassValidation","onFailValidation"] );
 		let { validation } = validationObj || {};
-		let newProps = omit( this.props, ["autoExpandX","autoExpandY","validation","onPassValidation","onFailValidation"] );
+		let newProps = omit( this.props, ["fireEvent","autoExpandX","autoExpandY","validation","onPassValidation","onFailValidation"] );
 
 		let onChangeEventFunc = newProps.onChange;
 		newProps.onChange = (ev)=>{
@@ -157,6 +172,8 @@ MultiLineInputBase.propTypes = {
 	rows :  PropTypes.oneOfType( [PropTypes.string,PropTypes.number] ),
 	cols :  PropTypes.oneOfType( [PropTypes.string,PropTypes.number] ),
 
+	fireEvent : PropTypes.string,
+	tabIndex : PropTypes.string,
 	autoExpandY : PropTypes.bool ,
 	autoExpandX : PropTypes.bool ,
 	

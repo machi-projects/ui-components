@@ -38,7 +38,10 @@ export var CheckBoxItem = function (_Component) {
 }(Component);
 
 CheckBoxItem.propTypes = {
-	value: PropTypes.string.isRequired
+	value: PropTypes.string.isRequired,
+	tabIndex: PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut: PropTypes.func
 };
 
 var CheckBoxGroup = function (_Component2) {
@@ -113,6 +116,12 @@ CheckBoxGroup.propTypes = {
 	groupName: PropTypes.string,
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
+
+	fireEvent: PropTypes.string,
+	tabIndex: PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut: PropTypes.func,
+	onClick: PropTypes.func,
 
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

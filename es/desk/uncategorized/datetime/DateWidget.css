@@ -4,7 +4,6 @@
 .date
 {
 	border-bottom: 1px solid _alto ;
-	width:100%;
 	transition: border 0.2s linear 0s;
 	composes: _mineShaft from '../../common-css/colors/colors.css';
     font-size: 16px;

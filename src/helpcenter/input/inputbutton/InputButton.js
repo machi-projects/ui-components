@@ -21,11 +21,14 @@ export default class InputButton extends Component {
       focused,
       errored,
       valid,
-      raised
+      raised,
+      
+      focusIn,
+      focusOut
 
     } = this.props;
 
-    let newProps = omit(this.props, [ "className" , "styleId" , "focused" , "errored" ,"valid" , "raised" ]);
+    let newProps = omit(this.props, [ "className" , "styleId" , "focused" , "errored" ,"valid" , "raised" , "focusIn" , "focusOut" ]);
 
     let classNames = cx(styles,{
 
@@ -45,7 +48,7 @@ export default class InputButton extends Component {
 
     //let onPassValidation = validation.validate ?  errored =  true
 
-    return ( <InputButtonBoxBase {...newProps} className={ classNames }  />);
+    return ( <InputButtonBoxBase {...newProps} onFocus={focusIn} onBlur={focusOut} className={ classNames }  />);
 
 
   }
@@ -72,8 +75,10 @@ InputButton.propTypes = {
   value : PropTypes.string ,
   hidden : PropTypes.bool ,
 
-  onFocus: PropTypes.func,
-  onBlur : PropTypes.func,
+  fireEvent :  PropTypes.string,
+  focusIn: PropTypes.func,
+  focusOut : PropTypes.func,
+
   onKeyDown : PropTypes.func,
   onKeyUp : PropTypes.func,
   onChange : PropTypes.func,

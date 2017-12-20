@@ -36,16 +36,17 @@ var InputText = function (_Component) {
 			    focused = _props.focused,
 			    errored = _props.errored,
 			    valid = _props.valid,
-			    raised = _props.raised;
+			    raised = _props.raised,
+			    focusIn = _props.focusIn,
+			    focusOut = _props.focusOut;
 
 
-			var newProps = omit(this.props, ['className', 'styleId', 'focused', 'errored', 'valid', 'raised']);
+			var newProps = omit(this.props, ['className', 'styleId', 'focused', 'errored', 'valid', 'raised', 'focusIn', 'focusOut']);
 
 			var classNames = cx(styles, (_cx = {}, _defineProperty(_cx, styleId, true), _defineProperty(_cx, 'required', required), _defineProperty(_cx, 'disabled', disabled), _defineProperty(_cx, 'readOnly', readOnly), _defineProperty(_cx, 'hidden', hidden), _defineProperty(_cx, 'focused', focused), _defineProperty(_cx, 'errored', errored), _defineProperty(_cx, 'valid', valid), _defineProperty(_cx, 'raised', raised), _cx));
 
 			//let onPassValidation = validation.validate ?  errored =  true
-
-			return React.createElement(InputTextBoxBase, _extends({}, newProps, { className: classNames }));
+			return React.createElement(InputTextBoxBase, _extends({}, newProps, { onFocus: focusIn, onBlur: focusOut, className: classNames }));
 		}
 	}]);
 
@@ -80,8 +81,9 @@ InputText.propTypes = {
 	value: PropTypes.string,
 	hidden: PropTypes.bool,
 
-	onFocus: PropTypes.func,
-	onBlur: PropTypes.func,
+	fireEvent: PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut: PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onKeyUp: PropTypes.func,
 	onChange: PropTypes.func,

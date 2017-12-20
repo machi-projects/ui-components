@@ -12,6 +12,7 @@ export class RadioBoxItemBase extends React.Component {
 
 RadioBoxItemBase.propTypes = {
 	value: PropTypes.string.isRequired,
+	tabIndex : PropTypes.string,
 	styles: {
 		inputStyle: PropTypes.string,
 		labelStyle: PropTypes.string
@@ -50,7 +51,14 @@ export default class RadioBoxGroupBase extends React.Component {
 			groupName,
 			validation,
 			onPassValidation,
-			onFailValidation
+			onFailValidation,
+			
+			fireEvent,
+			tabIndex,
+			focusIn,
+			focusOut,
+			onClick
+			
 		} = this.props;
 
 		let uniqueName = this.state.uniqueName;
@@ -67,7 +75,12 @@ export default class RadioBoxGroupBase extends React.Component {
 				{...allStyles}
 				selectedItem={selectedItem}
 				onSelect={this.onSelectedItem}
-				tabIndex="-1"
+				
+				fireEvent={fireEvent}
+				tabIndex={tabIndex}
+				focusIn={focusIn}
+				focusOut={focusOut}
+				onClick={onClick}
 			>
 				{React.Children.map(this.props.children, (child, i) => {
 					let checked = stateSelectedItem == child.props.value;
@@ -75,7 +88,7 @@ export default class RadioBoxGroupBase extends React.Component {
 					//controlled RadioBoxItemBase..
 					let childStyles = child.props.styles || {};
 					return (
-						<PickOneItemBase key={i} pickId={child.props.value}>
+						<PickOneItemBase key={i} pickId={child.props.value} tabIndex={child.props.tabIndex}>
 							<InputButtonBoxBase
 								type="radio"
 								name={uniqueName}
@@ -105,13 +118,19 @@ RadioBoxGroupBase.propTypes = {
 		item: PropTypes.string,
 		active: PropTypes.string
 	}),
-
+	
 	required: PropTypes.bool,
-
+	
 	groupName: PropTypes.string,
 	selectedItem: PropTypes.string,
 	onSelect: PropTypes.func,
 
+	fireEvent : PropTypes.string,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,
 		validateOn: PropTypes.string,

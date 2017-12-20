@@ -27,10 +27,22 @@ var DateWidget = function (_React$Component) {
 		_this.handleSelect = _this.handleSelect.bind(_this);
 		_this.state = { selected: props.value, timeZone: props.timeZone || moment.tz.guess() };
 		_this.setDropPopupRef = _this.setDropPopupRef.bind(_this);
+		_this.setRef = _this.setRef.bind(_this);
+		_this.setPlaceHolderRef = _this.setPlaceHolderRef.bind(_this);
 		return _this;
 	}
 
 	_createClass(DateWidget, [{
+		key: 'setRef',
+		value: function setRef(el) {
+			this.elementRef = el;
+		}
+	}, {
+		key: 'setPlaceHolderRef',
+		value: function setPlaceHolderRef(el) {
+			this.placeHolderRef = el;
+		}
+	}, {
 		key: 'setDropPopupRef',
 		value: function setDropPopupRef(el) {
 			this.dropPopupRef = el;
@@ -57,7 +69,11 @@ var DateWidget = function (_React$Component) {
 			    dtPtn = _props.dtPtn,
 			    position = _props.position,
 			    timeZone = _props.timeZone,
-			    arrowPosition = _props.arrowPosition;
+			    arrowPosition = _props.arrowPosition,
+			    tabIndex = _props.tabIndex,
+			    focusIn = _props.focusIn,
+			    focusOut = _props.focusOut,
+			    onClick = _props.onClick;
 
 			var value = this.state.selected;
 			value = value ? moment.tz(value, this.state.timeZone) : null;
@@ -65,16 +81,17 @@ var DateWidget = function (_React$Component) {
 
 			return React.createElement(
 				'div',
-				{ className: style.posrel },
+				{ className: style.posrel, ref: this.setRef, tabIndex: tabIndex, onFocus: focusIn, onBlur: focusOut, onClick: onClick },
 				React.createElement(
 					'div',
 					{
 						className: isPopupOpen ? style.dateFocus : style.date,
 						'data-testid': 'remindMeOnDueDate',
 						onClick: function onClick(e) {
-							togglePopup(e, _this2.dropPopupRef);
+							togglePopup(e, _this2.dropPopupRef, _this2.placeHolderRef);
 						},
-						'data-testId': name
+						'data-testId': name,
+						ref: this.setPlaceHolderRef
 					},
 					React.createElement(
 						'span',
@@ -115,14 +132,14 @@ var DateWidget = function (_React$Component) {
 
 			var _props2 = this.props,
 			    id = _props2.id,
-			    onSelect = _props2.onSelect,
+			    onChange = _props2.onChange,
 			    togglePopup = _props2.togglePopup;
 
 			this.setState({ selected: userZoneSelectedTime }, function () {
 				if (_this3.props.validation && _this3.props.validation.validateOn) {
 					_this3.validateOnSelect(_this3.state.selected, _this3.props);
 				}
-				onSelect && onSelect(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
+				onChange && onChange(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
 			});
 
 			togglePopup(e);
@@ -142,7 +159,7 @@ var DateWidget = function (_React$Component) {
 			var targetTag = this.elementRef;
 			if (validation != null) {
 				//validateOn won't work here ...
-				var newValidation = validator.combinePropsValidation(this.props, defaultType, 'onSelect', validation, defaultCheckPropsRules, defaultValidateRules);
+				var newValidation = validator.combinePropsValidation(this.props, defaultType, 'onChange', validation, defaultCheckPropsRules, defaultValidateRules);
 
 				var validationObj = {
 					validation: newValidation,
@@ -156,10 +173,28 @@ var DateWidget = function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate(prevProps, prevState) {
+			var _this4 = this;
+
+			if (this.props.fireEvent !== prevProps.fireEvent && this.props.fireEvent) {
+				requestAnimationFrame(function () {
+					_this4.elementRef && _this4.elementRef[_this4.props.fireEvent] && _this4.elementRef[_this4.props.fireEvent]();
+				});
+			}
+		}
+	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			var _this5 = this;
+
 			if (this.props.validation != null && this.props.validation.validate) {
 				this.validateOnSelect(this.state.selected, this.props);
+			}
+			if (this.props.fireEvent != null) {
+				requestAnimationFrame(function () {
+					_this5.elementRef && _this5.elementRef[_this5.props.fireEvent] && _this5.elementRef[_this5.props.fireEvent]();
+				});
 			}
 		}
 	}]);
@@ -177,10 +212,10 @@ DateWidget.propTypes = (_DateWidget$propTypes = {
 	value: PropTypes.string,
 	dateTimeSelect: PropTypes.func,
 	togglePopup: PropTypes.func,
-	onSelect: PropTypes.func,
+	onChange: PropTypes.func,
 	removeClose: PropTypes.func,
 	name: PropTypes.string
-}, _defineProperty(_DateWidget$propTypes, 'isReadOnly', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'minErrorText', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'maxErrorText', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'min', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'max', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'isPopupOpen', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'isDateTime', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'dtPtn', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'position', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'timeZone', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'arrowPosition', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'placeholder', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'validation', PropTypes.shape({
+}, _defineProperty(_DateWidget$propTypes, 'isReadOnly', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'minErrorText', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'maxErrorText', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'min', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'max', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'isPopupOpen', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'isDateTime', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'dtPtn', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'position', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'timeZone', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'arrowPosition', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'placeholder', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'fireEvent', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'tabIndex', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'focusIn', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'focusOut', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'onClick', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'validation', PropTypes.shape({
 	validate: PropTypes.bool,
 	validateOn: PropTypes.string,
 	rulesOrder: PropTypes.arrayOf(PropTypes.string),

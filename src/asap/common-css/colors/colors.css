@@ -1,4 +1,4 @@
-@value _cerulean,_red,_red_1,_azureRadiance,_gallery,_wildSand,_wildSand_1,_mineShaft,_alabaster,_froly,_white,_black,_dustyGray,_tundora,_blue, _green, _transparent, _black_alpha_half, _grey_shade, _grey_shade2 from "../variables/colors.css";
+@value _cerulean, _emperor, _red,_red_1,_azureRadiance,_gallery,_wildSand,_wildSand_1,_mineShaft,_alabaster,_froly,_white,_black,_dustyGray,_tundora,_blue, _green, _transparent, _black_alpha_half, _grey_shade, _grey_shade2 from "../variables/colors.css";
 
 .clr_red {
 	color: _blue;
@@ -6,6 +6,10 @@
 
 .clr_green {
 	color: _green;
+}
+
+.clr_emperor{
+	color:_emperor;
 }
 
 .clr_greyshade{

@@ -1,6 +1,6 @@
 /* $Id$ */
 
-@value _mercury,_alto,_white,_tundora,_gallery_alpha_6,_pumice from '../../common-css/variables/colors.css';
+@value _mercury,_alto,_white,_tundora,_gallery_alpha_6,_pumice,_alto_1 from '../../common-css/variables/colors.css';
 
 .main{
 	width:100%;
@@ -10,7 +10,7 @@
 .dropdown{
 	width:100%;
     border-bottom:1px solid _alto;
-    border-radius:.2rem;
+    /* border-radius:.2rem; */
     font-size:0;
     min-height:31px;
     cursor: pointer;
@@ -137,4 +137,18 @@
 .isError
 {
     box-shadow:inset 0 0 0 2px #d9534f;
+}
+
+
+.droppopup{
+	display:none;
+}
+
+.droppopup.opened{
+	display:block;
+	visibility:hidden;
+}
+
+.droppopup.ready{
+	visibility:visible;
 }

@@ -90,6 +90,7 @@ const validator = {
 	composeRulesForValidation: (type, defaultValidateRules, newValidationRules) => {
 		let defaultPatterns = validator.regexs;
 		
+		
 		for (let i = 0, len = defaultValidateRules.length; i < len; i++) {
 			let rule = defaultValidateRules[i];
 			let ruleInfo = newValidationRules[rule] || '';

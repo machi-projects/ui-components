@@ -15,7 +15,10 @@ export  class PickOneItem extends Component {
 }
 
 PickOneItem.propTypes ={
-	pickId : PropTypes.string.isRequired
+	pickId : PropTypes.string.isRequired,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func
 }
 
 export default class PickOneGroup extends Component {
@@ -93,6 +96,12 @@ PickOneGroup.propTypes = {
    onSelect : PropTypes.func,
    pickOn : PropTypes.string,
 
+   fireEvent :  PropTypes.string,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
    validation : PropTypes.shape({
 		validate : PropTypes.bool ,
 		validateOn : PropTypes.string,

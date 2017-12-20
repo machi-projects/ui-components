@@ -18,7 +18,8 @@ export class RadioItem extends Component {
 }
 
 RadioItem.propTypes = {
-	value: PropTypes.string.isRequired
+	value: PropTypes.string.isRequired,
+	tabIndex : PropTypes.string
 };
 
 export default class RadioGroup extends Component {
@@ -107,6 +108,12 @@ RadioGroup.propTypes = {
 	onPassValidation: PropTypes.func,
 	onFailValidation: PropTypes.func,
 
+	fireEvent :  PropTypes.string,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
 	focused: PropTypes.bool,
 	errored: PropTypes.bool,
 	valid: PropTypes.bool,

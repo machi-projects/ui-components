@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { omit } from '../../utils/objectUtils';
+import { omit, equals } from '../../utils/objectUtils';
 
 export class FormFieldLabelBase extends Component {
 	render() {
@@ -15,7 +15,61 @@ export class FormFieldMsgBase extends Component {
 }
 
 export class FormFieldBase extends Component {
+	
+	constructor(props){
+		super(props);
+		this.onFocusInFieldItem = this.onFocusInFieldItem.bind(this);
+		this.onFocusOutFieldItem = this.onFocusOutFieldItem.bind(this);
+		
+		this.state = {  
+			fireEvent :  props.fireFieldFocusIn ? "focus" : null ,
+			fireFieldFocusIn  : props.fireFieldFocusIn  || false
+		}
+	}
+	
+	
+	componentWillReceiveProps(nextProps){
+
+		if( nextProps.fireFieldFocusIn !== this.state.fireFieldFocusIn){
+			
+			this.setState( { 
+				fireEvent : nextProps.fireFieldFocusIn ? "focus" : null, 
+				fireFieldFocusIn : nextProps.fireFieldFocusIn
+			} );
+		}
+	}
+	
+
+	onFocusInFieldItem(ev){
+				
+		this.props.onFocusFieldUpdate && this.props.onFocusFieldUpdate("up",null,()=>{
+			
+			this.setState( { 
+				
+				fireEvent : null ,
+				fireFieldFocusIn : false 
+				
+			})
+			
+		});
+	}
+	
+	onFocusOutFieldItem(ev){
+			
+		this.props.onFocusFieldUpdate && this.props.onFocusFieldUpdate("down",  ev.target.value ,()=>{
+			
+			this.setState({ 
+				
+				fireEvent : "blur" ,
+				fireFieldFocusIn : false 
+				
+			})
+			
+		});
+	}
+	
 	render() {
+		
 		let {
 			fieldStyle,
 			tabIndex,
@@ -27,21 +81,29 @@ export class FormFieldBase extends Component {
 			valid,
 			validation,
 			onPassValidation,
-			onFailValidation
+			onFailValidation,
+			
+			onFocusFieldUpdate
+			
 		} = this.props;
 		let FieldChild = React.Children.only(this.props.children);
 		let childOnPassValidation = FieldChild.props.onPassValidation;
 		let childOnFailValidation = FieldChild.props.onFailValidation;
-
+		
 		return (
 			<div className={fieldStyle} tabIndex={tabIndex}>
 				{React.cloneElement(FieldChild, {
+					ref : (el)=>{ this.fieldRef = el },
 					disabled: disabled,
 					readOnly: readOnly,
 					errored: errored,
 					focused: focused,
 					valid: valid,
+					fireEvent : this.state.fireFieldFocusIn ? this.state.fireEvent : this.state.fireEvent,
 					validation: validation,
+					focusIn :  this.onFocusInFieldItem,
+					focusOut : this.onFocusOutFieldItem,
+					tabIndex : FieldChild.props.tabIndex || "-1" ,			
 					onPassValidation: (a, b) => {
 						childOnPassValidation && childOnPassValidation(a, b);
 						onPassValidation && onPassValidation(a, b);
@@ -68,19 +130,31 @@ export default class FormFieldSetBase extends React.Component {
 		this.state = {
 			errored: false,
 			errMessage: null,
-			validate: ((props.validation && props.validation.validate) ? true : false)
+			validate: ((props.validation && props.validation.validate) ? true : false),
+			labelRaised : props.raiseLabelOnChange ? (props.value ? true : false) : false,
+			fieldFocused : false,
+			fireFocusIn : props.fireFocusIn || false
 		};
-
+		
 		//Bind the method to the component context
 		this.onPassValidationItem = this.onPassValidationItem.bind(this);
 		this.onFailValidationItem = this.onFailValidationItem.bind(this);
-		this.focusErrorFieldSet = this.focusErrorFieldSet.bind(this);
+		this.onFocusFieldUpdate = this.onFocusFieldUpdate.bind(this);
+		this.setFieldSetRef = this.setFieldSetRef.bind(this);
+	}
+	
+	setFieldSetRef(el){
+		this.fieldSetRef = el
 	}
 	
 	componentWillReceiveProps(nextProps){
-		
-		if( nextProps.validate !== this.props.validate  ){
-			this.setState({ validate : nextProps.validate });
+
+		if( (nextProps.value != this.props.value ) || ( nextProps.validate !== this.props.validate )  ){
+			
+			this.setState({ 
+				 validate : nextProps.validate,
+				 labelRaised : nextProps.raiseLabelOnChange ? (nextProps.value ? true : false) : false 
+			 })
 		}
 	}
 	
@@ -98,12 +172,22 @@ export default class FormFieldSetBase extends React.Component {
 		);
 	}
 
-	focusErrorFieldSet(el) {
-		el.focus && el.focus();
-		//React.findDOMNode(this).focus();
-		//requestAnimationFrame(()=>{ el.focus && el.focus() });  will be in on the same element id...
+	onFocusFieldUpdate(type , value, callback ){
+		
+		this.setState({
+			fieldFocused : (type == "up") , 
+			labelRaised : this.props.raiseLabelOnChange && ( (type == "up") ? true : (value && value.length > 0 ? true : false) ) 
+	    },()=>{
+	    		callback && callback();
+	    		/*if(this.props.fireFocusIn ){
+	    			requestAnimationFrame(()=>{
+	    				this.fieldSetRef && this.fieldSetRef.focus && this.fieldSetRef.focus();
+	    			})
+	    		}*/
+	    });
+		
 	}
-
+	
 	onFailValidationItem(rule, message, el) {
 		this.setState(
 			state => {
@@ -113,7 +197,6 @@ export default class FormFieldSetBase extends React.Component {
 				return state;
 			},
 			() => {
-				requestAnimationFrame(this.focusErrorFieldSet.bind(el));
 				this.props.onFailValidation && this.props.onFailValidation(this.props.fieldId, rule, this.state.errMessage, el);
 			}
 		);
@@ -123,33 +206,38 @@ export default class FormFieldSetBase extends React.Component {
 		let {
 			fieldSetStyle,
 
-			focusFieldOnError,
+			focusFieldOnChange,
 			hideMessageOnValid,
 
+			tabIndex,
 			fieldInfo,
 			validation,
 			onPassValidation,
 			onFailValidation
 		} = this.props;
-
 		
 		
 		return (
-			<div className={fieldSetStyle} tabIndex="-1">
+			<div className={fieldSetStyle} tabIndex={tabIndex} ref={this.setFieldSetRef}>
 				{React.Children.map(this.props.children, (childComponent, i) => {
 					if (childComponent.type.prototype === FormFieldLabelBase.prototype) {
 						let FieldLabelChild = React.Children.only(childComponent.props.children);
 						return React.cloneElement(
 							FieldLabelChild,
 							Object.assign(omit(childComponent.props, ['children']), {
-								errored: this.state.errored,
-								focused: this.state.errored && focusFieldOnError
+								errored : this.state.errored,
+								focused : this.state.fieldFocused,
+								raised : this.state.labelRaised
 							})
 						);
 					} else if (childComponent.type.prototype === FormFieldBase.prototype) {
 						return React.cloneElement(childComponent, {
 							errored: this.state.errored,
-							focused: this.state.errored && focusFieldOnError,
+							
+							focused: this.state.fieldFocused,
+							fireFieldFocusIn : this.props.fireFocusIn,
+							onFocusFieldUpdate : focusFieldOnChange ? this.onFocusFieldUpdate : null,
+									
 							valid: !this.state.errored,
 							validation: Object.assign({}, childComponent.props.validation, validation, {
 								validate: this.state.validate
@@ -164,7 +252,7 @@ export default class FormFieldSetBase extends React.Component {
 							FieldMsgChild,
 							Object.assign(omit(childComponent.props, ['children']), {
 								errored: this.state.errored,
-								focused: this.state.errored && focusFieldOnError,
+								focused: this.state.fieldFocused,
 								valid: !this.state.errored,
 								hidden: !this.state.errored && hideMessageOnValid
 							}),
@@ -182,11 +270,14 @@ export default class FormFieldSetBase extends React.Component {
 FormFieldSetBase.propTypes = {
 	fieldSetStyle: PropTypes.string,
 
+	tabIndex : PropTypes.string,
 	fieldId: PropTypes.string.isRequired,
 	value: PropTypes.any,
 
+	fireFocusIn :  PropTypes.bool,
 	hideMessageOnValid: PropTypes.bool,
-	focusFieldOnError: PropTypes.bool,
+	focusFieldOnChange : PropTypes.bool,
+	raiseLabelOnChange : PropTypes.bool,
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,

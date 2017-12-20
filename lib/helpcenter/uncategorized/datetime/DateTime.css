@@ -1,5 +1,5 @@
 /* $Id */
-@value _froly,_tundora,_white,_seashell,_transparent_alpha,_wildSand_1,_blackHaze,_silver,_deepCerulean from '../../common-css/variables/colors.css';
+@value _froly,_tundora,_white,_seashell,_transparent_alpha, _transparent_alpha_2,_wildSand_1,_blackHaze,_silver,_deepCerulean from '../../common-css/variables/colors.css';
 
 .timesection{
 	text-align: center;
@@ -12,7 +12,7 @@
 }
 .dateContainer {
 	composes: bg_white from '../../common-css/colors/colors.css';
-	box-shadow: 0px 2px 5px _transparent_alpha;
+	box-shadow: 0px 2px 5px _transparent_alpha_2;
 	width: 350px;
 }
 

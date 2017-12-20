@@ -26,7 +26,7 @@ export class PickOneItemBase extends React.Component {
 				};
 
 		return itemPid
-			? <div className={itemStyles} {...events} tabIndex={this.props.tabIndex}>
+			? <div className={itemStyles} {...events} tabIndex={this.props.tabIndex} onFocus={this.props.focusIn} onBlur={this.props.focusOut} >
 					{this.props.children}
 				</div>
 			: null;
@@ -35,7 +35,9 @@ export class PickOneItemBase extends React.Component {
 
 PickOneItemBase.propTypes = {
 	pickId: PropTypes.string.isRequired,
-	tabIndex: PropTypes.string
+	tabIndex: PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func
 };
 
 export default class PickOneGroupBase extends React.Component {
@@ -62,6 +64,16 @@ export default class PickOneGroupBase extends React.Component {
 
 		if ( nextProps.validation != null && nextProps.validation.validate ) {
 			this.validateOnSelect(this.state.selectedItem, nextProps);
+		}
+	}
+	
+
+	componentDidUpdate(prevProps, prevState)
+	{
+		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
+			requestAnimationFrame(()=>{
+				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			});
 		}
 	}
 
@@ -100,6 +112,13 @@ export default class PickOneGroupBase extends React.Component {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selectedItem, this.props);
 		}
+		
+		if(this.props.fireEvent!=null){
+			requestAnimationFrame(()=>{
+				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			})
+			
+		}
 	}
 
 	onSelectItem(newSelectedPid, ev) {
@@ -129,7 +148,10 @@ export default class PickOneGroupBase extends React.Component {
 
 	render() {
 		return (
-			<div className={this.props.styles.group} ref={this.setRef}  tabIndex={this.props.tabIndex}>
+			<div className={this.props.styles.group} ref={this.setRef}  tabIndex={this.props.tabIndex} 
+				onFocus={this.props.focusIn}
+				onBlur={this.props.focusOut}
+				onClick={this.props.onClick} >
 				{this.renderChildren()}
 			</div>
 		);
@@ -150,7 +172,12 @@ PickOneGroupBase.propTypes = {
 	}),
 	required: PropTypes.bool,
 
+	fireEvent :  PropTypes.string,
 	tabIndex: PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
 	itemsControls: PropTypes.bool,
 	selectedItem: PropTypes.string,
 	onSelect: PropTypes.func,

@@ -13,6 +13,16 @@ class DateWidget extends React.Component {
 		this.handleSelect = this.handleSelect.bind(this);
 		this.state = { selected: props.value, timeZone: props.timeZone || moment.tz.guess() };
 		this.setDropPopupRef = this.setDropPopupRef.bind(this);
+		this.setRef = this.setRef.bind(this);
+		this.setPlaceHolderRef = this.setPlaceHolderRef.bind(this);
+	}
+	
+	setRef(el) {
+		this.elementRef = el;
+	}
+	
+	setPlaceHolderRef(el) {
+		this.placeHolderRef = el;
 	}
 	
 	setDropPopupRef(el){
@@ -37,19 +47,26 @@ class DateWidget extends React.Component {
 			dtPtn,
 			position,
 			timeZone,
-			arrowPosition
+			arrowPosition,
+			
+			tabIndex,
+			focusIn,
+			focusOut,
+			onClick
+			
 		} = this.props;
 		let value = this.state.selected;
 		value = value ? moment.tz(value, this.state.timeZone) : null;
 		let displayText = value ? (!isDateTime ? value.format(dtPtn) : value.format(dtPtn + ' hh:mm A')) : '';
 		
 		return (
-			<div className={style.posrel} >
+			<div className={style.posrel} ref={this.setRef} tabIndex={tabIndex} onFocus={focusIn} onBlur={focusOut} onClick={onClick} >
 				<div
 					className={isPopupOpen ? style.dateFocus : style.date}
 					data-testid="remindMeOnDueDate"
-					onClick={(e)=>{ togglePopup(e,this.dropPopupRef) }}
+					onClick={(e)=>{ togglePopup(e,this.dropPopupRef,this.placeHolderRef) }}
 					data-testId={name}
+					ref={this.setPlaceHolderRef}
 				>
 					<span>
 						{value ? displayText : placeholder}
@@ -86,12 +103,12 @@ class DateWidget extends React.Component {
 	}
 
 	handleSelect(userZoneSelectedTime, e) {
-		let { id, onSelect, togglePopup } = this.props;
+		let { id, onChange, togglePopup } = this.props;
 		this.setState({ selected: userZoneSelectedTime }, () => {
 			if (this.props.validation && this.props.validation.validateOn) {
 				this.validateOnSelect(this.state.selected, this.props);
 			}
-			onSelect && onSelect(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
+			onChange && onChange(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
 		});
 
 		togglePopup(e);
@@ -110,7 +127,7 @@ class DateWidget extends React.Component {
 			let newValidation = validator.combinePropsValidation(
 				this.props,
 				defaultType,
-				'onSelect',
+				'onChange',
 				validation,
 				defaultCheckPropsRules,
 				defaultValidateRules
@@ -127,10 +144,25 @@ class DateWidget extends React.Component {
 			onPassValidation && onPassValidation(value, targetTag);
 		}
 	}
+	
+	componentDidUpdate(prevProps, prevState)
+	{
+		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
+			requestAnimationFrame(()=>{		
+				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			})
+			
+		}
+	}
 
 	componentDidMount() {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selected, this.props);
+		}
+		if(this.props.fireEvent!=null){
+			requestAnimationFrame(()=>{	
+				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			})
 		}
 	}
 }
@@ -145,7 +177,7 @@ DateWidget.propTypes = {
 	value: PropTypes.string,
 	dateTimeSelect: PropTypes.func,
 	togglePopup: PropTypes.func,
-	onSelect: PropTypes.func,
+	onChange: PropTypes.func,
 	removeClose: PropTypes.func,
 	name: PropTypes.string,
 	isReadOnly: PropTypes.bool,
@@ -161,6 +193,12 @@ DateWidget.propTypes = {
 	arrowPosition: PropTypes.string,
 	placeholder: PropTypes.string,
 
+	fireEvent : PropTypes.string,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,
 		validateOn: PropTypes.string,

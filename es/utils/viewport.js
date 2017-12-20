@@ -4,8 +4,22 @@ var viewPort = {
 		if (!el) return;
 
 		var rect = el.getBoundingClientRect();
-		customFrame = customFrame || document.documentElement;
-		var customFrameRect = customFrame.getBoundingClientRect();
+		//customFrame = customFrame || document.documentElement;
+
+		var customFrameRect = {
+			top: 0,
+			left: 0,
+			right: document.documentElement.clientWidth,
+			bottom: document.documentElement.clientHeight,
+			height: document.documentElement.clientHeight,
+			width: document.documentElement.clientWidth,
+			x: 0,
+			y: 0
+		};
+
+		if (customFrame) {
+			customFrameRect = customFrame.getBoundingClientRect();
+		}
 
 		var newReact = {
 			top: rect.top - customFrameRect.top,

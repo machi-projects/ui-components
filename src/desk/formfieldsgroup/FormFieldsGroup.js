@@ -57,6 +57,7 @@ FormFieldsGroup.defaultProps = {
 FormFieldsGroup.propTypes = {
 	formFieldsGroupStyle: PropTypes.string,
 
+	focusFieldOnError : PropTypes.bool,
 	validate: PropTypes.bool,
 	onFailValidation: PropTypes.func,
 	onPassValidation: PropTypes.func,

@@ -81,7 +81,7 @@ var Popup = function Popup(Component) {
 			}
 		}, {
 			key: 'togglePopup',
-			value: function togglePopup(e, dropElement) {
+			value: function togglePopup(e, dropElement, placeHoldeEl) {
 				var _this3 = this;
 
 				this.removeClose(e);
@@ -97,22 +97,32 @@ var Popup = function Popup(Component) {
 
 				this.setState({ isPopupOpen: !this.state.isPopupOpen, isPopupReady: false, position: 'bottom' }, function () {
 
-					if (!dropElement) {
+					if (!dropElement || !placeHoldeEl) {
 						return;
 					};
 
 					requestAnimationFrame(function () {
 
 						var frame = _this3.props.frameId ? document.getElementById(_this3.props.frameId) : null;
-						var viewReacts = viewPort.frameRelativeRects(dropElement, frame);
-						var elementRects = viewReacts.rect;
-						var frameRects = viewReacts.frameRect;
-						if (frameRects.height >= elementRects.bottom) {
+						var defaultPosition = _this3.props.defaultPosition || "bottomCenter";
+						var betterPosition = viewPort.betterView(dropElement, placeHoldeEl, defaultPosition, frame);
 
-							_this3.setState({ isPopupReady: true, position: 'bottom' });
-						} else {
+						//Auto predict views
+						if (betterPosition.view == "topCenter") {
 
 							_this3.setState({ isPopupReady: true, position: 'top' });
+						} else if (betterPosition.view == "bottomCenter") {
+
+							_this3.setState({ isPopupReady: true, position: 'bottom' });
+						} else if (betterPosition.view == "leftCenter") {
+
+							_this3.setState({ isPopupReady: true, position: 'left' });
+						} else if (betterPosition.view == "rightCenter") {
+
+							_this3.setState({ isPopupReady: true, position: 'right' });
+						} else {
+
+							_this3.setState({ isPopupReady: true, position: 'bottom' });
 						}
 					});
 				});
@@ -172,6 +182,7 @@ var Popup = function Popup(Component) {
 		}, {
 			key: 'render',
 			value: function render() {
+
 				return React.createElement(Component, _extends({
 					ref: this.setRef
 				}, this.props, this.state, {

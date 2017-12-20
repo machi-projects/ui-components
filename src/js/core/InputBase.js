@@ -42,15 +42,31 @@ export default class InputBase extends React.Component {
 		}
 	}
 
+	componentDidUpdate(prevProps, prevState)
+	{
+		if(this.props.fireEvent!==prevProps.fireEvent&& this.props.fireEvent){
+			requestAnimationFrame(()=>{
+				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
+			})
+		}
+	}
+	
 	componentDidMount() {
+		let inputTag = this.elementRef;
 		if (this.props.validation != null && this.props.validation.validate) {
-			let inputTag = this.elementRef;
+			
 			this.validateInputBox(
 				null,
 				inputTag,
 				null,
 				extract(this.props, ['validation', 'onPassValidation', 'onFailValidation'])
 			);
+		}
+		
+		if(this.props.fireEvent!=null){
+			requestAnimationFrame(()=>{
+				inputTag && inputTag[this.props.fireEvent] && inputTag[this.props.fireEvent]();
+			})
 		}
 	}
 
@@ -81,7 +97,7 @@ export default class InputBase extends React.Component {
 	render() {
 		let validationObj = extract(this.props, ['validation', 'onPassValidation', 'onFailValidation']);
 		let { validation } = validationObj || {};
-		let newProps = omit(this.props, ['validation', 'onPassValidation', 'onFailValidation']);
+		let newProps = omit(this.props, ['fireEvent','validation', 'onPassValidation', 'onFailValidation']);
 
 		let onChangeEventFunc = newProps.onChange;
 		newProps.onChange = ev => {
@@ -123,6 +139,8 @@ InputBase.propTypes = {
 	pattern: PropTypes.string,
 	value: PropTypes.string,
 
+	fireEvent: PropTypes.string,
+	tabIndex:PropTypes.string,
 	onFocus: PropTypes.func,
 	onBlur: PropTypes.func,
 	onKeyDown: PropTypes.func,

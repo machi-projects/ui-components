@@ -30,7 +30,8 @@ export var CheckBoxItemBase = function (_React$Component) {
 }(React.Component);
 
 CheckBoxItemBase.propTypes = {
-	value: PropTypes.string.isRequired
+	value: PropTypes.string.isRequired,
+	tabIndex: PropTypes.string
 };
 
 var CheckBoxGroupBase = function (_React$Component2) {
@@ -73,7 +74,12 @@ var CheckBoxGroupBase = function (_React$Component2) {
 			    groupName = _props.groupName,
 			    validation = _props.validation,
 			    onPassValidation = _props.onPassValidation,
-			    onFailValidation = _props.onFailValidation;
+			    onFailValidation = _props.onFailValidation,
+			    fireEvent = _props.fireEvent,
+			    tabIndex = _props.tabIndex,
+			    focusIn = _props.focusIn,
+			    focusOut = _props.focusOut,
+			    onClick = _props.onClick;
 
 
 			var uniqueName = this.state.uniqueName;
@@ -91,7 +97,12 @@ var CheckBoxGroupBase = function (_React$Component2) {
 				}, allStyles, {
 					selectedItems: selectedItems,
 					onSelect: this.onSelectedItem,
-					tabIndex: '-1'
+
+					fireEvent: fireEvent,
+					tabIndex: tabIndex,
+					focusIn: focusIn,
+					focusOut: focusOut,
+					onClick: onClick
 				}),
 				React.Children.map(this.props.children, function (child, i) {
 					var checked = stateSelectedItems.indexOf(child.props.value) !== -1;
@@ -101,7 +112,7 @@ var CheckBoxGroupBase = function (_React$Component2) {
 					var childStyles = child.props.styles || {};
 					return React.createElement(
 						PickItemBase,
-						{ key: i, pickId: child.props.value },
+						{ key: i, pickId: child.props.value, tabIndex: child.props.tabIndex },
 						React.createElement(InputButtonBoxBase, {
 							type: 'checkbox',
 							name: uniqueName,
@@ -141,6 +152,12 @@ CheckBoxGroupBase.propTypes = {
 	groupName: PropTypes.string,
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
+
+	fireEvent: PropTypes.string,
+	tabIndex: PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut: PropTypes.func,
+	onClick: PropTypes.func,
 
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

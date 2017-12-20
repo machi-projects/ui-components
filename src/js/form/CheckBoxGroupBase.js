@@ -11,7 +11,8 @@ export class CheckBoxItemBase extends React.Component {
 }
 
 CheckBoxItemBase.propTypes = {
-	value: PropTypes.string.isRequired
+	value: PropTypes.string.isRequired,
+	tabIndex : PropTypes.string
 };
 
 export default class CheckBoxGroupBase extends React.Component {
@@ -47,7 +48,14 @@ export default class CheckBoxGroupBase extends React.Component {
 			groupName,
 			validation,
 			onPassValidation,
-			onFailValidation
+			onFailValidation,
+			
+			fireEvent,
+			tabIndex,
+			focusIn,
+			focusOut,
+			onClick
+			
 		} = this.props;
 
 		let uniqueName = this.state.uniqueName;
@@ -64,7 +72,12 @@ export default class CheckBoxGroupBase extends React.Component {
 				{...allStyles}
 				selectedItems={selectedItems}
 				onSelect={this.onSelectedItem}
-				tabIndex="-1"
+				
+				fireEvent={fireEvent}
+				tabIndex={tabIndex}
+				focusIn={focusIn}
+				focusOut={focusOut}
+				onClick={onClick}
 			>
 				{React.Children.map(this.props.children, (child, i) => {
 					let checked = stateSelectedItems.indexOf(child.props.value) !== -1;
@@ -73,7 +86,7 @@ export default class CheckBoxGroupBase extends React.Component {
 
 					let childStyles = child.props.styles || {};
 					return (
-						<PickItemBase key={i} pickId={child.props.value}>
+						<PickItemBase key={i} pickId={child.props.value} 	tabIndex={child.props.tabIndex}>
 							<InputButtonBoxBase
 								type="checkbox"
 								name={uniqueName}
@@ -109,6 +122,12 @@ CheckBoxGroupBase.propTypes = {
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
 
+	fireEvent :  PropTypes.string,
+	tabIndex : PropTypes.string,
+	focusIn : PropTypes.func,
+	focusOut : PropTypes.func,
+	onClick : PropTypes.func,
+	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,
 		validateOn: PropTypes.string,

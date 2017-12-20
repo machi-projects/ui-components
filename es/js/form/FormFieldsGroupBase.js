@@ -7,7 +7,7 @@ import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructo
 import _inherits from 'babel-runtime/helpers/inherits';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { omit } from '../../utils/objectUtils';
+import { omit, equals } from '../../utils/objectUtils';
 
 var getTotalFieldsCount = function getTotalFieldsCount(fieldChildren) {
 
@@ -34,7 +34,8 @@ var FormFieldsGroupBase = function (_Component) {
 			validate: props.validate,
 			validFields: {},
 			inValidFields: {},
-			totalFieldsCount: props.totalFieldsCount ? nextProps.totalFieldsCount : getTotalFieldsCount(props.children)
+			totalFieldsCount: props.totalFieldsCount ? nextProps.totalFieldsCount : getTotalFieldsCount(props.children),
+			errorFocusFieldId: props.errorFieldId || null
 		};
 
 		_this.reseSetDoneFieldsCount();
@@ -64,7 +65,6 @@ var FormFieldsGroupBase = function (_Component) {
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-
 			if (nextProps.validate !== this.state.validate) {
 				this.setState({
 					validate: nextProps.validate,
@@ -76,13 +76,20 @@ var FormFieldsGroupBase = function (_Component) {
 		key: 'onValidationDone',
 		value: function onValidationDone() {
 
-			var numOfInvalidFields = _Object$keys(this.state.inValidFields).length;
-			var numOfValidFields = _Object$keys(this.state.validFields).length;
-			if (numOfInvalidFields > 0) {
+			var invalidFields = _Object$keys(this.state.inValidFields);
+			//let numOfValidFields =  Object.keys(this.state.validFields).length;
+			if (invalidFields.length > 0) {
+
+				console.log("invalidFields-->", invalidFields);
 				this.props.onFailValidation && this.props.onFailValidation(this.state.inValidFields);
+				if (this.props.focusFieldOnError) {
+					this.setState({ errorFocusFieldId: invalidFields[0] });
+				}
 			} else {
 				this.props.onPassValidation && this.props.onPassValidation(this.state.validatedFields);
+				this.setState({ errorFocusFieldId: null });
 			}
+
 			this.reseSetDoneFieldsCount();
 		}
 	}, {
@@ -124,6 +131,11 @@ var FormFieldsGroupBase = function (_Component) {
 			});
 		}
 	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return !equals(nextState, this.state);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var _this4 = this;
@@ -138,6 +150,8 @@ var FormFieldsGroupBase = function (_Component) {
 					return child ? React.cloneElement(child, {
 						key: i,
 						validate: _this4.state.validate,
+						tabIndex: "-1",
+						fireFocusIn: _this4.state.errorFocusFieldId == child.props.fieldId,
 						onPassValidation: function onPassValidation(fieldId, fieldVal, el) {
 							child.props.onPassValidation && child.props.onPassValidation(fieldId, fieldVal, el);
 							_this4.state.validate && _this4.onPassValidationItem(fieldId, fieldVal, el);
@@ -161,6 +175,7 @@ export default FormFieldsGroupBase;
 FormFieldsGroupBase.propTypes = {
 	formFieldsGroupStyle: PropTypes.string,
 
+	focusFieldOnError: PropTypes.bool,
 	validate: PropTypes.bool,
 	onFailValidation: PropTypes.func,
 	onPassValidation: PropTypes.func,

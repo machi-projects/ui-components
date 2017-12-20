@@ -38,7 +38,8 @@ export var RadioItem = function (_Component) {
 }(Component);
 
 RadioItem.propTypes = {
-	value: PropTypes.string.isRequired
+	value: PropTypes.string.isRequired,
+	tabIndex: PropTypes.string
 };
 
 var RadioGroup = function (_Component2) {
@@ -118,6 +119,12 @@ RadioGroup.propTypes = {
 
 	onPassValidation: PropTypes.func,
 	onFailValidation: PropTypes.func,
+
+	fireEvent: PropTypes.string,
+	tabIndex: PropTypes.string,
+	focusIn: PropTypes.func,
+	focusOut: PropTypes.func,
+	onClick: PropTypes.func,
 
 	focused: PropTypes.bool,
 	errored: PropTypes.bool,

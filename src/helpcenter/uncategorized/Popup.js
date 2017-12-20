@@ -31,7 +31,7 @@ var Popup = function(Component, group = 'global') {
 		setRef(el){
 			this.elementRef = el;
 		}
-		
+
 		componentDidMount() {
 			let groupPopups = popups[group] || [];
 			groupPopups.push(this);
@@ -60,7 +60,7 @@ var Popup = function(Component, group = 'global') {
 			}
 		}
 
-		togglePopup(e,dropElement) {
+		togglePopup(e,dropElement,placeHoldeEl) {
 			this.removeClose(e);
 			let groupPopups = popups[group];
 			groupPopups.forEach(popup => {
@@ -76,23 +76,35 @@ var Popup = function(Component, group = 'global') {
 			
 			this.setState({ isPopupOpen: !this.state.isPopupOpen , isPopupReady : false , position: 'bottom' },()=>{
 				
-				if( !dropElement ){ return; };
+				if( !dropElement || !placeHoldeEl ){ return; };
 				
 				requestAnimationFrame(()=>{
-
+					
 					var  frame = this.props.frameId ? document.getElementById(this.props.frameId) : null;
-					let viewReacts = viewPort.frameRelativeRects( dropElement ,  frame);
-					let elementRects = viewReacts.rect;
-					let frameRects = viewReacts.frameRect;		
-					if( frameRects.height >= elementRects.bottom ) {
-						
-						this.setState({ isPopupReady : true  , position: 'bottom' });
-					}
-					else{
+					let defaultPosition = this.props.defaultPosition || "bottomCenter";
+					let betterPosition = viewPort.betterView( dropElement , placeHoldeEl , defaultPosition ,  frame);
+					
+					//Auto predict views
+					if( betterPosition.view == "topCenter" ) {
 						
 						this.setState({ isPopupReady : true , position: 'top'  });
 					}
-					
+					else if( betterPosition.view == "bottomCenter" ){
+						
+						this.setState({ isPopupReady : true  , position: 'bottom' });
+					}
+					else if( betterPosition.view == "leftCenter" ) {
+						
+						this.setState({ isPopupReady : true , position: 'left'  });
+					}
+					else if( betterPosition.view == "rightCenter" ){
+						
+						this.setState({ isPopupReady : true  , position: 'right' });
+					}
+					else{
+						
+						this.setState({ isPopupReady : true , position: 'bottom'  });
+					}
 				})
 				
 			});
@@ -150,6 +162,7 @@ var Popup = function(Component, group = 'global') {
 		}
 
 		render() {
+			
 			return (
 				<Component
 					ref={this.setRef}

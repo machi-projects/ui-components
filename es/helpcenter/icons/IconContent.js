@@ -2,7 +2,7 @@ import React from 'react';
 export default function IconContent() {
 	return React.createElement(
 		'div',
-		{ id: 'zohohc-asap-common-icons', hidden: true, style: { display: 'none' } },
+		{ id: 'zoho-helpcenter-common-icons', hidden: true, style: { display: 'none' } },
 		React.createElement(
 			'svg',
 			null,

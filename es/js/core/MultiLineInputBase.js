@@ -54,18 +54,35 @@ var MultiLineInputBase = function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate(prevProps, prevState) {
+			var _this2 = this;
+
+			if (this.props.fireEvent !== prevProps.fireEvent && this.props.fireEvent) {
+				requestAnimationFrame(function () {
+					_this2.elementRef && _this2.elementRef[_this2.props.fireEvent] && _this2.elementRef[_this2.props.fireEvent]();
+				});
+			}
+		}
+	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var _this2 = this;
+			var _this3 = this;
 
 			var textareaTag = this.elementRef;
 			if (this.props.validation != null && this.props.validation.validate) {
 				this.validateInputBox(null, textareaTag, null, extract(this.props, ["validation", "onPassValidation", "onFailValidation"]));
 			}
 
+			if (this.props.fireEvent != null) {
+				requestAnimationFrame(function () {
+					textareaTag && textareaTag[_this3.props.fireEvent] && textareaTag[_this3.props.fireEvent]();
+				});
+			}
+
 			requestAnimationFrame(function () {
-				if (_this2.props.autoExpandX || _this2.props.autoExpandY) {
-					_this2.setState({
+				if (_this3.props.autoExpandX || _this3.props.autoExpandY) {
+					_this3.setState({
 						minHeight: textareaTag.clientHeight,
 						minWidth: textareaTag.clientWidth,
 						xAutoExpand: textareaTag.clientWidth == textareaTag.scrollWidth,
@@ -96,12 +113,12 @@ var MultiLineInputBase = function (_React$Component) {
 	}, {
 		key: 'autoExpand',
 		value: function autoExpand(el) {
-			var _this3 = this;
+			var _this4 = this;
 
 			if (this.props.autoExpandY && this.state.yAutoExpand) {
 				requestAnimationFrame(function () {
 
-					if (_this3.state.minHeight < el.scrollHeight) {
+					if (_this4.state.minHeight < el.scrollHeight) {
 						el.style.height = "auto";
 						el.style.height = el.scrollHeight + 'px';
 					}
@@ -110,7 +127,7 @@ var MultiLineInputBase = function (_React$Component) {
 
 			if (this.props.autoExpandX && this.state.xAutoExpand) {
 				requestAnimationFrame(function () {
-					if (_this3.state.minWidth < el.scrollWidth) {
+					if (_this4.state.minWidth < el.scrollWidth) {
 						el.style.scrollWidth = "auto";
 						el.style.width = el.scrollWidth + 'px';
 					}
@@ -133,25 +150,25 @@ var MultiLineInputBase = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this4 = this;
+			var _this5 = this;
 
 			var validationObj = extract(this.props, ["validation", "onPassValidation", "onFailValidation"]);
 
 			var _ref = validationObj || {},
 			    validation = _ref.validation;
 
-			var newProps = omit(this.props, ["autoExpandX", "autoExpandY", "validation", "onPassValidation", "onFailValidation"]);
+			var newProps = omit(this.props, ["fireEvent", "autoExpandX", "autoExpandY", "validation", "onPassValidation", "onFailValidation"]);
 
 			var onChangeEventFunc = newProps.onChange;
 			newProps.onChange = function (ev) {
-				_this4.onChangeText(ev, onChangeEventFunc);
+				_this5.onChangeText(ev, onChangeEventFunc);
 			};
 
 			if (validation.validateOn) {
 
 				var tempFunc = newProps[validation.validateOn];
 				newProps[validation.validateOn] = function (ev) {
-					_this4.validateInputBox(ev, ev.target, tempFunc, validationObj);
+					_this5.validateInputBox(ev, ev.target, tempFunc, validationObj);
 				};
 			}
 
@@ -176,6 +193,8 @@ MultiLineInputBase.propTypes = {
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	cols: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
+	fireEvent: PropTypes.string,
+	tabIndex: PropTypes.string,
 	autoExpandY: PropTypes.bool,
 	autoExpandX: PropTypes.bool,
 

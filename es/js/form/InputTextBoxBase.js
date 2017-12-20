@@ -72,6 +72,7 @@ InputTextBoxBase.propTypes = {
 	size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	autoFocus: PropTypes.bool,
 
+	tabIndex: PropTypes.string,
 	autoComplete: PropTypes.bool,
 	disabled: PropTypes.bool,
 	required: PropTypes.bool,
