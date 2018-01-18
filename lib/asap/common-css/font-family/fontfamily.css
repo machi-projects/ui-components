@@ -1,5 +1,5 @@
-@value _proximanova from "../variables/fontfamily.css";
+@value _roboto from '../variables/fontfamily.css';
 
-.ff_proximanova{
-  font-family: _proximanova;
+.fy_roboto{
+	font-family: _roboto;
 }

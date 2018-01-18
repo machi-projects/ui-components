@@ -3,6 +3,7 @@ import PickMultiGroupBase, { PickItemBase } from '../core/PickMultiGroupBase';
 import PropTypes from 'prop-types';
 import InputButtonBoxBase from './InputButtonBoxBase';
 import LabelBoxBase from './LabelBoxBase';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 export class CheckBoxItemBase extends React.Component {
 	render() {
@@ -20,16 +21,23 @@ export default class CheckBoxGroupBase extends React.Component {
 		super(props);
 		this.state = {
 			uniqueName: Date.now() + '_checkbox',
-			selectedItems: this.props.selectedItems || []
+			selectedItems: (this.props.selectedItems || [])
 		};
 		this.onSelectedItem = this.onSelectedItem.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps){
+		
+		if( deepEqualObject(nextProps.selectedItems , this.state.selectedItems) == false ){
+			this.setState({ selectedItems : nextProps.selectedItems });
+		}
+	}
+	
 	onSelectedItem(newSelectedItems, currObjState, el) {
 		this.setState(
-			prevState => {
-				prevState.selectedItems = newSelectedItems;
-				return prevState;
+			state => {
+				state.selectedItems = newSelectedItems;
+				return state;
 			},
 			() => {
 				this.props.onSelect && this.props.onSelect(this.props.groupName, this.state.selectedItems, currObjState, el);
@@ -50,10 +58,9 @@ export default class CheckBoxGroupBase extends React.Component {
 			onPassValidation,
 			onFailValidation,
 			
-			fireEvent,
 			tabIndex,
-			focusIn,
-			focusOut,
+			getElementRef,
+			getValue,
 			onClick
 			
 		} = this.props;
@@ -62,7 +69,6 @@ export default class CheckBoxGroupBase extends React.Component {
 		let allStyles = { styles };
 
 		let stateSelectedItems = this.state.selectedItems;
-
 		return (
 			<PickMultiGroupBase
 				required={required}
@@ -73,10 +79,9 @@ export default class CheckBoxGroupBase extends React.Component {
 				selectedItems={selectedItems}
 				onSelect={this.onSelectedItem}
 				
-				fireEvent={fireEvent}
 				tabIndex={tabIndex}
-				focusIn={focusIn}
-				focusOut={focusOut}
+				getElementRef={getElementRef}
+				getValue={getValue}
 				onClick={onClick}
 			>
 				{React.Children.map(this.props.children, (child, i) => {
@@ -121,12 +126,11 @@ CheckBoxGroupBase.propTypes = {
 	groupName: PropTypes.string,
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
-
-	fireEvent :  PropTypes.string,
+	getValue: PropTypes.func,
+	
 	tabIndex : PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
 	onClick : PropTypes.func,
+	getElementRef : PropTypes.func,
 	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

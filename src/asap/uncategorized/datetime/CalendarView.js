@@ -54,7 +54,7 @@ export default class CalendarView extends React.Component {
 			}
 			return rowArr
 		})();
-		return <div data-testId="dateContainer" className={style.DateNew}>{rows}</div>
+		return <div className={style.DateNew}>{rows}</div>
 	}
 
 	handleSelect(day,month,year){

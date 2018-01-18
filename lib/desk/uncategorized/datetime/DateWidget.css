@@ -6,45 +6,61 @@
 	border-bottom: 1px solid _alto ;
 	transition: border 0.2s linear 0s;
 	composes: _mineShaft from '../../common-css/colors/colors.css';
-    font-size: 16px;
+     composes: fs_16_px from '../../common-css/font-sizes/fontsizes.css';
+    outline:none;
     min-height: 24px;
-    padding: 10px 5px 0 5px;
+    padding: 25px 5px 10px 5px;
+    position: relative;
+    top: 10px;
+    -webkit-user-select: none;  
+	-moz-user-select: none;     
+	-ms-user-select: none; 
+    user-select: none;
+    box-sizing: border-box;
+    line-height: normal;
 }
-/* .date:hover
-{
-	border-bottom: 1px solid _gray ;
-} */
 
 .posrel
 {
 	position:relative;
+	outline:none;
 }
 
 .dateFocus
 {
 	border-bottom: 1px solid _red_1;
-	padding: 10px 5px 0 5px;
-	width:100%;
-	min-height:24px;
-	transition: border 0.2s linear 0s;
-	position:relative;
+	padding: 25px 5px 10px 5px;
+	outline:none;
+	width:inherit;
+	min-height: 24px;
+    transition: border 0.2s linear 0s;
+    position: relative;
+    top: 10px;
 	composes: _mineShaft from '../../common-css/colors/colors.css';
-	font-size: 16px;
+	composes: fs_16_px from '../../common-css/font-sizes/fontsizes.css';
+	-webkit-user-select: none;  
+	-moz-user-select: none;     
+	-ms-user-select: none; 
+    user-select: none;
+    box-sizing: border-box;
+   	line-height: normal;
 }
 .absolute
 {
 	position:absolute;
-	top:35px;
+	top:65px;
+	right:0;
 	composes: max_level_8 from '../../common-css/zindexes/zindex.css';
 }
 .dateTop
 {
 	composes:absolute;
-	bottom: 100%;
+	bottom: 55%;
 	top:auto;
 }
 
 .droppopup{
+	width:100%;
 	display:none;
 }
 

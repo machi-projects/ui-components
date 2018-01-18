@@ -1,31 +1,31 @@
-/* $Id$ */
+@value _transparent_alpha_16,_transparent_alpha_12,_roman,_mercury,_alto,_white,_tundora,_gallery_alpha_6,_pumice,_alto_1 from '../../common-css/variables/colors.css';
+@value _none from '../../common-css/variables/units.css';
 
-@value _mercury,_alto,_white,_tundora,_gallery_alpha_6,_pumice,_alto_1 from '../../common-css/variables/colors.css';
-
-.main{
+.default_main{
 	width:100%;
 	position:relative;
 	outline:none;
 }
-.dropdown{
+.default_dropdown{
 	width:100%;
     border-bottom:1px solid _alto;
-    /* border-radius:.2rem; */
-    font-size:0;
+     composes: fs_0_px from '../../common-css/font-sizes/fontsizes.css';
     min-height:31px;
     cursor: pointer;
 }
-.selectname{
+.default_selectname{
 	overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
     word-wrap:normal;
-    width:90%;
+    width:calc(100% - 10PX);
     display:inline-block;
-    font-size:16px;
-    padding: 10px 5px 0 5px;
+     composes: fs_15_px from '../../common-css/font-sizes/fontsizes.css';
+    padding: 25px 5px 20px 5px;
+    position: relative;
+    top: 10px;
 }
-.arrowDown:after
+.default_arrowDown:after
 {
 	content:"";
     width:8px;
@@ -36,10 +36,10 @@
     transform:rotate(-45deg);
     position:absolute;
     background-color: _white;
-    top:15px;
+    top:60%;
     right:10px;
-}
-.arrowUp:after
+} 
+.default_arrowUp:after
 {
 	content:"";
     width:10px;
@@ -50,105 +50,119 @@
     transform:rotate(-225deg);
     position:absolute;
     background-color: _white;
-    top:14px;
+    top:60%;
     right:10px;
 }
-.listview{
+.default_listview{
 	width: 100%;
     border-radius: 2px;
     composes: bg_white from '../../common-css/colors/colors.css';
     position: relative;
     top: 10px;
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
-    composes: max_level_9 from '../../common-css/zindexes/zindex.css';
+    box-shadow: 0 2px 5px 0 _transparent_alpha_16, 0 2px 10px 0 _transparent_alpha_12;
+    composes: max_level_8 from '../../common-css/zindexes/zindex.css';
     will-change: width, height;
     min-width: 100px;
     max-height: 650px;
     overflow-y: auto;
     position: absolute;
 }
-.listViewTop
+.default_listViewTop
 {
-	composes:listview;
+	composes:default_listview;
 	bottom:10px;
 	top:auto;
 }
-.listmenu{
+.default_listmenu{
 	margin:0 0 4px 0;
 	width:100%;
 	padding:0px;
 	max-height:200px;
 	overflow:auto;
 }
-.option{
+.default_option{
 	clear: both;
     cursor: pointer;
     text-align: left;
     text-transform: none;
-    font-size: 16px;
+     composes: fs_14_px from '../../common-css/font-sizes/fontsizes.css';
     composes: clr_tundora from '../../common-css/colors/colors.css';
     display: block;
     padding: 14px 16px;
+	margin: 0;
+    line-height: inherit;
 }
-.posRel
+.default_posRel
 {
 	position : relative;
 }
-.option:hover{
+.default_option:hover{
 	background-color: _gallery_alpha_6;
     color: _tundora;
 }
-.hide{
+.default_hide{
 	display : none;
 }
-.searchicon{
+.default_searchicon{
   width:100%;
   box-sizing:border-box;
-  padding: 16px;
-  border-bottom:1px solid _alto_1;
+  padding: 16px !important;
+  border:0 !important;
+  border-bottom:1px solid _alto_1 !important;
   outline:none;
-  border-left:0;
-  border-right:0;
-  border-top:0;
-  border-radius:0;
-  font-size:12px
+  border-radius:0 !important;
+  composes: fs_14_px from '../../common-css/font-sizes/fontsizes.css';
+  height: auto;
+  line-height: normal;
 }
-.searchIconPosSet
+
+.default_searchIconPosSet
 {
 	position: absolute;
 	top: 15px;
 	right: 15px;
+	background: #fff;
+    padding-left: 5px;
+    cursor: pointer;
 }
-.searchicon:focus
+.default_searchicon:focus
 {
 	outline:none;
-	border-color: _mercury;
-	box-shadow:none;
+	border: none !important;
+	border-bottom: 1px solid _mercury !important;
+	box-shadow: _none;
 }
-.bccolor{
+.default_bccolor{
 	composes: bg_gallery from '../../common-css/colors/colors.css';
-	composes:option;
+	composes:default_option;
 	composes: clr_tundora from '../../common-css/colors/colors.css';
 }
-.normal{
+.default_normal{
 	composes: bg_white from '../../common-css/colors/colors.css';
-	composes:option;
+	composes:default_option;
 }
-.isError
-{
-    box-shadow:inset 0 0 0 2px #d9534f;
+.default_isError{
+    box-shadow:inset 0 0 0 2px _roman;
 }
 
 
-.droppopup{
+.default_droppopup{
 	display:none;
 }
 
-.droppopup.opened{
+.default_droppopup.opened{
 	display:block;
 	visibility:hidden;
 }
 
-.droppopup.ready{
+.default_droppopup.ready{
 	visibility:visible;
+}
+
+.default_notfound{
+	padding: 10px 16px;
+	float: left;
+	width: 90%;
+	font-size: 14px;
+	color: #444;
 }

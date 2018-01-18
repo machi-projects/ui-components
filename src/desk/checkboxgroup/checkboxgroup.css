@@ -1,8 +1,7 @@
 .default {
-	margin-top: 10px;
-    padding-left: 5px;
+    width: inherit;
+    composes: fleft from '../common-css/floats/floats.css';
 	}
-
 
 .default:focus{
 	outline:none;
@@ -10,17 +9,9 @@
 
 .default .checkbox_item {
 	display: inline-block;
-	}
+}
 
 .default .checkbox_item.active_item {
 	display: inline-block;
-	}
-
-.mycheckbox {
 }
 
-.mycheckbox .checkbox_item {
-}
-
-.mycheckbox .checkbox_item.active_item {
-}

@@ -6,6 +6,7 @@ import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import style from './TimeField.css';
 import DropdownComponent from './DropdownComponent';
+import { deepEqualObject } from '../../../utils/objectUtils';
 
 var DateTime = function (_React$Component) {
 	_inherits(DateTime, _React$Component);
@@ -29,6 +30,11 @@ var DateTime = function (_React$Component) {
 	}
 
 	_createClass(DateTime, [{
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return deepEqualObject(nextProps, this.props) == false || deepEqualObject(nextState, this.state) == false;
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var _state = this.state,
@@ -85,7 +91,9 @@ var DateTime = function (_React$Component) {
 			    mins = nextProps.mins,
 			    amPm = nextProps.amPm;
 
-			this.setState({ hours: hours, mins: mins, amPm: amPm });
+			if (deepEqualObject(nextProps, this.props) == false) {
+				this.setState({ hours: hours, mins: mins, amPm: amPm });
+			}
 		}
 	}, {
 		key: 'hoursSelect',

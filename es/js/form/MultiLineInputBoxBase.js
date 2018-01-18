@@ -8,7 +8,7 @@ import React from 'react';
 import MultiLineInputBase from '../core/MultiLineInputBase';
 import validator from '../../utils/validator';
 import PropTypes from 'prop-types';
-import { equals } from '../../utils/objectUtils';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 var MultiLineInputBoxBase = function (_React$Component) {
 	_inherits(MultiLineInputBoxBase, _React$Component);
@@ -21,12 +21,8 @@ var MultiLineInputBoxBase = function (_React$Component) {
 
 	_createClass(MultiLineInputBoxBase, [{
 		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps) {
-			if (equals(nextProps, this.props)) {
-				return false;
-			}
-
-			return true;
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return deepEqualObject(nextProps, this.props) == false || deepEqualObject(nextState, this.state) == false;
 		}
 	}, {
 		key: 'render',
@@ -71,12 +67,14 @@ MultiLineInputBoxBase.propTypes = {
 	required: PropTypes.bool,
 	value: PropTypes.string,
 
+	getElementRef: PropTypes.func,
 	onFocus: PropTypes.func,
 	onBlur: PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onKeyUp: PropTypes.func,
 	onChange: PropTypes.func,
 	onInput: PropTypes.func,
+	getValue: PropTypes.func,
 
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

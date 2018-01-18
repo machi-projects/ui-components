@@ -14,6 +14,8 @@ import style from './DateTime.css';
 import moment from 'moment-timezone';
 import selectn from 'selectn';
 
+import { Icon } from '../../index';
+
 var monthend = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 var monthname = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -136,28 +138,28 @@ var DateTime = function (_React$Component) {
 						{ className: style.optionsTop },
 						React.createElement(
 							'span',
-							{ 'data-testId': 'prevYear', className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'll') },
-							'<<'
+							{ className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'll') },
+							React.createElement(Icon, { id: 'back', styleId: 'datepickerarw' })
 						),
 						React.createElement(
 							'span',
-							{ 'data-testId': 'prevMonth', className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'l') },
-							'<'
+							{ className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'l') },
+							React.createElement(Icon, { id: 'rightArrow', styleId: 'datepickerarw' })
 						),
 						React.createElement(
 							'span',
-							{ 'data-testId': 'resultString', className: style.monthStr },
+							{ className: style.monthStr },
 							showmonthtxt
 						),
 						React.createElement(
 							'span',
-							{ 'data-testId': 'nextMonth', className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'g') },
-							'>'
+							{ className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'g') },
+							React.createElement(Icon, { id: 'rightArrow', styleId: 'datepickerarw' })
 						),
 						React.createElement(
 							'span',
-							{ 'data-testId': 'nextyear', className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'gg') },
-							'>>'
+							{ className: style.sideArows, onClick: this.modifyCalendar.bind(this, 'gg') },
+							React.createElement(Icon, { id: 'back', styleId: 'datepickerarw' })
 						)
 					),
 					React.createElement(
@@ -250,13 +252,13 @@ var DateTime = function (_React$Component) {
 						{ className: style.marTop },
 						React.createElement(
 							'button',
-							{ 'data-testId': 'submit', className: style.blueBut, onClick: this.handleSelect },
-							i18NProviderUtils.getI18NValue('Set')
+							{ className: style.canButton, onClick: this.handleClear },
+							i18NProviderUtils.getI18NValue('Clear')
 						),
 						React.createElement(
 							'button',
-							{ 'data-testId': 'clear', className: style.canButton, onClick: this.handleClear },
-							i18NProviderUtils.getI18NValue('Clear')
+							{ className: style.blueBut, onClick: this.handleSelect },
+							i18NProviderUtils.getI18NValue('Set')
 						)
 					)
 				)
@@ -321,19 +323,19 @@ var DateTime = function (_React$Component) {
 	}, {
 		key: 'hoursSelect',
 		value: function hoursSelect(value) {
-			var hours = value.id;
+			var hours = value;
 			this.setState({ hours: hours });
 		}
 	}, {
 		key: 'minutesSelect',
 		value: function minutesSelect(value) {
-			var mins = value.id;
+			var mins = value;
 			this.setState({ mins: mins });
 		}
 	}, {
 		key: 'amPmSelect',
 		value: function amPmSelect(value) {
-			var amPm = value.id;
+			var amPm = value;
 			this.setState({ amPm: amPm });
 		}
 	}, {

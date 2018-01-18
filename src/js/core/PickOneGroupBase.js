@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import validator from '../../utils/validator';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 export class PickOneItemBase extends React.Component {
 	constructor(props) {
@@ -26,7 +27,7 @@ export class PickOneItemBase extends React.Component {
 				};
 
 		return itemPid
-			? <div className={itemStyles} {...events} tabIndex={this.props.tabIndex} onFocus={this.props.focusIn} onBlur={this.props.focusOut} >
+			? <div className={itemStyles} {...events} tabIndex={this.props.tabIndex} >
 					{this.props.children}
 				</div>
 			: null;
@@ -35,9 +36,7 @@ export class PickOneItemBase extends React.Component {
 
 PickOneItemBase.propTypes = {
 	pickId: PropTypes.string.isRequired,
-	tabIndex: PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func
+	tabIndex: PropTypes.string
 };
 
 export default class PickOneGroupBase extends React.Component {
@@ -54,29 +53,26 @@ export default class PickOneGroupBase extends React.Component {
 	
 	setRef(el){
 		this.elementRef = el;
+		this.props.getElementRef && this.props.getElementRef(el);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.selectedItem !== nextProps.selectedItem) {
+		
+		if ( this.props.selectedItem !== this.state.selectedItem) {
 			let pickGroupTag = this.elementRef;
 			this.onSelectItem(nextProps.selectedItem, pickGroupTag);
 		}
 
-		if ( nextProps.validation != null && nextProps.validation.validate ) {
+		if( deepEqualObject(nextProps.validation,this.props.validation) == false && nextProps.validation && nextProps.validation.validate ){
 			this.validateOnSelect(this.state.selectedItem, nextProps);
 		}
 	}
 	
-
-	componentDidUpdate(prevProps, prevState)
+	shouldComponentUpdate(nextProps, nextState)
 	{
-		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
-			requestAnimationFrame(()=>{
-				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			});
-		}
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false));
 	}
-
+	
 	validateOnSelect(value, props) {
 		let defaultCheckPropsRules = ['required'];
 		let defaultValidateRules = ['required'];
@@ -112,19 +108,13 @@ export default class PickOneGroupBase extends React.Component {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selectedItem, this.props);
 		}
-		
-		if(this.props.fireEvent!=null){
-			requestAnimationFrame(()=>{
-				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			})
-			
-		}
 	}
 
 	onSelectItem(newSelectedPid, ev) {
 		let currentTarget = ev.currentTarget;
 		this.setState({ selectedItem: newSelectedPid }, function() {
 			this.props.onSelect && this.props.onSelect(this.state.selectedItem, currentTarget);
+			this.props.getValue && this.props.getValue(this.state.selectedItem);
 			if (this.props.validation != null && this.props.validation.validateOn) {
 				this.validateOnSelect(this.state.selectedItem, this.props);
 			}
@@ -148,9 +138,9 @@ export default class PickOneGroupBase extends React.Component {
 
 	render() {
 		return (
-			<div className={this.props.styles.group} ref={this.setRef}  tabIndex={this.props.tabIndex} 
-				onFocus={this.props.focusIn}
-				onBlur={this.props.focusOut}
+			<div className={this.props.styles.group} 
+				ref={this.setRef}  
+				tabIndex={this.props.tabIndex}
 				onClick={this.props.onClick} >
 				{this.renderChildren()}
 			</div>
@@ -172,15 +162,14 @@ PickOneGroupBase.propTypes = {
 	}),
 	required: PropTypes.bool,
 
-	fireEvent :  PropTypes.string,
 	tabIndex: PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef : PropTypes.func,
 	onClick : PropTypes.func,
 	
 	itemsControls: PropTypes.bool,
 	selectedItem: PropTypes.string,
 	onSelect: PropTypes.func,
+	getValue : PropTypes.func,
 	pickOn: PropTypes.string,
 
 	validation: PropTypes.shape({

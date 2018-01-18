@@ -7,6 +7,7 @@ import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import PropTypes from 'prop-types';
 import validator from '../../utils/validator';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 export var PickItemBase = function (_React$Component) {
 	_inherits(PickItemBase, _React$Component);
@@ -17,7 +18,6 @@ export var PickItemBase = function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, (PickItemBase.__proto__ || _Object$getPrototypeOf(PickItemBase)).call(this, props));
 
 		_this.onPickItem = _this.onPickItem.bind(_this);
-		_this.state = { timeStamp: 0 };
 		return _this;
 	}
 
@@ -43,7 +43,7 @@ export var PickItemBase = function (_React$Component) {
 
 			return itemPid ? React.createElement(
 				'div',
-				_extends({ className: itemStyles }, events, { tabIndex: this.props.tabIndex, onFocus: this.props.focusIn, onBlur: this.props.focusOut }),
+				_extends({ className: itemStyles }, events, { tabIndex: this.props.tabIndex }),
 				this.props.children
 			) : null;
 		}
@@ -54,9 +54,7 @@ export var PickItemBase = function (_React$Component) {
 
 PickItemBase.propTypes = {
 	pickId: PropTypes.string.isRequired,
-	tabIndex: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func
+	tabIndex: PropTypes.string
 };
 
 var PickMultiGroupBase = function (_React$Component2) {
@@ -70,7 +68,7 @@ var PickMultiGroupBase = function (_React$Component2) {
 
 		_this3.renderChildren = _this3.renderChildren.bind(_this3);
 		_this3.onSelectItem = _this3.onSelectItem.bind(_this3);
-		_this3.state = { selectedItems: _this3.props.selectedItems };
+		_this3.state = { selectedItems: _this3.props.selectedItems || [] };
 		_this3.validateOnSelect = _this3.validateOnSelect.bind(_this3);
 
 		_this3.setRef = _this3.setRef.bind(_this3);
@@ -81,45 +79,33 @@ var PickMultiGroupBase = function (_React$Component2) {
 		key: 'setRef',
 		value: function setRef(el) {
 			this.elementRef = el;
+			this.props.getElementRef && this.props.getElementRef(el);
 		}
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			var previousPids = (this.props.selectedItems || []).join('');
-			var nextPids = (nextProps.selectedItems || []).join('');
-			if (previousPids != nextPids) {
+
+			if (deepEqualObject(this.props.selectedItems, this.state.selectedItems) == false) {
+
 				var pickGroupTag = this.elementRef;
-				onSelectItem(nextProps.selectedItems, pickGroupTag, nextProps);
+				this.onSelectItem(nextProps.selectedItems, pickGroupTag, nextProps);
 			}
 
-			if (nextProps.validation != null && nextProps.validation.validate) {
+			if (deepEqualObject(nextProps.validation, this.props.validation) == false && nextProps.validation && nextProps.validation.validate) {
+
 				this.validateOnSelect(this.state.selectedItems, nextProps);
 			}
 		}
 	}, {
-		key: 'componentDidUpdate',
-		value: function componentDidUpdate(prevProps, prevState) {
-			var _this4 = this;
-
-			if (this.props.fireEvent !== prevProps.fireEvent && this.props.fireEvent) {
-				requestAnimationFrame(function () {
-					_this4.elementRef && _this4.elementRef[_this4.props.fireEvent] && _this4.elementRef[_this4.props.fireEvent]();
-				});
-			}
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return deepEqualObject(nextProps, this.props) == false || deepEqualObject(nextState, this.state) == false;
 		}
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var _this5 = this;
-
 			if (this.props.validation != null && this.props.validation.validate) {
 				this.validateOnSelect(this.state.selectedItems, this.props);
-			}
-
-			if (this.props.fireEvent != null) {
-				requestAnimationFrame(function () {
-					_this5.elementRef && _this5.elementRef[_this5.props.fireEvent] && _this5.elementRef[_this5.props.fireEvent]();
-				});
 			}
 		}
 	}, {
@@ -152,6 +138,8 @@ var PickMultiGroupBase = function (_React$Component2) {
 	}, {
 		key: 'onSelectItem',
 		value: function onSelectItem(newSelectedPid, ev, nextProps) {
+			var _this4 = this;
+
 			this.setState(function (state) {
 				var selectedItems = state.selectedItems;
 				var itemPosition = selectedItems.indexOf(newSelectedPid);
@@ -163,32 +151,35 @@ var PickMultiGroupBase = function (_React$Component2) {
 
 				return { selectedItems: selectedItems };
 			}, function () {
-				var selectedItems = this.state.selectedItems;
+				var selectedItems = _this4.state.selectedItems;
 				var itemPosition = selectedItems.indexOf(newSelectedPid);
 
-				this.props.onSelect && this.props.onSelect(selectedItems, {
+				_this4.props.onSelect && _this4.props.onSelect(selectedItems, {
 					id: newSelectedPid,
 					active: itemPosition !== -1
 				}, ev.currentTarget);
 
-				if (this.props.validation && this.props.validation.validateOn) {
-					this.validateOnSelect(selectedItems, nextProps || this.props);
+				console.log("selectedItems===>", selectedItems);
+				_this4.props.getValue && _this4.props.getValue(selectedItems);
+
+				if (_this4.props.validation && _this4.props.validation.validateOn) {
+					_this4.validateOnSelect(selectedItems, nextProps || _this4.props);
 				}
 			});
 		}
 	}, {
 		key: 'renderChildren',
 		value: function renderChildren() {
-			var _this6 = this;
+			var _this5 = this;
 
 			return React.Children.map(this.props.children, function (child) {
 				return React.cloneElement(child, {
-					selectedItems: _this6.state.selectedItems,
-					onSelectItem: _this6.onSelectItem,
-					selectedItemStyle: _this6.props.styles.active,
-					normalItemStyle: _this6.props.styles.item,
-					itemsControls: _this6.props.itemsControls,
-					pickOn: _this6.props.pickOn
+					selectedItems: _this5.state.selectedItems,
+					onSelectItem: _this5.onSelectItem,
+					selectedItemStyle: _this5.props.styles.active,
+					normalItemStyle: _this5.props.styles.item,
+					itemsControls: _this5.props.itemsControls,
+					pickOn: _this5.props.pickOn
 				});
 			});
 		}
@@ -198,9 +189,9 @@ var PickMultiGroupBase = function (_React$Component2) {
 
 			return React.createElement(
 				'div',
-				{ className: this.props.styles.group, ref: this.setRef, tabIndex: this.props.tabIndex,
-					onFocus: this.props.focusIn,
-					onBlur: this.props.focusOut,
+				{ className: this.props.styles.group,
+					ref: this.setRef,
+					tabIndex: this.props.tabIndex,
 					onClick: this.props.onClick },
 				this.renderChildren()
 			);
@@ -230,12 +221,11 @@ PickMultiGroupBase.propTypes = {
 	itemsControls: PropTypes.bool,
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
+	getValue: PropTypes.func,
 	pickOn: PropTypes.string,
 
-	fireEvent: PropTypes.string,
 	tabIndex: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func,
+	getElementRef: PropTypes.func,
 	onClick: PropTypes.func,
 
 	validation: PropTypes.shape({

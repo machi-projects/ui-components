@@ -1,19 +1,25 @@
-@value _froly from '../common-css/variables/colors.css';
+@value _crimson,_froly,_red,_white,_yellow,_green,_blue from '../common-css/variables/colors.css';
 @value _none from '../common-css/variables/units.css';
+@value _px_14, _px_15 from '../../../components/common-css/typography/fontsizes.css';
 
-.default {
+.default  {
 	composes: clr_dustyGray from '../common-css/colors/colors.css';
     cursor: text;
-    transition: .2s ease-out;
-    font: 600 14px 'San Francisco Display Thin';
     display: inline-block;
     position: relative;
+    outline: none;
+    composes: fs_14_px from '../../../components/common-css/typography/fontsizes.css';
+    composes: ft_400 from '../common-css/font-weight/fontweight.css';
+    pointer-events: none;
     left: 5px;
-   	outline: none;
+    top: 30px;
+    transition: 0.2s ease all;
+    letter-spacing: normal;
+    margin:0;
 }
 
-.default:focus {
-	font-size: 14px;
+.default:focus,  .fload_checkboxlabel:focus {
+	font-size: _px_14;
     -webkit-transform: translateY(-20px);
     transform: translateY(-20px);
     visibility: visible;
@@ -21,10 +27,11 @@
 }
 
  
-.default.mandatory::before{
+.default.mandatory::before,.fload_checkboxlabel::before, .captchaLabel::before{
 	content: "*";
-    color: _froly;
-    font: bold 15px/18px 'San Francisco Display Regular';
+    color: _crimson;
+    font-size: _px_15;
+    font-weight:bold;
     background: _none;
     width: auto;
     height: auto;
@@ -36,49 +43,35 @@
 }
 
 
-.default.raised{
-	color:green
+.default.raised,.fload_checkboxlabel.raised{
+	top: 10px;
+    font-size: _px_14;
+    transition: .2s ease-out;
 }
 
 
 
-
-
-
-/*
-
-.info {
+.fload_checkboxlabel{
+	composes: clr_dustyGray from '../common-css/colors/colors.css';
+    cursor: text;
+    display: inline-block;
+    outline: none;
+    composes: fs_14_px from '../../../components/common-css/typography/fontsizes.css';
+    composes: ft_400 from '../common-css/font-weight/fontweight.css';
+    transition: 0.2s ease all;
+    margin-top: 4px;
+    margin-left: 10px;
 }
 
-.primary {
+.captchaLabel{
+	cursor: text;
+    display: inline-block;
+    position: relative;
+   	left: 5px;
+   	padding: 20px 0;
+	font-size: 16px;
+	letter-spacing: normal;
+    	margin:0;
 }
 
-.danger {
-}
 
-.warning {
-}
-
-.primary_x  .a {
-	color: red;
-}
-
-.danger_x  .a {
-	color: yellow;
-}
-
-.warning_x .a {
-	color: green;
-}
-
-.primary_y  .a {
-	color: white;
-}
-
-.danger_y  .a {
-	color: blue;
-}
-
-.warning_y .a {
-}
-*/

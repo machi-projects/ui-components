@@ -81,7 +81,7 @@ var CalendarView = function (_React$Component) {
 			}();
 			return React.createElement(
 				'div',
-				{ 'data-testId': 'dateContainer', className: style.DateNew },
+				{ className: style.DateNew },
 				rows
 			);
 		}

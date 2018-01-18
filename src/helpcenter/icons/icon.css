@@ -1,20 +1,44 @@
-@value _red,_tundora from "../common-css/variables/colors.css";
+@value _crimson,_red,_tundora, _emerald from "../common-css/variables/colors.css";
+@value _inherit from '../common-css/variables/units.css';
 
 .iconbase {
     position:relative;
-    top: -.1133333333em;
     display:inline-block;
-    width: 24px;
-    height: 24px;
-    color: inherit;
+    width: 20px;
+    height: 20px;
+    color: _inherit;
     vertical-align:middle;
-    
     fill: currentColor
 }
 
+.date_Picker{
+	width: 14px;
+    height: 14px;
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    composes: cursor_pointer from '../common-css/others/others.css';
+}
+.refresh_icon{
+	width: 25px;
+    height: 25px;
+}
+.refresh_icon:hover	{
+	color: _emerald;
+}
 /* icon hover */
 .attachIcon:hover {
 	color : _tundora;
 }
 /* icon hover */
 
+.errormsgIcon{
+	color: _crimson;
+	float: right;
+    width: 14px;
+    height: 14px;
+}
+.datepickerarw{
+	height:17px;
+	width:17px;
+}

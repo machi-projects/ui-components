@@ -6,12 +6,12 @@ export default class PictureBoxBase extends React.Component {
 	render() {
 		let { groupStyle, sourceStyle, captionStyle } = this.props;
 
-		let imgTagProps = extract(this.props, ['src', 'alt']);
-		let figureProps = omit(this.props, ['src', 'alt', 'children', 'groupStyle', 'sourceStyle', 'captionStyle']);
+		let imgTagProps = extract(this.props, ['src', 'alt', 'onError']);
+		let figureProps = omit(this.props, ['src', 'alt', 'onError', 'children', 'groupStyle', 'sourceStyle', 'captionStyle']);
 
 		return (
 			<figure {...figureProps} className={groupStyle}>
-				<img {...imgTagProps} className={sourceStyle} />
+				<img {...imgTagProps} className={sourceStyle}  />
 
 				{this.props.children
 					? <figcaption className={captionStyle}>
@@ -27,6 +27,7 @@ PictureBoxBase.propTypes = {
 	src: PropTypes.string,
 	alt: PropTypes.string,
 
+	onError : PropTypes.func,
 	groupStyle: PropTypes.string,
 	sourceStyle: PropTypes.string,
 	captionStyle: PropTypes.string

@@ -22,10 +22,7 @@ export default class MultiLineInput extends Component {
 			raised,
 			
 			autoExpandX,
-			autoExpandY,
-			
-			focusIn,
-			focusOut
+			autoExpandY
 			
 		} = this.props;
 
@@ -35,10 +32,8 @@ export default class MultiLineInput extends Component {
 			'focused',
 			'errored',
 			'valid',
-			'raised',
+			'raised'
 			
-			"focusIn",
-			"focusOut"
 		]);
 
 		let classNames = cx(styles, {
@@ -61,7 +56,7 @@ export default class MultiLineInput extends Component {
 
 		//let onPassValidation = validation.validate ?  errored =  true
 
-		return <MultiLineInputBoxBase {...newProps} onFocus={focusIn} onBlur={focusOut} className={classNames} />;
+		return <MultiLineInputBoxBase {...newProps} className={classNames} />;
 	}
 }
 MultiLineInput.defaultProps = {
@@ -88,16 +83,15 @@ MultiLineInput.propTypes = {
 	required: PropTypes.bool,
 	value: PropTypes.string,
 
-	fireEvent :  PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef: PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onKeyUp: PropTypes.func,
 	onChange: PropTypes.func,
 	onInput: PropTypes.func,
+	getValue: PropTypes.func,
 
 	validation: PropTypes.shape({
-		show: PropTypes.bool,
+		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
 		rules: PropTypes.object,
 		rulesOrder: PropTypes.arrayOf(PropTypes.string),

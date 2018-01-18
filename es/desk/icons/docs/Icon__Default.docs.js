@@ -23,7 +23,9 @@ var Icon__Default = function (_Component) {
 			return React.createElement(
 				'div',
 				null,
-				React.createElement(Icon, { id: 'searchIcon', color: 'green', size: 'small' })
+				React.createElement(Icon, { id: 'searchIcon', color: 'green', size: 'small' }),
+				React.createElement(Icon, { id: 'datePicker', size: 'small' }),
+				React.createElement(Icon, { id: 'Refresh', size: 'small' })
 			);
 		}
 	}]);

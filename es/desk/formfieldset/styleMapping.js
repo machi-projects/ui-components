@@ -4,7 +4,7 @@ export default {
     labelStyle: "default",
     messageStyle: "default"
   },
-  "myfieldgroup": {
+  "float_checkboxgroup": {
     fieldStyle: "field_default",
     labelStyle: "default",
     messageStyle: "default"

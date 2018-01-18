@@ -26,8 +26,8 @@ var PictureBoxBase = function (_React$Component) {
 			    captionStyle = _props.captionStyle;
 
 
-			var imgTagProps = extract(this.props, ['src', 'alt']);
-			var figureProps = omit(this.props, ['src', 'alt', 'children', 'groupStyle', 'sourceStyle', 'captionStyle']);
+			var imgTagProps = extract(this.props, ['src', 'alt', 'onError']);
+			var figureProps = omit(this.props, ['src', 'alt', 'onError', 'children', 'groupStyle', 'sourceStyle', 'captionStyle']);
 
 			return React.createElement(
 				'figure',
@@ -52,6 +52,7 @@ PictureBoxBase.propTypes = {
 	src: PropTypes.string,
 	alt: PropTypes.string,
 
+	onError: PropTypes.func,
 	groupStyle: PropTypes.string,
 	sourceStyle: PropTypes.string,
 	captionStyle: PropTypes.string

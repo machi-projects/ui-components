@@ -1,23 +1,98 @@
-.default {
+.default{
+	height: 100%;
+    box-sizing: border-box;
+	border-bottom: 1px solid rgba(224, 224, 224, .7);
+}
+.default input[type="text"]::-webkit-input-placeholder
+{
+	color: #aaa;
+	
+}
+.default input[type="text"]::-moz-input-placeholder
+{
+	color: #aaa;
+	
+}
+.default input[type="text"]::-ms-input-placeholder
+{
+	color: #aaa;
+	
 }
 
-.default .searchicon {
+.default.iscollaspe{
+	
 }
 
-.default .textbox {
+.iscollaspe.isfloatlabel{
+	
 }
 
-.default .clearicon {
+.default.isfloatlabel{
+	width:100%;
+	transition: width .4s ease-out;
+	display:block
 }
 
-.mysearch {
+.default .searchicon, .default .clearicon.issearching{
+	display:block;
 }
 
-.mysearch .searchicon {
+.default .clearicon , .default .searchicon.issearching  {
+	display:none;
 }
 
-.mysearch .textbox {
+.default .innerboxstyle{
+	width: 100%;
+	height:100%;
 }
 
-.mysearch .clearicon {
+.default.isfloatlabel .innerboxstyle{
+	transition: width .4s ease-out;
 }
+
+.default.isfloatlabel.iscollaspe .innerboxstyle{
+	width: 0;
+	height:0;
+}
+
+.default.isfloatlabel .innerboxstyle{
+	 width: 100%;
+	transition: width .4s ease-out;
+	float:right 
+}
+
+.default.isfloatlabel.iscollaspe .textbox{
+    display:none;
+    padding:0;
+} 
+
+.default.isfloatlabel .textbox{
+	padding: 0; 
+
+} 
+
+.default.isfloatlabel .floatbox{
+	width:0;
+	 display : none;
+}
+
+.default.isfloatlabel.iscollaspe  .floatbox{
+	width:100%;
+	display : block;
+}
+
+.searchicon,.clearicon{
+	cursor:pointer;
+    position: absolute;
+    top: 7px;
+    right: 20px;
+    background: #f7f7f7;
+    composes: clr_greyshade from '../common-css/colors/colors.css';
+    padding-left: 2px;
+ }
+ 
+ .textbox{
+ 	height:100%;
+    position: relative;
+ }
+ 

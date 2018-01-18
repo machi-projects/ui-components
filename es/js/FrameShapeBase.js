@@ -32,12 +32,13 @@ var FrameShapeBase = function (_React$Component) {
 			    frameStyle = _props.frameStyle,
 			    iconStyle = _props.iconStyle,
 			    textStyle = _props.textStyle,
-			    picStyles = _props.picStyles;
+			    picStyles = _props.picStyles,
+			    onPictureError = _props.onPictureError;
 
 
 			var frameContent = null;
 			if (type == 'picture') {
-				frameContent = React.createElement(PictureBoxBase, _extends({ alt: name, src: picture }, picStyles));
+				frameContent = React.createElement(PictureBoxBase, _extends({ alt: name, src: picture }, picStyles, { onError: onPictureError }));
 			} else if (type == 'text') {
 				frameContent = React.createElement(PlainTextBase, { className: textStyle, text: text });
 			} else if (type == 'icon') {
@@ -65,6 +66,7 @@ FrameShapeBase.propTypes = {
 	picture: PropTypes.string,
 	text: PropTypes.string,
 	iconId: PropTypes.string,
+	onPictureError: PropTypes.func,
 
 	textStyle: PropTypes.string,
 	frameStyle: PropTypes.string,

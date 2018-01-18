@@ -3,20 +3,21 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import style from './MultiSelect.css';
-import { formatValue, bind } from '../common';
+import { formatValue , bind , getSelectedValue } from '../common';
 
-import {  equals } from '../../../utils/objectUtils';
+import { deepEqualObject } from '../../../utils/objectUtils';
 import validator from '../../../utils/validator';
 import Popup from '../Popup';
 import Pill from '../Pill';
 
 import { FormatText } from 'fz-i18n';
 
+
 class MultiSelect extends React.Component {
 	constructor(props) {
 		super(props);
 		bind.apply(this, [
-			'handleFocus',
+			'handleSearchFocus',
 			'handleKeyUp',
 			'handleSelect',
 			'handleChange',
@@ -25,47 +26,71 @@ class MultiSelect extends React.Component {
 			'handleToggle',
 			'handleToggleClick',
 			'handleKeyDown',
-			'onSelectedItem'
+			'onSelectedItem',
+			'onChangeValue',
 		]);
 
 		this.state = {
-			focusedSuggestion: 0,
+			focusedSuggestionIndex: 0,
 			searchString: '',
-			suggestions: formatValue(props.defaultSuggestions),
-			selectedValues: formatValue(props.defaultSelectedValues)
+			selectedValues : props.selectedValues,
+			formattedSuggestions : formatValue(props.suggestions,props.valueField,props.textField),
+			formattedSelectedValues : formatValue(props.selectedValues,props.valueField,props.textField)
 		};
 
 		this.setRef = this.setRef.bind(this);
 		this.setDropPopupRef = this.setDropPopupRef.bind(this);
 		this.setPlaceHolderRef = this.setPlaceHolderRef.bind(this);
+		this.setSearchInputRef = this.setSearchInputRef.bind(this);
 	}
 
 	setRef(el) {
 		this.elementRef = el;
+		this.props.getElementRef && this.props.getElementRef(el);
 	}
 
 	setDropPopupRef(el) {
 		this.dropPopupRef = el;
 	}
-	
+
 	setPlaceHolderRef(el) {
 		this.placeHolderRef = el;
 	}
 
-	componentWillReceiveProps(nextprops) {
-		if ( (nextprops.selectedValues &&  !equals(nextprops.selectedValues !== this.props.selectedValues) ) || 
-				(nextprops.suggestions && !equals(nextprops.suggestions , this.props.suggestions) )) {
-			
+	setSearchInputRef(el) {
+		this.searchInputRef = el;
+	}
+
+	shouldComponentUpdate(nextProps, nextState)
+	{
+		return ( (deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false) )
+	}
+
+	componentWillReceiveProps(nextProps) {
+
+		if( deepEqualObject(nextProps.selectedValues, this.state.selectedValues) == false ) {
+
 			this.setState({
-				suggestions: formatValue(nextprops.suggestions),
-				selectedValues: formatValue(nextprops.selectedValues)
+				selectedValues : nextProps.selectedValues,
+				formattedSelectedValues : formatValue(nextProps.selectedValues,this.props.valueField,this.props.textField)
+			},()=>{
+
+				let selectedValues = getSelectedValue(this.state.formattedSelectedValues,this.props.valueField);
+				this.onChangeValue(selectedValues);
+
 			});
-			
 		}
-		
-		if (nextprops.validation != null && nextprops.validation.validate) {
-			this.validateOnSelect(this.state.selectedValues, nextprops);
+
+		if( deepEqualObject(nextProps.suggestions, this.props.suggestions) == false ) {
+			this.setState({
+				formattedSuggestions : formatValue(nextProps.suggestions,this.props.valueField,this.props.textField)
+			});
 		}
+
+		if( deepEqualObject(nextProps.validation,this.props.validation) == false && nextProps.validation && nextProps.validation.validate ){
+			this.validateOnSelect(getSelectedValue(this.state.formattedSelectedValues,this.props.valueField), nextProps);
+		}
+
 	}
 
 	validateOnSelect(value, props) {
@@ -92,31 +117,16 @@ class MultiSelect extends React.Component {
 				onPassValidation: onPassValidation,
 				onFailValidation: onFailValidation
 			};
-			
+
 			validator.executeValidation(value, targetTag, validationObj, defaultType);
 		} else {
 			onPassValidation && onPassValidation(value, targetTag);
 		}
 	}
 
-	componentDidUpdate(prevProps, prevState)
-	{
-		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
-			requestAnimationFrame(()=>{
-				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			});
-		}
-	}
-	
 	componentDidMount() {
 		if (this.props.validation != null && this.props.validation.validate) {
-			this.validateOnSelect(this.state.selectedValues, this.props);
-		}
-		
-		if(this.props.fireEvent!=null){
-			requestAnimationFrame(()=>{
-				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			})
+			this.validateOnSelect(getSelectedValue(this.state.formattedSelectedValues,this.props.valueField), this.props);
 		}
 	}
 
@@ -132,44 +142,54 @@ class MultiSelect extends React.Component {
 		e.stopPropagation && e.stopPropagation();
 		e.nativeEvent && e.nativeEvent.stopImmediatePropagation && e.nativeEvent.stopImmediatePropagation();
 		let { isPopupOpen, togglePopup } = this.props;
-		ReactDOM.findDOMNode(this.refs.nameInput).focus();
+		this.handleSearchFocus();
 		!isPopupOpen && togglePopup(e, dropRef, placeHolderRef);
 	}
 
 	handleSelect(selectedValue, e) {
 		let { closePopupOnly, isPopupOpen } = this.props;
+		this.setState((state)=>{
 
-		let selectedValues = this.state.selectedValues;
-		let newSelectedSuggestions = [...selectedValues, selectedValue];
-		this.setState({ focusedSuggestion: 0, searchString: '', selectedValues: newSelectedSuggestions }, () => {
+			state.focusedSuggestionIndex = 0 ;
+			state.searchString = '';
+			state.formattedSelectedValues = [...state.formattedSelectedValues, selectedValue];
+
+		},() => {
 			this.onSelectedItem();
 		});
+
 		isPopupOpen && closePopupOnly(e);
-		this.refs.nameInput.focus();
+		this.handleSearchFocus();
 	}
 
 	onSelectedItem() {
-		
-		this.props.onChange && this.props.onChange(this.state.selectedValues, this.props.groupName);
+
+		let selectedValues = getSelectedValue(this.state.formattedSelectedValues,this.props.valueField);
+		this.onChangeValue( selectedValues, this.props.groupName);
 		if (this.props.validation && this.props.validation.validateOn) {
-			this.validateOnSelect(this.state.selectedValues, this.props);
+			this.validateOnSelect(selectedValues, this.props);
 		}
 	}
 
-	handleFocus() {
-		ReactDOM.findDOMNode(this.refs.nameInput).focus();
+	onChangeValue(val, groupName){
+		this.props.onChange && this.props.onChange(val, groupName);
+		this.props.getValue && this.props.getValue(val);
+	}
+
+	handleSearchFocus() {
+		this.searchInputRef && this.searchInputRef.focus();
 	}
 
 	handleRemove(selectedValue, e) {
 		let { valueField, isPopupOpen, closePopupOnly, groupName } = this.props;
-		let selectedValues = this.state.selectedValues;
+		let selectedValues = this.state.formattedSelectedValues;
 		let newSelectedSuggestions = selectedValues.filter((selectedSuggestion, i) => {
 			return !(selectedSuggestion[valueField] === selectedValue[valueField]);
 		});
 
 		isPopupOpen && closePopupOnly(e);
-		ReactDOM.findDOMNode(this.refs.nameInput).focus();
-		this.setState({ focusedSuggestion: 0, selectedValues: newSelectedSuggestions }, () => {
+		this.handleSearchFocus();
+		this.setState({ focusedSuggestionIndex: 0, formattedSelectedValues: newSelectedSuggestions }, () => {
 			this.onSelectedItem();
 		});
 	}
@@ -179,11 +199,11 @@ class MultiSelect extends React.Component {
 		let searchString = e.target.value;
 		let { valueField, searchKeys, searchType, isPopupOpen, closePopupOnly, groupName } = this.props;
 
-		let { focusedSuggestion, suggestions, selectedValues } = this.state;
+		let { focusedSuggestionIndex, formattedSuggestions, formattedSelectedValues } = this.state;
 		let suggestionList = this.filterSuggestions(
 			searchString,
-			suggestions,
-			selectedValues,
+			formattedSuggestions,
+			formattedSelectedValues,
 			searchKeys,
 			searchType,
 			valueField
@@ -192,15 +212,15 @@ class MultiSelect extends React.Component {
 		let suggestionLength = suggestionList.length;
 		switch (keyCode) {
 			case 8:
-				if (selectedValues.length && searchString.length == 0) {
-					let newSelectedSuggestions = selectedValues.slice(0, -1);
-					focusedSuggestion = 0;
-					this.setState({ focusedSuggestion, selectedValues: newSelectedSuggestions }, () => {
+				if (formattedSelectedValues.length && searchString.length == 0) {
+					let newSelectedSuggestions = formattedSelectedValues.slice(0, -1);
+					focusedSuggestionIndex = 0;
+					this.setState({ focusedSuggestionIndex, formattedSelectedValues: newSelectedSuggestions }, () => {
 						this.onSelectedItem();
 					});
 
 					//isPopupOpen && closePopupOnly(e)
-					this.handleFocus();
+					this.handleSearchFocus();
 				}
 				break;
 		}
@@ -218,11 +238,11 @@ class MultiSelect extends React.Component {
 			closePopupOnly,
 			groupName
 		} = this.props;
-		let { focusedSuggestion, suggestions, selectedValues } = this.state;
+		let { focusedSuggestionIndex, formattedSuggestions, formattedSelectedValues } = this.state;
 		let suggestionList = this.filterSuggestions(
 			searchString,
-			suggestions,
-			selectedValues,
+			formattedSuggestions,
+			formattedSelectedValues,
 			searchKeys,
 			searchType,
 			valueField
@@ -232,42 +252,45 @@ class MultiSelect extends React.Component {
 			case 40:
 			case 34:
 				if (suggestionLength) {
-					if (focusedSuggestion === suggestionLength - 1) {
-						focusedSuggestion = 0;
+					if (focusedSuggestionIndex === suggestionLength - 1) {
+						focusedSuggestionIndex = 0;
 					} else {
-						focusedSuggestion += 1;
+						focusedSuggestionIndex += 1;
 					}
 				}
 				break;
 			case 38:
 			case 33:
 				if (suggestionLength) {
-					if (focusedSuggestion === 0) {
-						focusedSuggestion = suggestionLength - 1;
+					if (focusedSuggestionIndex === 0) {
+						focusedSuggestionIndex = suggestionLength - 1;
 					} else {
-						focusedSuggestion -= 1;
+						focusedSuggestionIndex -= 1;
 					}
 				}
 				break;
 			case 13:
 				if (suggestionLength) {
-					ReactDOM.findDOMNode(this.refs.nameInput).focus();
-					let selectedSuggestion = suggestionList[focusedSuggestion];
-					let newSelectedSuggestions = [...selectedValues, selectedSuggestion];
+					this.handleSearchFocus();
+					let selectedSuggestion = suggestionList[focusedSuggestionIndex];
+					let newSelectedSuggestions = [...formattedSelectedValues, selectedSuggestion];
 
-					if (isPopupOpen) {
-						focusedSuggestion = 0;
+					//if (isPopupOpen) {
+						focusedSuggestionIndex = 0;
 						searchString = '';
-						closePopupOnly(e);
-					}
-					else{
+						//closePopupOnly(e);
+					//}
+
+					/*else{
 						togglePopup(e);
-					}
-					this.setState({ focusedSuggestion, searchString, selectedValues: newSelectedSuggestions }, () => {
-						if (isPopupOpen) {
+					}*/
+
+					//togglePopup(e);
+					this.setState({ focusedSuggestionIndex, searchString, formattedSelectedValues: newSelectedSuggestions }, () => {
+						//if (isPopupOpen) {
 							this.onSelectedItem();
-							this.handleFocus();
-						}
+							this.handleSearchFocus();
+						//}
 					});
 
 					return;
@@ -279,11 +302,11 @@ class MultiSelect extends React.Component {
 				isPopupOpen && closePopupOnly(e);
 				break;
 			default:
-				focusedSuggestion = 0;
+				focusedSuggestionIndex = 0;
 				break;
 		}
 
-		this.setState({ focusedSuggestion, searchString });
+		this.setState({ focusedSuggestionIndex, searchString });
 	}
 
 	filterSuggestions(searchString, suggestions = [], selectedValues = [], searchKeys, searchType, valueField) {
@@ -311,17 +334,17 @@ class MultiSelect extends React.Component {
 		);
 	}
 
-	handleHover(focusedSuggestion) {
-		this.state.focusedSuggestion !== focusedSuggestion && this.setState({ focusedSuggestion });
+	handleHover(focusedSuggestionIndex) {
+		this.state.focusedSuggestionIndex !== focusedSuggestionIndex && this.setState({ focusedSuggestionIndex });
 	}
 
 	handleToggleClick(ev){
 
 		this.handleToggle(ev,this.dropPopupRef,this.placeHolderRef)
 	}
-	
+
 	render() {
-		let { searchString, focusedSuggestion, inputFocus } = this.state;
+		let { searchString, focusedSuggestionIndex, inputFocus } = this.state;
 
 		let {
 			groupName,
@@ -329,7 +352,7 @@ class MultiSelect extends React.Component {
 			searchType,
 			textField,
 			valueField,
-			styles = {},
+			styleId,
 			isReadOnly,
 			isPopupReady,
 			isPopupOpen,
@@ -338,18 +361,16 @@ class MultiSelect extends React.Component {
 			removeClose,
 			placeholder,
 			allowClear,
-			
+
 			tabIndex,
-			focusIn,
-			focusOut,
 			onClick
-			
+
 		} = this.props;
 
-		let stateSuggestions = this.state.suggestions;
-		let stateSelectedValues = this.state.selectedValues;
+		let stateSuggestions = this.state.formattedSuggestions;
+		let stateSelectedValues = this.state.formattedSelectedValues;
 
-		let selectedValues = stateSelectedValues.map((selectedValue, i) => {
+		let displaySelectedItems = stateSelectedValues.map((selectedValue, i) => {
 			return [
 				<SelectedItem
 					value={selectedValue}
@@ -357,6 +378,7 @@ class MultiSelect extends React.Component {
 					textField={textField}
 					onDelete={this.handleRemove}
 					key={i}
+					styleId={styleId}
 				/>
 			];
 		});
@@ -370,10 +392,10 @@ class MultiSelect extends React.Component {
 			valueField
 		);
 
-		let suggestionList;
+		let suggestionList = null;
 		if (suggestions.length) {
 			suggestionList = suggestions.map((suggestion, i) => {
-				let focus = focusedSuggestion === i;
+				let focus = focusedSuggestionIndex === i;
 				return (
 					<SuggestionItem
 						index={i}
@@ -381,26 +403,27 @@ class MultiSelect extends React.Component {
 						textField={textField}
 						valueField={valueField}
 						onHover={this.handleHover}
-						value={suggestion}
+						option={suggestion}
 						onChange={this.handleSelect}
 						focus={focus}
+						styleId={styleId}
 					/>
 				);
 			});
 		} else {
-			suggestionList = <FormatText i18NKey="No matches found" className={style.notfound} type="div" />;
+			suggestionList = <FormatText i18NKey="No matches found" className={style[`${styleId}_notfound`]} type="div" />;
 		}
 
 		return (
-			<div className={style.mainrel} ref={this.setRef}  tabIndex={tabIndex} onFocus={focusIn} onBlur={focusOut} onClick={onClick} >
-				<div ref={this.setPlaceHolderRef} className={isPopupOpen ? style.mainFlexWrap : style.mainBorder} 
+			<div className={style[`${styleId}_mainrel`]} ref={this.setRef}  tabIndex={tabIndex} onClick={onClick} >
+				<div ref={this.setPlaceHolderRef} className={isPopupOpen ? style[`${styleId}_mainFlexWrap`] : style[`${styleId}_mainBorder`]}
 						onClick={!isReadOnly && this.handleToggleClick }>
-					{selectedValues}
-					<span className={style.inputAdjust}>
+					{displaySelectedItems}
+					<span className={style[`${styleId}_inputAdjust`]}>
 						<input
-							className={style.inputFocus}
+							className={style[`${styleId}_inputFocus`]}
 							placeholder={placeholder}
-							ref="nameInput"
+							ref={this.setSearchInputRef}
 							readOnly={isReadOnly}
 							onKeyDown={this.handleKeyDown}
 							onKeyUp={this.handleKeyUp}
@@ -408,17 +431,18 @@ class MultiSelect extends React.Component {
 							value={searchString}
 						/>
 					</span>
-					<div className={style.clr} />
+					<div className={style[`${styleId}_clr`]} />
 				</div>
 				<div ref={this.setDropPopupRef}  onClick={removeClose}
+				
 				className={
-						style.droppopup+' '+ ( isPopupReady ? style.ready : '' ) +' '+ 
+						style[`${styleId}_droppopup`]+' '+ ( isPopupReady ? style.ready : '' ) +' '+
 						( isPopupOpen ? style.opened : '')  +' '+
-						(position == 'top' ? style.ListAdsTop : style.ListAds)
+						(position == 'top' ? style[`${styleId}_ListAdsTop`] : style[`${styleId}_ListAds`])
 				}>
 					{suggestionList}
 				</div>
-				<div className={style.clr} />
+				<div className={style[`${styleId}_clr`]} />
 			</div>
 		);
 	}
@@ -431,10 +455,12 @@ MultiSelect.defaultProps = {
 	textField: 'name',
 	searchKeys: ['name'],
 	searchType: 'indexOf',
-	allowClear: true
+	allowClear: true,
+	styleId: "default"
 };
 
 MultiSelect.propTypes = {
+	styleId: PropTypes.string,
 	groupName: PropTypes.string,
 	placeholder: PropTypes.string,
 	selectedValues: PropTypes.array,
@@ -450,12 +476,15 @@ MultiSelect.propTypes = {
 	onChange: PropTypes.func,
 	closePopupOnly: PropTypes.func,
 
-	fireEvent : PropTypes.string,
 	tabIndex : PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef : PropTypes.func,
+	getValue : PropTypes.func,
 	onClick : PropTypes.func,
-	
+
+	errored : PropTypes.bool,
+	focused : PropTypes.bool,
+	errored : PropTypes.bool,
+
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
@@ -481,24 +510,24 @@ class SuggestionItem extends React.Component {
 	}
 
 	handleSelect(e) {
-		let { onChange, value } = this.props;
-		onChange && onChange(value, e);
+		let { onChange, option } = this.props;
+		onChange && onChange(option, e);
 	}
 
 	render() {
-		let { focus, textField, value = {} } = this.props;
+		let { focus, textField, option = {}, styleId } = this.props;
 
-		let className = focus ? style.suggestionFocus : style.suggestion;
+		let className = focus ? style[`${styleId}_suggestionFocus`] : style[`${styleId}_suggestion`];
 		return (
 			<div className={className} onClick={this.handleSelect} onMouseOver={this.handleHover}>
-				{value[textField]}
+				{option[textField]}
 			</div>
 		);
 	}
 }
 
 SuggestionItem.propTypes = {
-	value: PropTypes.object,
+	option: PropTypes.object,
 	textField: PropTypes.string,
 	onHover: PropTypes.func,
 	onChange: PropTypes.func
@@ -519,11 +548,11 @@ class SelectedItem extends React.Component {
 	}
 
 	render() {
-		let { textField, value = {}, allowClear } = this.props;
+		let { textField, value = {}, allowClear,styleId } = this.props;
 		return (
-			<span className={style.multiSel}>
+			<span className={style[`${styleId}_multiSel`]}>
 				<Pill
-					backIcon={allowClear ? { name: 'xCloseIcon', size: 'small' } : null}
+					backIcon={allowClear ? { name: 'closeicon', size: 'small' } : null}
 					text={value[textField]}
 					onBackIconClick={this.handleRemove}
 				/>

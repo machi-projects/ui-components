@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PickMultiGroupBase, { PickItemBase } from '../../js/core/PickMultiGroupBase';
 
-import styles from './pickmultigroup.css';
 import styleMapping from './styleMapping';
 
 import {omit} from '../../utils/objectUtils';
@@ -16,9 +15,7 @@ export  class PickItem extends Component {
 
 PickItem.propTypes ={
 	pickId : PropTypes.string.isRequired,
-	tabIndex : PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func
+	tabIndex : PropTypes.string
 }
 
 export default class PickMultiGroup extends Component {
@@ -69,7 +66,7 @@ export default class PickMultiGroup extends Component {
         {
           React.Children.map(this.props.children, (child ,i ) => {
 
-            return (<PickItemBase key={i} {...child.props} />);
+              return (<PickItemBase key={i} {...child.props} />);
 
            })
         }
@@ -95,23 +92,23 @@ PickMultiGroup.propTypes = {
    itemsControls : PropTypes.bool,
    selectedItems :  PropTypes.arrayOf(PropTypes.string),
    onSelect : PropTypes.func,
+   getValue : PropTypes.func,
    pickOn : PropTypes.string,
 
-	tabIndex : PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
-	onClick : PropTypes.func,
+   tabIndex : PropTypes.string,
+   getElementRef : PropTypes.func,
+   onClick : PropTypes.func,
 	
    validation : PropTypes.shape({
-		validate : PropTypes.bool ,
-		validateOn : PropTypes.string,
-		rulesOrder :  PropTypes.arrayOf(PropTypes.string),
-		rules : PropTypes.object,
-		messages : PropTypes.object
- 	}),
+	validate : PropTypes.bool ,
+	validateOn : PropTypes.string,
+	rulesOrder :  PropTypes.arrayOf(PropTypes.string),
+	rules : PropTypes.object,
+	messages : PropTypes.object
+  }),
 
- 	onPassValidation : PropTypes.func,
- 	onFailValidation :  PropTypes.func,
+  onPassValidation : PropTypes.func,
+  onFailValidation :  PropTypes.func,
 
   focused : PropTypes.bool,
   errored : PropTypes.bool,

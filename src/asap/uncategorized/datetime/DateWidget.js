@@ -5,13 +5,17 @@ import Popup from '../Popup';
 import style from './DateWidget.css';
 import moment from 'moment-timezone';
 
+import { Icon } from '../../index';
+
 import validator from '../../../utils/validator';
+import { deepEqualObject } from '../../../utils/objectUtils';
 
 class DateWidget extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleSelect = this.handleSelect.bind(this);
-		this.state = { selected: props.value, timeZone: props.timeZone || moment.tz.guess() };
+		this.onChangeValue = this.onChangeValue.bind(this);
+		this.state = { selected : props.value, timeZone: (props.timeZone || moment.tz.guess()) };
 		this.setDropPopupRef = this.setDropPopupRef.bind(this);
 		this.setRef = this.setRef.bind(this);
 		this.setPlaceHolderRef = this.setPlaceHolderRef.bind(this);
@@ -19,6 +23,7 @@ class DateWidget extends React.Component {
 	
 	setRef(el) {
 		this.elementRef = el;
+		this.props.getElementRef && this.props.getElementRef(el);
 	}
 	
 	setPlaceHolderRef(el) {
@@ -29,6 +34,30 @@ class DateWidget extends React.Component {
 		this.dropPopupRef = el;
 	}
 	
+	componentWillReceiveProps(nextProps) {
+		
+		if( nextProps.value !== this.state.selected){
+			this.setState({ selected : nextProps.value },()=>{
+				this.onChangeValue(this.state.selected);
+			});
+		}
+		
+		if( deepEqualObject(nextProps.validation,this.props.validation) == false && nextProps.validation && nextProps.validation.validate ){
+			this.validateOnSelect(this.state.selected, nextProps);
+		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState)
+	{
+		return ( (deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false) )
+	}
+	
+	
+	onChangeValue(val, groupName){
+		this.props.onChange && this.props.onChange(val, groupName);
+		this.props.getValue && this.props.getValue(val);
+	}
+
 	render() {
 		let {
 			togglePopup,
@@ -50,24 +79,23 @@ class DateWidget extends React.Component {
 			arrowPosition,
 			
 			tabIndex,
-			focusIn,
-			focusOut,
 			onClick
-			
 		} = this.props;
 		let value = this.state.selected;
+		
 		value = value ? moment.tz(value, this.state.timeZone) : null;
 		let displayText = value ? (!isDateTime ? value.format(dtPtn) : value.format(dtPtn + ' hh:mm A')) : '';
 		
 		return (
-			<div className={style.posrel} ref={this.setRef} tabIndex={tabIndex} onFocus={focusIn} onBlur={focusOut} onClick={onClick} >
+			<div className={style.posrel} ref={this.setRef} tabIndex={tabIndex} onClick={onClick} >
 				<div
 					className={isPopupOpen ? style.dateFocus : style.date}
-					data-testid="remindMeOnDueDate"
 					onClick={(e)=>{ togglePopup(e,this.dropPopupRef,this.placeHolderRef) }}
-					data-testId={name}
 					ref={this.setPlaceHolderRef}
 				>
+				
+				<Icon id="datePicker" color="tundora" styleId="date_Picker" />
+				
 					<span>
 						{value ? displayText : placeholder}
 					</span>
@@ -96,19 +124,16 @@ class DateWidget extends React.Component {
 		);
 	}
 
-	componentWillReceiveProps(nextprops) {
-		if (nextprops.validation != null && nextprops.validation.validate) {
-			this.validateOnSelect(this.state.selected, nextprops);
-		}
-	}
 
 	handleSelect(userZoneSelectedTime, e) {
-		let { id, onChange, togglePopup } = this.props;
-		this.setState({ selected: userZoneSelectedTime }, () => {
+		
+		let value = userZoneSelectedTime ? userZoneSelectedTime.utc().format() : null;
+		let { id, togglePopup } = this.props;
+		this.setState({ selected: value }, () => {
 			if (this.props.validation && this.props.validation.validateOn) {
-				this.validateOnSelect(this.state.selected, this.props);
+				this.validateOnSelect(this.state.selected , this.props);
 			}
-			onChange && onChange(userZoneSelectedTime ? userZoneSelectedTime.utc().format() : '', id);
+			this.onChangeValue(this.state.selected,id);
 		});
 
 		togglePopup(e);
@@ -140,35 +165,21 @@ class DateWidget extends React.Component {
 			};
 
 			validator.executeValidation(value, targetTag, validationObj , defaultType);
-		} else {
+		}
+		else {
 			onPassValidation && onPassValidation(value, targetTag);
 		}
 	}
 	
-	componentDidUpdate(prevProps, prevState)
-	{
-		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
-			requestAnimationFrame(()=>{		
-				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			})
-			
-		}
-	}
-
 	componentDidMount() {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selected, this.props);
-		}
-		if(this.props.fireEvent!=null){
-			requestAnimationFrame(()=>{	
-				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			})
 		}
 	}
 }
 
 DateWidget.defaultProps = {
-	placeholder: '-None-'
+	placeholder: 'No date selected'
 };
 
 DateWidget.propTypes = {
@@ -193,11 +204,14 @@ DateWidget.propTypes = {
 	arrowPosition: PropTypes.string,
 	placeholder: PropTypes.string,
 
-	fireEvent : PropTypes.string,
 	tabIndex : PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef : PropTypes.func,
+	getValue : PropTypes.func,
 	onClick : PropTypes.func,
+	
+	raised : PropTypes.bool,
+	focused : PropTypes.bool,
+	errored : PropTypes.bool,
 	
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,
@@ -211,5 +225,5 @@ DateWidget.propTypes = {
 	onFailValidation: PropTypes.func
 };
 
-export default Popup(DateWidget, 'date');
+export default Popup(DateWidget);
 //export const DateWidgetInline = Popup(DateWidget);

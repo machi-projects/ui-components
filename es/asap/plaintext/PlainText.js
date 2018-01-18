@@ -8,9 +8,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import PlainTextBase from '../../js/PlainTextBase';
-import styles from './plaintext.css';
+
 import { omit } from '../../utils/objectUtils';
 import cx from '../../utils/classNamesUtils/classNamesBind';
+
+import styles from './plaintext.css';
 
 var PlainText = function (_React$Component) {
 		_inherits(PlainText, _React$Component);

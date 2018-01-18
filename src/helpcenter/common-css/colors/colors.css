@@ -1,7 +1,90 @@
-@value _cerulean, _emperor, _red,_red_1,_azureRadiance,_gallery,_wildSand,_wildSand_1,_mineShaft,_alabaster,_froly,_white,_black,_dustyGray,_tundora,_blue, _green, _transparent, _black_alpha_half, _grey_shade, _grey_shade2 from "../variables/colors.css";
+@value  _crimson, _silverChalice, _shamrock, _turquoise, _cerulean, _emerald, _yellowGreen, _goldenTainoi, _burntSienna_1, _burntSienna_2, _malibu, _blueViolet, _indigo_1, _cranberry, _regentGray, _atoll, _blueChill, _scooter, _fuelYellow, _sunglo, _trendyPink, _silverChalice, _stormGray, _stormGray, _bondiBlue , _rodeoDust , _orientalPink , _greenHaze , _conifer , _provincial_pink , _inherit ,  _cerulean , _emperor , _red , _red_1 , _azureRadiance , _gallery , _wildSand , _wildSand_1 , _mineShaft , _alabaster , _froly , _white , _black , _dustyGray , _tundora , _blue , _green , _transparent , _black_alpha_half , _grey_shade , _grey_shade2  from '../variables/colors.css';
+
+
+.clr_crimson{
+	color: _crimson;
+}
+.clr_shamrock{
+	color: _shamrock
+}
+.clr_turquoise{
+	color: _turquoise
+}
+.clr_cerulean{
+	color: _cerulean
+}
+.clr_yellowGreen{
+	color: _yellowGreen
+}
+.clr_goldenTainoi{
+	color: _goldenTainoi
+}
+.clr_burntSienna_1{
+	color: _burntSienna_1
+}
+.clr_burntSienna_2{
+	color: _burntSienna_2
+}
+.clr_malibu{
+	color: _malibu
+}
+.clr_blueViolet{
+	color: _blueViolet
+}
+.clr_indigo_1{
+	color: _indigo_1
+}
+.clr_cranberry{
+	color: _cranberry
+}
+.clr_regentGray{
+	color: _regentGray
+}
+.clr_atoll{
+	color: _atoll
+}
+.clr_blueChill{
+	color: _blueChill
+}
+.clr_scooter{
+	color: _scooter
+}
+.clr_fuelYellow{
+	color: _fuelYellow
+}
+.clr_sunglo{
+	color: _sunglo
+}
+.clr_trendyPink{
+	color: _trendyPink
+}
+.clr_silverChalice{
+	color: _silverChalice
+}
+.clr_stormGray{
+	color: _stormGray
+}
+.clr_bondiBlue{
+	color: _bondiBlue
+}
+.clr_rodeoDust{
+	color: _rodeoDust
+}
+.clr_orientalPink{
+	color: _orientalPink
+}
+.clr_greenHaze{
+	color: _greenHaze
+}
+.clr_conifer{
+	color: _conifer
+}
+.clr_sushi{
+	color: _sushi;
+}
 
 .clr_red {
-	color: _blue;
+	color: _red;
 }
 
 .clr_green {
@@ -21,6 +104,13 @@
 .clr_tundora{
 	color: _tundora;
 }
+.clr_azureRadiance{
+	color: _azureRadiance;
+}
+
+.clr_emerald{
+	color: _emerald;
+}
 .clr_dustyGray{
 	color: _dustyGray;
 }
@@ -29,6 +119,9 @@
 }
 .clr_white{
 	color: _white;
+}
+.clr_white_imp{
+	color: _white !important
 }
 .clr_froly{
 	color: _froly;
@@ -43,6 +136,9 @@
 	color: _cerulean;
 }
 
+.bg_provincial_pink{
+	background-color: _provincial_pink;
+}
 
 .bg_wildSand{
 	background-color: _wildSand;
@@ -89,3 +185,176 @@
 	background-color: _red_1;
 }
 
+.clr_inherit{
+	color: _inherit;
+}
+
+
+
+
+
+.foto_set_bgclr_a{
+	background-color: _shamrock ;
+	composes: clr_white ;
+}
+.foto_set_bgclr_b{
+	background-color: _turquoise;
+	composes: clr_white;
+}
+.foto_set_bgclr_c{
+	background-color: _cerulean;
+	composes: clr_white;
+}
+.foto_set_bgclr_d{
+	background-color: _yellowGreen;
+	composes: clr_white;
+}
+.foto_set_bgclr_e{
+	background-color: _goldenTainoi;
+	composes: clr_white;
+}
+.foto_set_bgclr_f{
+	background-color: _burntSienna_1;
+	composes: clr_white;
+}
+.foto_set_bgclr_g{
+	background-color: _burntSienna_2;
+	composes: clr_white;
+}
+.foto_set_bgclr_h{
+	background-color: _malibu;
+	composes: clr_white;
+}
+.foto_set_bgclr_i{
+	background-color: _blueViolet;
+	composes: clr_white;
+}
+.foto_set_bgclr_j{
+	background-color: _indigo_1;
+	composes: clr_white;
+}
+.foto_set_bgclr_k{
+	background-color: _cranberry;
+	composes: clr_white;
+}
+.foto_set_bgclr_l{
+	background-color: _regentGray;
+	composes: clr_white;
+}
+
+
+.foto_set_bgclr_m{
+	background-color: _atoll;
+	composes: clr_white;
+}
+.foto_set_bgclr_n{
+	background-color: _blueChill;
+	composes: clr_white;
+}
+.foto_set_bgclr_o{
+	background-color: _scooter;
+	composes: clr_white;
+}
+.foto_set_bgclr_p{
+	background-color: _fuelYellow;
+	composes: clr_white;
+}
+.foto_set_bgclr_q{
+	background-color: _sunglo;
+	composes: clr_white;
+}
+.foto_set_bgclr_r{
+	background-color: _trendyPink;
+	composes: clr_white;
+}
+
+.foto_set_bgclr_s{
+	background-color: _silverChalice;
+	composes: clr_white;
+}
+.foto_set_bgclr_t{
+	background-color: _stormGray;
+	composes: clr_white;
+}
+.foto_set_bgclr_u{
+	background-color: _bondiBlue;
+	composes: clr_white;
+}
+.foto_set_bgclr_v{
+	background-color: _bondiBlue;
+	composes: clr_white;
+}
+.foto_set_bgclr_w{
+	background-color: _shamrock;
+	composes: clr_white;
+}
+.foto_set_bgclr_x{
+	background-color: _rodeoDust;
+	composes: clr_white;
+}
+.foto_set_bgclr_y{
+	background-color: _orientalPink;
+	composes: clr_white;
+}
+.foto_set_bgclr_z{
+	background-color: _greenHaze;
+	composes: clr_white;
+}
+.foto_set_bgclr_others{
+	background-color: _conifer;
+	composes: clr_white
+}
+
+.foto_set_bgclr_nouser{
+	background-color: _conifer;
+}
+
+.foto_set_bgclr_nouser:after{
+	content:'\2022';
+}
+.foto_set_bgclr_0{
+	background-color: _greenHaze;
+	composes: clr_white;
+}
+.foto_set_bgclr_1{
+	background-color: _orientalPink;
+	composes: clr_white;
+}
+.foto_set_bgclr_2{
+	background-color: _rodeoDust;
+	composes: clr_white;
+}
+.foto_set_bgclr_3{
+	background-color: _shamrock;
+	composes: clr_white;
+}
+.foto_set_bgclr_4{
+	background-color: _bondiBlue;
+	composes: clr_white;
+}
+.foto_set_bgclr_5{
+	background-color: _stormGray;
+	composes: clr_white;
+}
+.foto_set_bgclr_6{
+	background-color: _silverChalice;
+	composes: clr_white;
+}
+.foto_set_bgclr_7{
+	background-color : _trendyPink;
+	composes: clr_white;
+}
+.foto_set_bgclr_8{
+	background-color: _sunglo;
+	composes: clr_white;
+}
+.foto_set_bgclr_9{
+	background-color: _fuelYellow;
+	composes: clr_white;
+}
+
+/*
+.foto_set_bgclr_special-characters{
+	border-color:#ec5063;
+} 
+*/

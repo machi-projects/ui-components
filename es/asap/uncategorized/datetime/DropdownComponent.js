@@ -9,6 +9,9 @@ import ReactDOM from 'react-dom';
 import style from './DropdownComponent.css';
 import Popup from '../Popup';
 import { formatValue, bind } from '../common';
+
+import { deepEqualObject } from '../../../utils/objectUtils';
+
 var getI18NValue = function getI18NValue(value, _ref) {
   var _ref2 = _toArray(_ref);
 
@@ -23,16 +26,16 @@ var DropdownComponent = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (DropdownComponent.__proto__ || _Object$getPrototypeOf(DropdownComponent)).call(this, props));
 
-    bind.apply(_this, ["handleFocus", "handleSelect", "handleKeyUp", "handleToggle", "handleChange", "setInputRef"]);
+    bind.apply(_this, ["handleFocus", "handleSelect", "handleKeyUp", "handleToggle", "handleChange", "onChangeValue", "setInputRef"]);
 
     var value = props.value,
         suggestions = props.suggestions,
         valueField = props.valueField,
         textField = props.textField;
 
-    suggestions = suggestions ? formatValue(suggestions) : [];
+    suggestions = suggestions ? formatValue(suggestions, props.valueField, props.textField) : [];
     value = value ? value : [suggestions[0]];
-    var selectedValue = value ? formatValue([value])[0] : null;
+    var selectedValue = value ? formatValue([value], props.valueField, props.textField)[0] : null;
 
     var focusedSuggestion = _this.getFocussedSuggestion(suggestions, selectedValue, valueField);
     _this.state = { searchString: "", focusedSuggestion: focusedSuggestion };
@@ -95,16 +98,15 @@ var DropdownComponent = function (_React$Component) {
           searchKeys = _props.searchKeys,
           searchType = _props.searchType,
           suggestions = _props.suggestions,
-          onSelect = _props.onSelect,
           value = _props.value,
           togglePopup = _props.togglePopup,
           closePopupOnly = _props.closePopupOnly;
 
 
       suggestions = suggestions && suggestions.length && suggestions || [];
-      suggestions = formatValue(suggestions); //
+      suggestions = formatValue(suggestions, valueField, textField); //
       value = value && value || suggestions[0];
-      value = formatValue([value]); //
+      value = formatValue([value], valueField, textField); //
 
       var _state = this.state,
           focusedSuggestion = _state.focusedSuggestion,
@@ -139,7 +141,7 @@ var DropdownComponent = function (_React$Component) {
           if (suggestionLength) {
             var selectedValue = suggestionList[focusedSuggestion];
             if (selectedValue) {
-              onSelect(selectedValue);
+              this.onChangeValue(selectedValue);
               togglePopup(e);
               searchString = "";
               focusedSuggestion = 0;
@@ -162,13 +164,20 @@ var DropdownComponent = function (_React$Component) {
   }, {
     key: 'handleSelect',
     value: function handleSelect(value, e) {
-      var _props2 = this.props,
-          onSelect = _props2.onSelect,
-          togglePopup = _props2.togglePopup;
+      var togglePopup = this.props.togglePopup;
 
-      onSelect(value);
+      this.onChangeValue(value);
       togglePopup(e);
       this.setState({ searchString: "" });
+    }
+  }, {
+    key: 'onChangeValue',
+    value: function onChangeValue(value) {
+      var _props2 = this.props,
+          onSelect = _props2.onSelect,
+          valueField = _props2.valueField;
+
+      onSelect && onSelect(value[valueField]);
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -178,15 +187,15 @@ var DropdownComponent = function (_React$Component) {
           textField = nextProps.textField,
           value = nextProps.value;
 
+      if (deepEqualObject(nextProps, this.props) == false) {
 
-      suggestions = suggestions ? formatValue(suggestions) : [];
-      value = value ? value : suggestions[0];
-      var selectedValue = value ? formatValue([value])[0] : null;
+        suggestions = suggestions ? formatValue(suggestions, valueField, textField) : [];
+        value = value ? value : suggestions[0];
+        var selectedValue = value ? formatValue([value], valueField, textField)[0] : null;
+        var focusedSuggestion = this.getFocussedSuggestion(suggestions, selectedValue, valueField);
 
-      var focusedSuggestion = this.getFocussedSuggestion(suggestions, selectedValue, valueField);
-      this.state = {
-        focusedSuggestion: focusedSuggestion
-      };
+        this.setState({ focusedSuggestion: focusedSuggestion });
+      }
     }
   }, {
     key: 'handleToggle',
@@ -227,9 +236,9 @@ var DropdownComponent = function (_React$Component) {
       var dropDownMainstyle = styles.newMain ? styles.newMain : style.main;
       dropDownMainstyle = isReadOnly ? style.mainNot : dropDownMainstyle;
 
-      suggestions = suggestions ? formatValue(suggestions) : [];
+      suggestions = suggestions ? formatValue(suggestions, valueField, textField) : [];
       value = value ? value : suggestions[0];
-      var selectedValue = value ? formatValue([value])[0] : null;
+      var selectedValue = value ? formatValue([value], valueField, textField)[0] : null;
       suggestions = this.filterSuggestions(searchString, suggestions, searchKeys, searchType);
 
       if (suggestions.length) {
@@ -241,28 +250,27 @@ var DropdownComponent = function (_React$Component) {
         suggestionsListElements = React.createElement(
           'li',
           { className: style.notfound },
-          (getI18NValue("crm.module.empty.msg.for.search"), ["matches"])
+          'No Result'
         );
       }
 
       return React.createElement(
         'div',
-        { className: dropDownMainstyle, onClick: !isReadOnly && this.handleToggle, 'data-testid': id },
+        { className: dropDownMainstyle, onClick: !isReadOnly && this.handleToggle },
         React.createElement(
           'div',
-          { className: styles.container ? styles.container : this.props.dropStyle ? style.dropStyle : style.dropdown, 'data-testid': 'remindByCountContainer' },
+          { className: styles.container ? styles.container : this.props.dropStyle ? style.dropStyle : style.dropdown },
           React.createElement(
             'span',
             { className: style.flexline },
             selectedValue && React.createElement(
               'span',
-              { 'data-testid': 'selectedValue', className: this.props.dropStyle ? style.dropSelectName : style.selectname },
+              { className: this.props.dropStyle ? style.dropSelectName : style.selectname },
               selectedValue[textField]
             ),
             React.createElement(
               'span',
               { className: isPopupOpen ? style.topArow : style.downArow },
-              ' ',
               ' '
             )
           )
@@ -273,13 +281,13 @@ var DropdownComponent = function (_React$Component) {
           searchField && React.createElement(
             'div',
             { className: searchField ? style.searchinp : style.hide, onClick: removeClose },
-            React.createElement('input', { type: 'text', id: 'testtest', className: style.searchicon, onChange: this.handleChange,
+            React.createElement('input', { type: 'text', className: style.searchicon, onChange: this.handleChange,
               value: this.state.searchString, onKeyUp: this.handleKeyUp, ref: this.setInputRef }),
             React.createElement('span', { className: style.searchIcon })
           ),
           React.createElement(
             'ul',
-            { className: style.listmenu, 'data-testid': 'suggestionContainer' },
+            { className: style.listmenu },
             suggestionsListElements
           )
         )
@@ -289,6 +297,11 @@ var DropdownComponent = function (_React$Component) {
 
   return DropdownComponent;
 }(React.Component);
+
+DropdownComponent.defaultProps = {
+  valueField: "id",
+  textField: "name"
+};
 
 export default Popup(DropdownComponent, "dropdown");
 

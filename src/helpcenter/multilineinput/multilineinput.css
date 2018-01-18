@@ -1,4 +1,5 @@
-@value _alto,_jordyBlue,_red_1,_green from '../common-css/variables/colors.css';
+@value _alto,_jordyBlue,_red_1,_green, _froly from '../common-css/variables/colors.css';
+@value _none from '../common-css/variables/units.css';
 
 .default{
 	margin: 0;
@@ -13,24 +14,29 @@
     background-size: 350px 100%;
     background-repeat: no-repeat;
     composes: clr_tundora from '../common-css/colors/colors.css';
-    outline: none;
-    width: 97%;
-    font-size: 16px;
-    padding: 10px 5px;	
-   
+    outline: none !important;
+    width: 100%;
+    composes: fs_16_px from '../../../components/common-css/typography/fontsizes.css';
+    overflow:auto;
+    box-shadow: none;
 }
 
 .default:focus{
 	background-position: 0 0;
-	border-bottom: 1px solid  _red_1;
-	box-shadow: none;
-	outline:none;
+	border: _none !important;
+	border-bottom: 1px solid  _froly !important;
+	box-shadow: _none;
+	outline: _none !important;
 }
 
 .default.autoExpandY{
-	 box-sizing: padding-box;
+	 box-sizing: border-box;
 	 resize:none;
-	 max-height:250px;
+	 max-height: 100px;
+     padding: 0 10px 10px 5px;
+     margin-top: 15px;
+     height: 30px;
+     box-shadow: none;
 }
 
 .default.focused {
@@ -39,12 +45,6 @@
 
 .default.raised {
   outline: 5px auto _green;
-}
-
-
-
-.myinput{
-
 }
 
 .myinput.focused {

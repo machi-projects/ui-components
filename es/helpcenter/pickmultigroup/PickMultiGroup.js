@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PickMultiGroupBase, { PickItemBase } from '../../js/core/PickMultiGroupBase';
 
-import styles from './pickmultigroup.css';
 import styleMapping from './styleMapping';
 
 import { omit } from '../../utils/objectUtils';
@@ -36,9 +35,7 @@ export var PickItem = function (_Component) {
 
 PickItem.propTypes = {
   pickId: PropTypes.string.isRequired,
-  tabIndex: PropTypes.string,
-  focusIn: PropTypes.func,
-  focusOut: PropTypes.func
+  tabIndex: PropTypes.string
 };
 
 var PickMultiGroup = function (_Component2) {
@@ -109,11 +106,11 @@ PickMultiGroup.propTypes = {
   itemsControls: PropTypes.bool,
   selectedItems: PropTypes.arrayOf(PropTypes.string),
   onSelect: PropTypes.func,
+  getValue: PropTypes.func,
   pickOn: PropTypes.string,
 
   tabIndex: PropTypes.string,
-  focusIn: PropTypes.func,
-  focusOut: PropTypes.func,
+  getElementRef: PropTypes.func,
   onClick: PropTypes.func,
 
   validation: PropTypes.shape({

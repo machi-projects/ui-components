@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import validator from '../../utils/validator';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 export class PickItemBase extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onPickItem = this.onPickItem.bind(this);
-		this.state = { timeStamp: 0 };
 	}
 
 	onPickItem(newSelectedItemPid, ev) {
@@ -27,7 +27,7 @@ export class PickItemBase extends React.Component {
 				};
 
 		return itemPid
-			? <div className={itemStyles} {...events} tabIndex={this.props.tabIndex} onFocus={this.props.focusIn} onBlur={this.props.focusOut}>
+			? <div className={itemStyles} {...events} tabIndex={this.props.tabIndex} >
 					{this.props.children}
 				</div>
 			: null;
@@ -36,9 +36,7 @@ export class PickItemBase extends React.Component {
 
 PickItemBase.propTypes = {
 	pickId: PropTypes.string.isRequired,
-	tabIndex: PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func
+	tabIndex: PropTypes.string
 };
 
 export default class PickMultiGroupBase extends React.Component {
@@ -47,7 +45,7 @@ export default class PickMultiGroupBase extends React.Component {
 		// Bind the method to the component context
 		this.renderChildren = this.renderChildren.bind(this);
 		this.onSelectItem = this.onSelectItem.bind(this);
-		this.state = { selectedItems: this.props.selectedItems };
+		this.state = { selectedItems : (this.props.selectedItems || []) };
 		this.validateOnSelect = this.validateOnSelect.bind(this);
 		
 		this.setRef = this.setRef.bind(this);
@@ -55,40 +53,32 @@ export default class PickMultiGroupBase extends React.Component {
 
 	setRef(el){
 		this.elementRef = el;
+		this.props.getElementRef && this.props.getElementRef(el);
 	}
-	
 	
 	componentWillReceiveProps(nextProps) {
-		let previousPids = (this.props.selectedItems || []).join('');
-		let nextPids = (nextProps.selectedItems || []).join('');
-		if (previousPids != nextPids) {
+		
+		if ( deepEqualObject(this.props.selectedItems,this.state.selectedItems) == false ) {
+			
 			let pickGroupTag = this.elementRef;
-			onSelectItem(nextProps.selectedItems, pickGroupTag, nextProps);
+			this.onSelectItem(nextProps.selectedItems, pickGroupTag, nextProps);
 		}
 
-		if ( nextProps.validation != null && nextProps.validation.validate ) {
+		if( deepEqualObject(nextProps.validation,this.props.validation) == false && nextProps.validation && nextProps.validation.validate ){
+			
 			this.validateOnSelect(this.state.selectedItems, nextProps);
 		}
+		
 	}
-
-	componentDidUpdate(prevProps, prevState)
+	
+	shouldComponentUpdate(nextProps, nextState)
 	{
-		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
-			requestAnimationFrame(()=>{				
-				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			})
-		}
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false));
 	}
 	
 	componentDidMount() {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selectedItems, this.props);
-		}
-		
-		if(this.props.fireEvent!=null){
-			requestAnimationFrame(()=>{			
-				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			});
 		}
 	}
 
@@ -117,7 +107,8 @@ export default class PickMultiGroupBase extends React.Component {
 			};
 
 			validator.executeValidation(values, targetTag, validationObj, defaultType );
-		} else {
+		}
+		else{
 			onPassValidation && onPassValidation(values, targetTag);
 		}
 	}
@@ -135,7 +126,7 @@ export default class PickMultiGroupBase extends React.Component {
 
 				return { selectedItems };
 			},
-			function() {
+			()=>{
 				let selectedItems = this.state.selectedItems;
 				let itemPosition = selectedItems.indexOf(newSelectedPid);
 
@@ -147,7 +138,11 @@ export default class PickMultiGroupBase extends React.Component {
 							active: itemPosition !== -1
 						},
 						ev.currentTarget
-					);
+				);
+				
+				console.log("selectedItems===>",selectedItems)
+				this.props.getValue && this.props.getValue(selectedItems);
+				
 
 				if( this.props.validation && this.props.validation.validateOn ){
 					this.validateOnSelect(selectedItems, nextProps || this.props);
@@ -173,9 +168,9 @@ export default class PickMultiGroupBase extends React.Component {
 	render() {
 
 		return (
-			<div className={this.props.styles.group}  ref={this.setRef}  tabIndex={this.props.tabIndex} 
-				onFocus={this.props.focusIn}
-				onBlur={this.props.focusOut}
+			<div className={this.props.styles.group}  
+				ref={this.setRef}  
+				tabIndex={this.props.tabIndex}
 				onClick={this.props.onClick} >
 				{this.renderChildren()}
 			</div>
@@ -201,12 +196,11 @@ PickMultiGroupBase.propTypes = {
 	itemsControls: PropTypes.bool,
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
+	getValue : PropTypes.func,
 	pickOn: PropTypes.string,
 
-	fireEvent : PropTypes.string,
 	tabIndex: PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef : PropTypes.func,
 	onClick : PropTypes.func,
 	
 	validation: PropTypes.shape({

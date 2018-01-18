@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import RadioBoxGroupBase, { RadioBoxItemBase } from '../../js/form/RadioBoxGroupBase';
 
-import styles from './radiogroup.css';
 import inputStyles from '../input/inputbutton/inputbutton.css';
 import labelStyles from '../label/label.css';
 
@@ -108,10 +107,9 @@ RadioGroup.propTypes = {
 	onPassValidation: PropTypes.func,
 	onFailValidation: PropTypes.func,
 
-	fireEvent :  PropTypes.string,
 	tabIndex : PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef : PropTypes.func,
+	getValue : PropTypes.func,
 	onClick : PropTypes.func,
 	
 	focused: PropTypes.bool,

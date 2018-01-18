@@ -3,9 +3,9 @@ import LabelBase from '../core/LabelBase';
 import PropTypes from 'prop-types';
 
 export default class LabelBoxBase extends React.Component {
-
+	
 	render() {
-    return ( <LabelBase {...this.props} /> );
+		return ( <LabelBase {...this.props} /> );
 	}
 
 }

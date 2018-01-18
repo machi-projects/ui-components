@@ -11,7 +11,10 @@ export default class Icon__Default extends Component {
 				<div>
 
 						<Icon id="searchIcon" color="green" size="small" />
-
+					
+						<Icon id="datePicker" size="small" />
+							
+						<Icon id="Refresh" size="small" />
 				</div>
 		)
 	}

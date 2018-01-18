@@ -1,0 +1,1 @@
+export { default as CaptchaBox } from "./CaptchaBox.js";

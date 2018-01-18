@@ -1,67 +1,69 @@
-/* $Id$ */
-@value _alto,_tundora,_athensGray,_gallery_alpha_6,_red_1 from '../../common-css/variables/colors.css';
+@value _transparent_alpha_16,_transparent_alpha_12,_alto,_tundora,_athensGray,_gallery_alpha_6,_red_1 from '../../common-css/variables/colors.css';
+@value _none , _px_16  from '../../common-css/variables/units.css';
+@value _px_16 from '../../common-css/font-sizes/fontsizes.css';
 
-.notfound{
+.default_notfound{
     padding:0 7px;
 }
-.mainrel{
+.default_mainrel{
     position:relative;
+    outline:none;
 }
-.mainBorder{
+.default_mainBorder{
     border-bottom: 1px solid _alto;
-    margin:5px 0 0;
+    margin:30px 0 0;
 }
-.mainFlexWrap{
-    composes:mainBorder;
+.default_mainFlexWrap{
+    composes:default_mainBorder;
     border-bottom: 1px solid _red_1;
 }
-.inputAdjust{
+.default_inputAdjust{
     display:block;
-    overflow:hidden;
+    overflow:hidden; 
     white-space: nowrap;
     min-width: 120px;
 }
-.inputFocus{
+.default_inputFocus{
     width: 100%;
     box-sizing: border-box;
    	composes: clr_tundora from '../../common-css/colors/colors.css';
     outline: 0;
-    font: 14px "San Francisco Display Light",sans-serif;
-    border: none;
+     composes: fs_14_px from '../../common-css/font-sizes/fontsizes.css';
+    border: none !important;
     padding: 5px;
     margin: 7px 0 6px;
 }
-.inputFocus:focus{ 
-  border-color: _athensGray;
-  box-shadow:none;
+.default_inputFocus:focus{ 
+ /*  border-color: _athensGray; */
+  box-shadow: _none;
 }
 
-.suggestlistview{
+.default_suggestlistview{
     width: 100%;
     border-radius: 2px;
     composes: bg_white from '../../common-css/colors/colors.css';
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+    box-shadow: 0 2px 5px 0 _transparent_alpha_16, 0 2px 10px 0 _transparent_alpha_12;
     composes: max_level_9 from '../../common-css/zindexes/zindex.css';
     will-change: width, height;
     min-width: 100px;
-    max-height: 650px;
+    max-height: 200px;
     overflow-y: auto;
     border-top: 0px;
 }
 
-.ListAds{
-	composes : suggestlistview;
+.default_ListAds{
+	composes : default_suggestlistview;
 	position: relative;
 	top: 0px;
 }
 
-.ListAdsTop{
-   composes : suggestlistview;
+.default_ListAdsTop{
+   composes : default_suggestlistview;
    position: absolute;
    bottom: 50px;
 }
 
-.suggestion{
+.default_suggestion{
    	width:100%;
     box-sizing:border-box;
     composes: bg_white from '../../common-css/colors/colors.css';
@@ -69,55 +71,63 @@
     cursor: pointer;
     text-align: left;
     text-transform: none;
-    font-size: 16px;
+     composes: fs_16_px from '../../common-css/font-sizes/fontsizes.css';
     composes: clr_tundora from '../../common-css/colors/colors.css';
     display: block;
     padding: 14px 16px;
+    line-height: normal;
 }
-.suggestionFocus{
-    composes:suggestion;
+.default_suggestionFocus{
+    composes:default_suggestion;
     composes: bg_gallery from '../../common-css/colors/colors.css';
     clear: both;
     cursor: pointer;
     text-align: left;
     text-transform: none;
-    font-size: 16px;
+     composes: fs_14_px from '../../common-css/font-sizes/fontsizes.css';
     composes: clr_tundora from '../../common-css/colors/colors.css';
     display: block;
     padding: 14px 16px;
 }
-.suggestionFocus:hover{
+.default_suggestionFocus:hover{
 	background-color: _gallery_alpha_6;
     clear: both;
     cursor: pointer;
     text-align: left;
     text-transform: none;
-    font-size: 16px;
+    font-size: _px_16;
     color: _tundora;
     display: block;
     padding: 14px 16px;
 }
-.hide{
+.default_hide{
  display:none;
 }
-.clr{
+.default_clr{
     clear:both;
 }
-.multiSel{
+.default_multiSel{
   float:left;
   margin:6px 5px 6px 0
 }
 
 
-.droppopup{
+.default_droppopup{
 	display:none;
 }
 
-.droppopup.opened{
+.default_droppopup.opened{
 	display:block;
 	visibility:hidden;
 }
 
-.droppopup.ready{
+.default_droppopup.ready{
 	visibility:visible;
+}
+.default_notfound{
+	padding: 10px 16px;
+	float: left;
+	width: 90%;
+	font-size: 14px;
+	color: #444;
 }

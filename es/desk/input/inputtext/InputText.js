@@ -37,16 +37,14 @@ var InputText = function (_Component) {
 			    errored = _props.errored,
 			    valid = _props.valid,
 			    raised = _props.raised,
-			    focusIn = _props.focusIn,
-			    focusOut = _props.focusOut;
+			    iscollapsed = _props.iscollapsed;
 
 
-			var newProps = omit(this.props, ['className', 'styleId', 'focused', 'errored', 'valid', 'raised', 'focusIn', 'focusOut']);
+			var newProps = omit(this.props, ['className', 'styleId', 'focused', 'errored', 'valid', 'raised', 'iscollapsed']);
 
-			var classNames = cx(styles, (_cx = {}, _defineProperty(_cx, styleId, true), _defineProperty(_cx, 'required', required), _defineProperty(_cx, 'disabled', disabled), _defineProperty(_cx, 'readOnly', readOnly), _defineProperty(_cx, 'hidden', hidden), _defineProperty(_cx, 'focused', focused), _defineProperty(_cx, 'errored', errored), _defineProperty(_cx, 'valid', valid), _defineProperty(_cx, 'raised', raised), _cx));
-
+			var classNames = cx(styles, (_cx = {}, _defineProperty(_cx, styleId, true), _defineProperty(_cx, 'required', required), _defineProperty(_cx, 'disabled', disabled), _defineProperty(_cx, 'readOnly', readOnly), _defineProperty(_cx, 'hidden', hidden), _defineProperty(_cx, 'iscollapsed', iscollapsed), _defineProperty(_cx, 'focused', focused), _defineProperty(_cx, 'errored', errored), _defineProperty(_cx, 'valid', valid), _defineProperty(_cx, 'raised', raised), _cx));
 			//let onPassValidation = validation.validate ?  errored =  true
-			return React.createElement(InputTextBoxBase, _extends({}, newProps, { onFocus: focusIn, onBlur: focusOut, className: classNames }));
+			return React.createElement(InputTextBoxBase, _extends({}, newProps, { className: classNames }));
 		}
 	}]);
 
@@ -81,16 +79,15 @@ InputText.propTypes = {
 	value: PropTypes.string,
 	hidden: PropTypes.bool,
 
-	fireEvent: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func,
+	getElementRef: PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onKeyUp: PropTypes.func,
 	onChange: PropTypes.func,
 	onInput: PropTypes.func,
+	getValue: PropTypes.func,
 
 	validation: PropTypes.shape({
-		show: PropTypes.bool,
+		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
 		rules: PropTypes.object,
 		rulesOrder: PropTypes.arrayOf(PropTypes.string),
@@ -103,7 +100,8 @@ InputText.propTypes = {
 	focused: PropTypes.bool,
 	errored: PropTypes.bool,
 	valid: PropTypes.bool,
-	raised: PropTypes.bool
+	raised: PropTypes.bool,
+	iscollapsed: PropTypes.bool
 };
 
 if (__DOCS__) {

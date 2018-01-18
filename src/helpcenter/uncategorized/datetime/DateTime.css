@@ -10,10 +10,15 @@
 .DateNew{
 	padding: 10px 15px;
 }
+
+.DateNew > div{
+	display:flex;
+}
+
 .dateContainer {
 	composes: bg_white from '../../common-css/colors/colors.css';
 	box-shadow: 0px 2px 5px _transparent_alpha_2;
-	width: 350px;
+	width: 100%;
 }
 
 .topArow {
@@ -39,7 +44,11 @@
 	top: auto;
 	bottom: -8px;
 	transform: rotate(135deg);
-	left: 15px;
+	right: 9px;
+	background: #fff;
+    border-color: #fff;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	composes: min_level_minus_1 from '../../common-css/zindexes/zindex.css';
 }
 
 .topLeftArowPos {
@@ -50,8 +59,7 @@
 	composes: topArow;
 	background-position: -335px -150px;
 	top: -8px;
-	right: 0;
-	left: 30px;
+	right: 9px;
 }
 
 .bottomArowPos {
@@ -73,8 +81,7 @@
 
 .commonStr {
 	composes: clr_tundora from '../../common-css/colors/colors.css';
-	font-family: 'San Francisco Display Regular', sans-serif;
-	font-size: 14px;
+	composes: fs_14_px from '../../common-css/font-sizes/fontsizes.css';
 	text-align: center;
 	display: inline-block;
 }
@@ -83,10 +90,16 @@
 	composes: commonStr;
 	width: 30px;
 	height: 30px;
-	line-height: 30px;
 	margin: 0px 10px;
 	cursor: pointer;
 	composes: clr_white from '../../common-css/colors/colors.css';
+	transition: all .3s ease-out;
+	 display: -webkit-flex; 
+	  display: flex;
+	  -webkit-align-items: center;
+	  align-items: center;
+	  -webkit-justify-content: center;
+	  justify-content: center;
 }
 
 .monthStr {
@@ -98,15 +111,17 @@
 .daysStr {
 	composes: commonStr;
 	width: 45px;
-	font-size: 12px;
-	font-family: 'San Francisco Display Light', sans-serif;
+	 composes: fs_12_px from '../../common-css/font-sizes/fontsizes.css';
 	text-transform: uppercase;
 	composes: clr_white from '../../common-css/colors/colors.css';
 }
 
 .datesStr {
-	width: 31px;
-	padding: 4px 3px;
+	width: 36px;
+	height: 36px;
+	box-sizing: border-box;
+	padding: 18px 3px 10px 3px;
+	line-height:0;
 	composes: commonStr;
 	margin: 2px 4px;
 	cursor: pointer;
@@ -114,12 +129,15 @@
 }
 
 .optionsTop {
-	/* margin: 8px 0px; */
 	composes: bg_froly from '../../common-css/colors/colors.css';
-	padding: 10px;
+	padding: 12px 10px;
+	display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 .days {
+	display:flex;
 	composes: bg_froly from '../../common-css/colors/colors.css';
     padding: 10px 15px;
 }
@@ -130,24 +148,17 @@
 	border-radius: 100px;
 }
 
-.datemain {
-	/* padding: 0 15px; */
-	
-}
-
 .sunday {
 	composes: clr_froly from '../../common-css/colors/colors.css';
 }
 
 .today{
 	composes: bg_froly from '../../common-css/colors/colors.css';
-	composes: clr_tundora from '../../common-css/colors/colors.css';
+	composes: clr_white_imp from '../../common-css/colors/colors.css' ;
 	border-radius: 100px;
-	width: 31px;
-	margin: 2px 4px;
-	padding: 4px 0px;
 	composes: commonStr;
 }
+
 
 .today:hover {
 	background: _froly;
@@ -162,54 +173,54 @@
 .marTop {
 	padding: 12px 0;
     border-top: 1px solid _blackHaze;
+    display: flex;
+    justify-content: space-around;
+    position:relative;
 }
 
+.marTop > button{
+	flex:1;
+	padding:0;
+}
+.marTop > button:hover{
+	background-color: transparent;
+}
 .marTop::after{
 	content: "";
     position: absolute;
     border-left: 1px solid _blackHaze;
-    height: 43px;
+    height: 100%;
     left: 50%;
+    top:0;
     bottom: 0;
 }
 
 .blueBut {
-	composes: clr_dustyGray from '../../common-css/colors/colors.css';
-    cursor: pointer;
-    font-size: 16px;
-    font-family: 'San Francisco Display Regular', sans-serif;
-    outline: none;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    composes: bg_transparent from '../../common-css/colors/colors.css'; 
-    border: none;
-    padding: 0px 76px 0px;
-    transition: all 0.65s ease;
-}
-
-/* .blueBut:hover {
-	border: 1px solid _deepCerulean;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-}
- */
-.canButton {
 	composes: clr_froly from '../../common-css/colors/colors.css';
     cursor: pointer;
-    font-size: 16px;
-    font-family: 'San Francisco Display Regular', sans-serif;
+     composes: fs_16_px from '../../common-css/font-sizes/fontsizes.css';
     outline: none;
     text-overflow: ellipsis;
     overflow: hidden;
     composes: bg_transparent from '../../common-css/colors/colors.css'; 
     border: none;
-    padding: 0px 60px 0px;
     transition: all 0.65s ease;
 }
 
-/* .canButton:hover {
-	border: 1px solid _silver;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-} */
+
+.canButton {
+	composes: clr_dustyGray from '../../common-css/colors/colors.css';
+    cursor: pointer;
+    composes: fs_16_px from '../../common-css/font-sizes/fontsizes.css';
+    outline: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    composes: bg_transparent from '../../common-css/colors/colors.css'; 
+    border: none;
+    transition: all 0.65s ease;
+}
+
+
 
 .timeStr {
 	composes: clr_tundora from '../../common-css/colors/colors.css';
@@ -220,7 +231,8 @@
     white-space: nowrap;
     word-wrap: normal;
     display: inline-block;
-    font: 15px/18px 'San Francisco Display Regular', sans-serif;
+     composes: fs_15_px from '../../common-css/font-sizes/fontsizes.css';
+    light-hight:18px;
     padding-top: 10px;
 }
 
@@ -229,4 +241,11 @@
 	display: inline-block;
 	vertical-align: top;
 	margin: 0px 10px;
+}
+
+.sideArows:nth-child(2) {
+	transform: rotate(180deg);
+}
+.sideArows:last-child{
+	transform: rotate(180deg);
 }

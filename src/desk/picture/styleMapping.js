@@ -4,7 +4,7 @@ export default {
       sourceStyle : "source",
       captionStyle : "caption"
    },
-   "mypicture" :  {
+   "thumbnail_group" :  {
        sourceStyle : "source",
        captionStyle : "caption"
     }

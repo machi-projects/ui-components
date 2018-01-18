@@ -7,6 +7,7 @@ import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import PropTypes from 'prop-types';
 import validator from '../../utils/validator';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 export var PickOneItemBase = function (_React$Component) {
 	_inherits(PickOneItemBase, _React$Component);
@@ -42,7 +43,7 @@ export var PickOneItemBase = function (_React$Component) {
 
 			return itemPid ? React.createElement(
 				'div',
-				_extends({ className: itemStyles }, events, { tabIndex: this.props.tabIndex, onFocus: this.props.focusIn, onBlur: this.props.focusOut }),
+				_extends({ className: itemStyles }, events, { tabIndex: this.props.tabIndex }),
 				this.props.children
 			) : null;
 		}
@@ -53,9 +54,7 @@ export var PickOneItemBase = function (_React$Component) {
 
 PickOneItemBase.propTypes = {
 	pickId: PropTypes.string.isRequired,
-	tabIndex: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func
+	tabIndex: PropTypes.string
 };
 
 var PickOneGroupBase = function (_React$Component2) {
@@ -80,29 +79,25 @@ var PickOneGroupBase = function (_React$Component2) {
 		key: 'setRef',
 		value: function setRef(el) {
 			this.elementRef = el;
+			this.props.getElementRef && this.props.getElementRef(el);
 		}
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			if (this.props.selectedItem !== nextProps.selectedItem) {
+
+			if (this.props.selectedItem !== this.state.selectedItem) {
 				var pickGroupTag = this.elementRef;
 				this.onSelectItem(nextProps.selectedItem, pickGroupTag);
 			}
 
-			if (nextProps.validation != null && nextProps.validation.validate) {
+			if (deepEqualObject(nextProps.validation, this.props.validation) == false && nextProps.validation && nextProps.validation.validate) {
 				this.validateOnSelect(this.state.selectedItem, nextProps);
 			}
 		}
 	}, {
-		key: 'componentDidUpdate',
-		value: function componentDidUpdate(prevProps, prevState) {
-			var _this4 = this;
-
-			if (this.props.fireEvent !== prevProps.fireEvent && this.props.fireEvent) {
-				requestAnimationFrame(function () {
-					_this4.elementRef && _this4.elementRef[_this4.props.fireEvent] && _this4.elementRef[_this4.props.fireEvent]();
-				});
-			}
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return deepEqualObject(nextProps, this.props) == false || deepEqualObject(nextState, this.state) == false;
 		}
 	}, {
 		key: 'validateOnSelect',
@@ -135,16 +130,8 @@ var PickOneGroupBase = function (_React$Component2) {
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var _this5 = this;
-
 			if (this.props.validation != null && this.props.validation.validate) {
 				this.validateOnSelect(this.state.selectedItem, this.props);
-			}
-
-			if (this.props.fireEvent != null) {
-				requestAnimationFrame(function () {
-					_this5.elementRef && _this5.elementRef[_this5.props.fireEvent] && _this5.elementRef[_this5.props.fireEvent]();
-				});
 			}
 		}
 	}, {
@@ -153,6 +140,7 @@ var PickOneGroupBase = function (_React$Component2) {
 			var currentTarget = ev.currentTarget;
 			this.setState({ selectedItem: newSelectedPid }, function () {
 				this.props.onSelect && this.props.onSelect(this.state.selectedItem, currentTarget);
+				this.props.getValue && this.props.getValue(this.state.selectedItem);
 				if (this.props.validation != null && this.props.validation.validateOn) {
 					this.validateOnSelect(this.state.selectedItem, this.props);
 				}
@@ -161,17 +149,17 @@ var PickOneGroupBase = function (_React$Component2) {
 	}, {
 		key: 'renderChildren',
 		value: function renderChildren() {
-			var _this6 = this;
+			var _this4 = this;
 
 			return React.Children.map(this.props.children, function (child, i) {
 				return React.cloneElement(child, {
 					key: i,
-					selectedItem: _this6.state.selectedItem,
-					onSelectItem: _this6.onSelectItem,
-					selectedItemStyle: _this6.props.styles.active,
-					normalItemStyle: _this6.props.styles.item,
-					itemsControls: _this6.props.itemsControls,
-					pickOn: _this6.props.pickOn
+					selectedItem: _this4.state.selectedItem,
+					onSelectItem: _this4.onSelectItem,
+					selectedItemStyle: _this4.props.styles.active,
+					normalItemStyle: _this4.props.styles.item,
+					itemsControls: _this4.props.itemsControls,
+					pickOn: _this4.props.pickOn
 				});
 			});
 		}
@@ -180,9 +168,9 @@ var PickOneGroupBase = function (_React$Component2) {
 		value: function render() {
 			return React.createElement(
 				'div',
-				{ className: this.props.styles.group, ref: this.setRef, tabIndex: this.props.tabIndex,
-					onFocus: this.props.focusIn,
-					onBlur: this.props.focusOut,
+				{ className: this.props.styles.group,
+					ref: this.setRef,
+					tabIndex: this.props.tabIndex,
 					onClick: this.props.onClick },
 				this.renderChildren()
 			);
@@ -209,15 +197,14 @@ PickOneGroupBase.propTypes = {
 	}),
 	required: PropTypes.bool,
 
-	fireEvent: PropTypes.string,
 	tabIndex: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func,
+	getElementRef: PropTypes.func,
 	onClick: PropTypes.func,
 
 	itemsControls: PropTypes.bool,
 	selectedItem: PropTypes.string,
 	onSelect: PropTypes.func,
+	getValue: PropTypes.func,
 	pickOn: PropTypes.string,
 
 	validation: PropTypes.shape({

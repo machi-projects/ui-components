@@ -9,6 +9,8 @@ import style from './DateTime.css';
 import moment from 'moment-timezone';
 import selectn from 'selectn';
 
+import { Icon } from '../../index';
+
 var monthend = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 var monthname = [
 	'January',
@@ -109,20 +111,20 @@ export default class DateTime extends React.Component {
 				<i className={position ? style[`${position}ArowPos`] : style.topArow} />
 				<div className={style.datemain}>
 					<div className={style.optionsTop}>
-						<span data-testId="prevYear" className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'll')}>
-							&lt;&lt;
+						<span className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'll')}>
+							<Icon id="back"  styleId="datepickerarw" />
 						</span>
-						<span data-testId="prevMonth" className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'l')}>
-							&lt;
+						<span className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'l')}>
+							<Icon id="rightArrow"  styleId="datepickerarw" />
 						</span>
-						<span data-testId="resultString" className={style.monthStr}>
+						<span className={style.monthStr}>
 							{showmonthtxt}
 						</span>
-						<span data-testId="nextMonth" className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'g')}>
-							&gt;
+						<span className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'g')}>
+							<Icon id="rightArrow"  styleId="datepickerarw" />
 						</span>
-						<span data-testId="nextyear" className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'gg')}>
-							&gt;&gt;
+						<span className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'gg')}>
+							<Icon id="back"  styleId="datepickerarw" />
 						</span>
 					</div>
 
@@ -175,11 +177,11 @@ export default class DateTime extends React.Component {
 						</div>}
 
 					<div className={style.marTop}>
-						<button data-testId="submit" className={style.blueBut} onClick={this.handleSelect}>
-							{i18NProviderUtils.getI18NValue('Set')}
-						</button>
-						<button data-testId="clear" className={style.canButton} onClick={this.handleClear}>
+						<button className={style.canButton} onClick={this.handleClear}>
 							{i18NProviderUtils.getI18NValue('Clear')}
+						</button>
+						<button className={style.blueBut} onClick={this.handleSelect}>
+							{i18NProviderUtils.getI18NValue('Set')}
 						</button>
 					</div>
 				</div>
@@ -229,17 +231,17 @@ export default class DateTime extends React.Component {
 	}
 
 	hoursSelect(value) {
-		let hours = value.id;
+		let hours = value;
 		this.setState({ hours });
 	}
 
 	minutesSelect(value) {
-		let mins = value.id;
+		let mins = value;
 		this.setState({ mins });
 	}
 
 	amPmSelect(value) {
-		let amPm = value.id;
+		let amPm = value;
 		this.setState({ amPm });
 	}
 

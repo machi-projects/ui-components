@@ -1,81 +1,25 @@
-
-.default {
-
+.thumbnail_box{
+	width: 45px;
+	height: 45px;
+	composes: fleft from '../../../components/common-css/floats/floats.css';
+	margin-right: 5px;
 }
 
-.default.avatar_picture {
-
-}
-
-.default.avatar_picture.size_small {
-
-}
-
-.default.avatar_picture.shape_round {
-
-}
-
-.default.avatar_picture.shape_square {
-
-}
-
-.default.avatar_picture.shape_square_rounded {
-
-}
-
-.default.avatar_text.size_large {
-
-}
-
-.default.avatar_text.shape_square_rounded {
-
-}
-
-.default.avatar_text {
-
-}
-
-.default.avatar_icon {
-
+.thumbnail_box.avatar_text{
+	/* padding: 5px;
+	vertical-align: middle;
+	text-align: center;
+	line-height: 1.5; */
+	text-transform: uppercase;
+	border-width: 1.5px;
+	box-sizing: border-box;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5px;
 }
 
 
-.myavatar {
-
-}
-
-.myavatar.avatar_picture {
-
-}
-
-.myavatar.avatar_picture.size_small {
-
-}
-
-.myavatar.avatar_picture.shape_round {
-
-}
-
-.myavatar.avatar_picture.shape_square {
-
-}
-
-.myavatar.avatar_picture.shape_square_rounded {
-
-}
-
-.myavatar.avatar_text.size_large {
-
-}
-
-.myavatar.avatar_text.shape_square_rounded {
-
-}
-
-.myavatar.avatar_text {
-
-}
-
-.myavatar.avatar_icon {
-
+.thumbnail_box span{
+	white-space: nowrap;
 }

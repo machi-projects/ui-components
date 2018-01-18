@@ -20,9 +20,7 @@ export default class InputText extends Component {
 			errored,
 			valid,
 			raised,
-			
-			focusIn,
-			focusOut
+			iscollapsed
 			
 		} = this.props;
 
@@ -33,9 +31,7 @@ export default class InputText extends Component {
 			'errored',
 			'valid',
 			'raised',
-			
-			'focusIn',
-			'focusOut'
+			'iscollapsed'
 		]);
 
 		let classNames = cx(styles, {
@@ -45,15 +41,15 @@ export default class InputText extends Component {
 			disabled: disabled,
 			readOnly: readOnly,
 			hidden: hidden,
-
+			iscollapsed : iscollapsed,
+			
 			focused: focused,
 			errored: errored,
 			valid: valid,
 			raised: raised
 		});
-
 		//let onPassValidation = validation.validate ?  errored =  true
-		return <InputTextBoxBase {...newProps} onFocus={focusIn} onBlur={focusOut} className={classNames} />;
+		return <InputTextBoxBase {...newProps} className={classNames} />;
 	}
 }
 InputText.defaultProps = {
@@ -82,16 +78,15 @@ InputText.propTypes = {
 	value: PropTypes.string,
 	hidden: PropTypes.bool,
 
-	fireEvent :  PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef: PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onKeyUp: PropTypes.func,
 	onChange: PropTypes.func,
 	onInput: PropTypes.func,
+	getValue : PropTypes.func,
 
 	validation: PropTypes.shape({
-		show: PropTypes.bool,
+		validate: PropTypes.bool,
 		validateOn: PropTypes.string,
 		rules: PropTypes.object,
 		rulesOrder: PropTypes.arrayOf(PropTypes.string),
@@ -104,7 +99,8 @@ InputText.propTypes = {
 	focused: PropTypes.bool,
 	errored: PropTypes.bool,
 	valid: PropTypes.bool,
-	raised: PropTypes.bool
+	raised: PropTypes.bool,
+	iscollapsed : PropTypes.bool
 };
 
 if (__DOCS__) {

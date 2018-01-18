@@ -2,7 +2,7 @@ export default {
 	default: {
 		inputStyleId: 'searchinput',
 		clearIcon: {
-			id: 'clear',
+			id: 'closeicon',
 			styleId: 'searchview'
 		},
 		searchIcon: {
@@ -13,7 +13,7 @@ export default {
 	mysearch: {
 		inputStyleId: 'searchinput',
 		clearIcon: {
-			id: 'clear',
+			id: 'closeicon',
 			styleId: 'searchview'
 		},
 		searchIcon: {

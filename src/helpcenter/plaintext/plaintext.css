@@ -8,3 +8,10 @@
 .mytext.raised {
 
 }
+
+.thumbnail_text{
+	line-height: 0;
+	font: inherit;
+    color: inherit;
+    font-size:16px;
+}

@@ -1,8 +1,7 @@
 import React from 'react';
 import validator from '../../utils/validator';
 import PropTypes from 'prop-types';
-import { omit, extract, equals } from '../../utils/objectUtils';
-import typeChecker from '../../utils/typeChecker';
+import { omit, extract, deepEqualObject } from '../../utils/objectUtils';
 
 export default class InputBase extends React.Component {
 	constructor(props) {
@@ -16,22 +15,21 @@ export default class InputBase extends React.Component {
 
 	setRef(el){
 		this.elementRef = el;
+		this.props.getElementRef && this.props.getElementRef(el);
 	}
 	
-	shouldComponentUpdate(nextProps, nextState) {
-		if (equals(nextProps, this.props) && nextState.text && this.state.text && nextState.text == this.state.text) {
-			return false;
-		}
-
-		return true;
+	shouldComponentUpdate(nextProps, nextState)
+	{
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false));
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.value != this.props.value) {
-			this.setTextValue(nextProps.value);
+		
+		if (nextProps.value != this.state.text) {
+			this.setTextValue((nextProps.value || ''));
 		}
 
-		if ( nextProps.validation != null && nextProps.validation.validate ) {
+		if( deepEqualObject(nextProps.validation,this.props.validation) == false && nextProps.validation && nextProps.validation.validate ){
 			let inputTag = this.elementRef;
 			this.validateInputBox(
 				null,
@@ -39,15 +37,6 @@ export default class InputBase extends React.Component {
 				null,
 				extract(nextProps, ['validation', 'onPassValidation', 'onFailValidation'])
 			);
-		}
-	}
-
-	componentDidUpdate(prevProps, prevState)
-	{
-		if(this.props.fireEvent!==prevProps.fireEvent&& this.props.fireEvent){
-			requestAnimationFrame(()=>{
-				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			})
 		}
 	}
 	
@@ -62,16 +51,13 @@ export default class InputBase extends React.Component {
 				extract(this.props, ['validation', 'onPassValidation', 'onFailValidation'])
 			);
 		}
-		
-		if(this.props.fireEvent!=null){
-			requestAnimationFrame(()=>{
-				inputTag && inputTag[this.props.fireEvent] && inputTag[this.props.fireEvent]();
-			})
-		}
 	}
 
 	setTextValue(text) {
-		this.setState({ text: text });
+		
+		this.setState({ text: text },()=>{
+			this.props.getValue && this.props.getValue(this.state.text);
+		});
 	}
 
 	onChangeValue(ev, callback) {
@@ -95,9 +81,11 @@ export default class InputBase extends React.Component {
 	}
 
 	render() {
+		
+		let removeTabIndex = this.props.tabIndex < 0 ? 'tabIndex' : '';
 		let validationObj = extract(this.props, ['validation', 'onPassValidation', 'onFailValidation']);
 		let { validation } = validationObj || {};
-		let newProps = omit(this.props, ['fireEvent','validation', 'onPassValidation', 'onFailValidation']);
+		let newProps = omit(this.props, [removeTabIndex, 'getValue', 'getElementRef','validation', 'onPassValidation', 'onFailValidation']);
 
 		let onChangeEventFunc = newProps.onChange;
 		newProps.onChange = ev => {
@@ -110,8 +98,8 @@ export default class InputBase extends React.Component {
 				this.validateInputBox(ev, ev.target, tempFunc, validationObj);
 			};
 		}
-
-		return <input {...newProps}  ref={this.setRef}  value={this.state.text} />;
+		
+		return <input {...newProps}  ref={this.setRef}  value={this.state.text}/>;
 	}
 }
 
@@ -139,7 +127,7 @@ InputBase.propTypes = {
 	pattern: PropTypes.string,
 	value: PropTypes.string,
 
-	fireEvent: PropTypes.string,
+	getElementRef : PropTypes.func,
 	tabIndex:PropTypes.string,
 	onFocus: PropTypes.func,
 	onBlur: PropTypes.func,
@@ -147,6 +135,7 @@ InputBase.propTypes = {
 	onKeyUp: PropTypes.func,
 	onChange: PropTypes.func,
 	onInput: PropTypes.func,
+	getValue : PropTypes.func,
 
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

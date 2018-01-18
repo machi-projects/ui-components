@@ -14,6 +14,7 @@ import { Icon } from '../index';
 import styles from './searchbox.css';
 import styleMapping from './styleMapping';
 import { omit } from '../../utils/objectUtils';
+import cx from '../../utils/classNamesUtils/classNames';
 
 var InputBox = function (_React$Component) {
 	_inherits(InputBox, _React$Component);
@@ -29,21 +30,23 @@ var InputBox = function (_React$Component) {
 		value: function render() {
 			var _props = this.props,
 			    textboxStyle = _props.textboxStyle,
-			    inputStyleId = _props.inputStyleId,
-			    placeholder = _props.placeholder;
+			    inputStyleId = _props.inputStyleId;
 
-			var newProps = omit(this.props, ['textboxStyle', 'inputStyleId']);
-
+			var newProps = omit(this.props, ['textboxStyle', 'inputStyleId', 'typeName']);
 			return React.createElement(
 				'div',
 				{ className: textboxStyle },
-				React.createElement(InputText, _extends({ type: 'text', styleId: inputStyleId, placeholder: placeholder }, newProps))
+				React.createElement(InputText, _extends({ type: 'text', styleId: inputStyleId }, newProps))
 			);
 		}
 	}]);
 
 	return InputBox;
 }(React.Component);
+
+InputBox.defaultProps = {
+	typeName: "InputBox"
+};
 
 var SearchIcon = function (_React$Component2) {
 	_inherits(SearchIcon, _React$Component2);
@@ -60,11 +63,15 @@ var SearchIcon = function (_React$Component2) {
 			var _props2 = this.props,
 			    onClick = _props2.onClick,
 			    iconstyle = _props2.iconstyle,
-			    iconInfo = _props2.iconInfo;
+			    iconInfo = _props2.iconInfo,
+			    isSearching = _props2.isSearching;
+
+
+			var classNames = cx(iconstyle, isSearching ? styles["issearching"] : null);
 
 			return React.createElement(
 				'div',
-				{ className: iconstyle, onClick: onClick },
+				{ className: classNames, onClick: onClick },
 				React.createElement(Icon, { styleId: iconInfo.styleId, id: iconInfo.id })
 			);
 		}
@@ -72,6 +79,10 @@ var SearchIcon = function (_React$Component2) {
 
 	return SearchIcon;
 }(React.Component);
+
+SearchIcon.defaultProps = {
+	typeName: "SearchIcon"
+};
 
 var ClearIcon = function (_SearchIcon) {
 	_inherits(ClearIcon, _SearchIcon);
@@ -84,6 +95,10 @@ var ClearIcon = function (_SearchIcon) {
 
 	return ClearIcon;
 }(SearchIcon);
+
+ClearIcon.defaultProps = {
+	typeName: "ClearIcon"
+};
 
 var SearchBox = function (_React$Component3) {
 	_inherits(SearchBox, _React$Component3);
@@ -103,7 +118,11 @@ var SearchBox = function (_React$Component3) {
 			    placeholder = _props3.placeholder,
 			    viewOrder = _props3.viewOrder,
 			    searchOn = _props3.searchOn,
-			    onChange = _props3.onChange;
+			    onChange = _props3.onChange,
+			    onClickClearSeach = _props3.onClickClearSeach,
+			    onClickSearch = _props3.onClickSearch,
+			    isCollaspe = _props3.isCollaspe,
+			    children = _props3.children;
 
 
 			var styleMappings = styleMapping[styleId];
@@ -115,14 +134,28 @@ var SearchBox = function (_React$Component3) {
 
 
 			var searchBoxStyle = styles[styleId];
+			var searchBoxCollaspeStyle = styles["iscollaspe"];
+			var searchBoxFloatStyle = styles["isfloatlabel"];
+			var searchBoxInnerStyle = styles["innerboxstyle"];
 
 			var searchiconStyle = styles['searchicon'];
 			var textboxStyle = styles['textbox'];
+			var floatboxStyle = styles['floatbox'];
 			var cleariconStyle = styles['clearicon'];
 
 			return React.createElement(
 				SearchBoxBase,
-				{ searchBoxStyle: searchBoxStyle, text: text, searchOn: searchOn, onChange: onChange },
+				{ searchBoxStyle: searchBoxStyle, text: text, searchOn: searchOn,
+					searchBoxCollaspeStyle: searchBoxCollaspeStyle,
+					searchBoxFloatStyle: searchBoxFloatStyle,
+					searchBoxInnerStyle: searchBoxInnerStyle,
+					floatboxStyle: floatboxStyle,
+					placeholder: placeholder,
+					isCollaspe: isCollaspe,
+					floatLabelOnSearchBox: children,
+					onChange: onChange,
+					onClickClearSeach: onClickClearSeach,
+					onClickSearch: onClickSearch },
 				viewOrder.map(function (item, i) {
 					if (item == 'textbox') {
 						return React.createElement(InputBox, { textboxStyle: textboxStyle, inputStyleId: inputStyleId, key: i });
@@ -155,8 +188,14 @@ SearchBox.propTypes = {
 	text: PropTypes.string,
 	placeholder: PropTypes.string,
 
+	isCollaspe: PropTypes.bool,
+	floatLabelOnSearchBox: PropTypes.any,
+
 	searchOn: PropTypes.string,
-	onChange: PropTypes.func
+	onChange: PropTypes.func,
+
+	onClickClearSeach: PropTypes.func,
+	onClickSearch: PropTypes.func
 };
 
 if (__DOCS__) {

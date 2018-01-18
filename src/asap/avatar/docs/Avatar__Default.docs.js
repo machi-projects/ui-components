@@ -8,7 +8,7 @@ export default class Avatar__Default extends Component {
 
 				<div>
 
-						<Avatar  styleId="myavatar" type="picture" picture="https://my.com/img/mycom.png" name="hello" shape="square" size="small" borderSize="small_2"  />
+						<Avatar styleId="myavatar" type="picture" picture="https://my.com/img/mycom.png" name="hello" shape="square" size="small" borderSize="small_2"  />
 
 						<Avatar type="picture" picture="https://my.com/img/mycom.png"  name="hello" shape="square-rounded" size="medium" borderSize="xlarge" />
 

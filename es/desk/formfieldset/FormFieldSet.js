@@ -85,9 +85,6 @@ var FormFieldSet = function (_Component2) {
 						);
 					} else if (childComponent.type.prototype == FormField.prototype) {
 						return React.createElement(FormFieldBase, _extends({}, childComponent.props, {
-							disabled: disabled,
-							readOnly: readOnly,
-							focused: focused,
 							errored: errored,
 							fieldStyle: fieldStyle
 						}));
@@ -127,10 +124,8 @@ FormFieldSet.propTypes = {
 	fieldId: PropTypes.string.isRequired,
 	value: PropTypes.any,
 
-	fireFocusIn: PropTypes.bool,
-	hideMessageOnValid: PropTypes.bool,
-	focusFieldOnChange: PropTypes.bool,
-	raiseLabelOnChange: PropTypes.bool,
+	focusField: PropTypes.bool,
+	floatingLabel: PropTypes.bool,
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,

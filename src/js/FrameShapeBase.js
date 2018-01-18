@@ -7,11 +7,11 @@ import IconSvgBase from './IconSvgBase';
 
 export default class FrameShapeBase extends React.Component {
 	render() {
-		let { type, name, picture, text, iconId, frameStyle, iconStyle, textStyle, picStyles } = this.props;
+		let { type, name, picture, text, iconId, frameStyle, iconStyle, textStyle, picStyles , onPictureError } = this.props;
 
 		let frameContent = null;
 		if (type == 'picture') {
-			frameContent = <PictureBoxBase alt={name} src={picture} {...picStyles} />;
+			frameContent = <PictureBoxBase alt={name} src={picture} {...picStyles} onError={onPictureError} />;
 		} else if (type == 'text') {
 			frameContent = <PlainTextBase className={textStyle} text={text} />;
 		} else if (type == 'icon') {
@@ -33,6 +33,7 @@ FrameShapeBase.propTypes = {
 	picture: PropTypes.string,
 	text: PropTypes.string,
 	iconId: PropTypes.string,
+	onPictureError : PropTypes.func,
 
 	textStyle: PropTypes.string,
 	frameStyle: PropTypes.string,

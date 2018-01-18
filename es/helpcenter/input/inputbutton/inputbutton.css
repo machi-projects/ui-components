@@ -1,9 +1,5 @@
 @value _froly,_white,_mercury,_transparent_alpha from '../../common-css/variables/colors.css';
 
-.default{
-	
-}
-
 .default_checkbox[type="checkbox"]
 {
 	position:relative;
@@ -50,36 +46,4 @@
     border-radius: 0;
    margin-left: 3px;
     margin-top: 2px;
-}
-
-.default.optional , .default:optional{
-
-}
-.default.required , .default:required{
-
-}
-
-.default.enabled , .default:enabled {
-
-}
-.default.disabled ,  .default:disabled {
-
-}
-
-.default.readOnly, .default:read-only {
-
-}
-.default.readwrite, .default:read-write {
-
-}
-
-.default.invalid , .default:invalid  {
-
-}
-.default.valid ,  .default.valid {
-
-}
-
-.default.raised{
-
 }

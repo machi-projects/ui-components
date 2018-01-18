@@ -36,18 +36,16 @@ var InputButton = function (_Component) {
           focused = _props.focused,
           errored = _props.errored,
           valid = _props.valid,
-          raised = _props.raised,
-          focusIn = _props.focusIn,
-          focusOut = _props.focusOut;
+          raised = _props.raised;
 
 
-      var newProps = omit(this.props, ["className", "styleId", "focused", "errored", "valid", "raised", "focusIn", "focusOut"]);
+      var newProps = omit(this.props, ["className", "styleId", "focused", "errored", "valid", "raised"]);
 
       var classNames = cx(styles, (_cx = {}, _defineProperty(_cx, styleId, true), _defineProperty(_cx, 'required', required), _defineProperty(_cx, 'disabled', disabled), _defineProperty(_cx, 'readOnly', readOnly), _defineProperty(_cx, 'hidden', hidden), _defineProperty(_cx, 'focused', focused), _defineProperty(_cx, 'errored', errored), _defineProperty(_cx, 'valid', valid), _defineProperty(_cx, 'raised', raised), _cx));
 
       //let onPassValidation = validation.validate ?  errored =  true
 
-      return React.createElement(InputButtonBoxBase, _extends({}, newProps, { onFocus: focusIn, onBlur: focusOut, className: classNames }));
+      return React.createElement(InputButtonBoxBase, _extends({}, newProps, { className: classNames }));
     }
   }]);
 
@@ -77,16 +75,12 @@ InputButton.propTypes = {
   value: PropTypes.string,
   hidden: PropTypes.bool,
 
-  fireEvent: PropTypes.string,
-  focusIn: PropTypes.func,
-  focusOut: PropTypes.func,
-
-  onKeyDown: PropTypes.func,
-  onKeyUp: PropTypes.func,
+  onClick: PropTypes.func,
   onChange: PropTypes.func,
+  getValue: PropTypes.func,
 
   validation: PropTypes.shape({
-    show: PropTypes.bool,
+    validate: PropTypes.bool,
     validateOn: PropTypes.string,
     rules: PropTypes.object,
     rulesOrder: PropTypes.arrayOf(PropTypes.string),

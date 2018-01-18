@@ -1,4 +1,4 @@
-@value _per_100, _per_80, _auto, _px_30 from "../variables/units.css";
+@value _per_100, _per_80, _auto, _px_30, _px_25 from "../variables/units.css";
 
 .dm_wh_80per{
     width: _per_80;
@@ -14,16 +14,26 @@
   height: _auto;
 }
 
+.dm_25{
+	width:25px;
+	height:25px
+}
 
+.dm_30{
+	width:30px;
+	height:30px
+}
 
-/*
+.dm_32{
+	width:32px;
+	height:32px
+}
 
-  weight - wh
-  height - ht
-  dimension - dm
+.dm_40{
+	width:40px;
+	height:40px;
+}
 
-    dimension - properties - numberPer
-    dimension - properties - numberPx
-
-    dimension - properties - numberPx
-*/
+.lh_1_8{
+	line-height:1.8 !important
+}

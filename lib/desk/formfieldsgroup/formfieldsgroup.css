@@ -1,6 +1,5 @@
 .default{
-	padding: 25px;
+	padding: 0 25px;
     outline: none;
     position: relative;
-    bottom: 49px;
-}
+   }

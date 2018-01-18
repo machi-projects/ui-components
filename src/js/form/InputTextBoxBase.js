@@ -2,16 +2,15 @@ import React from 'react';
 import InputBase from '../core/InputBase';
 import validator from '../../utils/validator';
 import PropTypes from 'prop-types';
-import { equals } from '../../utils/objectUtils';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 export default class InputTextBoxBase extends React.Component {
-	shouldComponentUpdate(nextProps) {
-		if (equals(nextProps, this.props)) {
-			return false;
-		}
-		return true;
+	
+	shouldComponentUpdate(nextProps, nextState)
+	{
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false));
 	}
-
+	
 	render() {
 		let defaultCheckPropsRules = [
 			'required',
@@ -77,6 +76,7 @@ InputTextBoxBase.propTypes = {
 		'text',
 		'range',
 		'color',
+		'phone',
 		'file',
 		'search',
 		'tel',
@@ -107,12 +107,14 @@ InputTextBoxBase.propTypes = {
 	pattern: PropTypes.string,
 	value: PropTypes.string,
 
+	getElementRef : PropTypes.func,
 	onFocus: PropTypes.func,
 	onBlur: PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onKeyUp: PropTypes.func,
 	onChange: PropTypes.func,
 	onInput: PropTypes.func,
+	getValue : PropTypes.func,
 
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

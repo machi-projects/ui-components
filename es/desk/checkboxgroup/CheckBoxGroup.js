@@ -39,9 +39,7 @@ export var CheckBoxItem = function (_Component) {
 
 CheckBoxItem.propTypes = {
 	value: PropTypes.string.isRequired,
-	tabIndex: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func
+	tabIndex: PropTypes.string
 };
 
 var CheckBoxGroup = function (_Component2) {
@@ -117,10 +115,9 @@ CheckBoxGroup.propTypes = {
 	selectedItems: PropTypes.arrayOf(PropTypes.string),
 	onSelect: PropTypes.func,
 
-	fireEvent: PropTypes.string,
 	tabIndex: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func,
+	getElementRef: PropTypes.func,
+	getValue: PropTypes.func,
 	onClick: PropTypes.func,
 
 	validation: PropTypes.shape({

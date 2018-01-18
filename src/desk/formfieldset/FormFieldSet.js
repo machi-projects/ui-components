@@ -34,7 +34,7 @@ export default class FormFieldSet extends Component {
 			errored,
 			raised
 		} = this.props;
-
+		
 		let newProps = omit(this.props, [
 			'className',
 			'styleId',
@@ -81,10 +81,7 @@ export default class FormFieldSet extends Component {
 					} else if (childComponent.type.prototype == FormField.prototype) {
 						return (
 							<FormFieldBase
-								{...childComponent.props}								
-								disabled={disabled}
-								readOnly={readOnly}
-								focused={focused}
+								{...childComponent.props}
 								errored={errored}								
 								fieldStyle={fieldStyle}
 							/>
@@ -121,10 +118,8 @@ FormFieldSet.propTypes = {
 	fieldId: PropTypes.string.isRequired,
 	value: PropTypes.any,
 
-	fireFocusIn :  PropTypes.bool,
-	hideMessageOnValid: PropTypes.bool,
-	focusFieldOnChange : PropTypes.bool,
-	raiseLabelOnChange : PropTypes.bool,
+	focusField :  PropTypes.bool,
+	floatingLabel : PropTypes.bool,
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,

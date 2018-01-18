@@ -3,6 +3,7 @@ import PickOneGroupBase, { PickOneItemBase } from '../core/PickOneGroupBase';
 import PropTypes from 'prop-types';
 import InputButtonBoxBase from './InputButtonBoxBase';
 import LabelBoxBase from './LabelBoxBase';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 export class RadioBoxItemBase extends React.Component {
 	render() {
@@ -29,6 +30,13 @@ export default class RadioBoxGroupBase extends React.Component {
 		this.onSelectedItem = this.onSelectedItem.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps){
+		
+		if( deepEqualObject(nextProps.selectedItem , this.state.selectedItem) == false ){
+			this.setState({ selectedItem : nextProps.selectedItem });
+		}
+	}
+	
 	onSelectedItem(newSelectedItem, el) {
 		this.setState(
 			prevState => {
@@ -53,10 +61,9 @@ export default class RadioBoxGroupBase extends React.Component {
 			onPassValidation,
 			onFailValidation,
 			
-			fireEvent,
 			tabIndex,
-			focusIn,
-			focusOut,
+			getElementRef,
+			getValue,
 			onClick
 			
 		} = this.props;
@@ -75,12 +82,10 @@ export default class RadioBoxGroupBase extends React.Component {
 				{...allStyles}
 				selectedItem={selectedItem}
 				onSelect={this.onSelectedItem}
+				getValue={getValue}
 				
-				fireEvent={fireEvent}
 				tabIndex={tabIndex}
-				focusIn={focusIn}
-				focusOut={focusOut}
-				onClick={onClick}
+				getElementRef={getElementRef}
 			>
 				{React.Children.map(this.props.children, (child, i) => {
 					let checked = stateSelectedItem == child.props.value;
@@ -124,11 +129,10 @@ RadioBoxGroupBase.propTypes = {
 	groupName: PropTypes.string,
 	selectedItem: PropTypes.string,
 	onSelect: PropTypes.func,
+	getValue: PropTypes.func,
 
-	fireEvent : PropTypes.string,
 	tabIndex : PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef : PropTypes.func,
 	onClick : PropTypes.func,
 	
 	validation: PropTypes.shape({

@@ -31,7 +31,7 @@ var Popup = function(Component, group = 'global') {
 		setRef(el){
 			this.elementRef = el;
 		}
-
+		
 		componentDidMount() {
 			let groupPopups = popups[group] || [];
 			groupPopups.push(this);

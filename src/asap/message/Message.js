@@ -63,6 +63,7 @@ export default class Message extends React.Component {
 			hovered: hovered,
 			hidden: hidden,
 			raised: raised
+			
 		});
 
 		return <MessageBase {...newProps} className={classNames} />;

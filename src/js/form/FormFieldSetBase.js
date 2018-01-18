@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { omit, equals } from '../../utils/objectUtils';
+import { omit, deepEqualObject , IsEqualGivenKeys } from '../../utils/objectUtils';
 
 export class FormFieldLabelBase extends Component {
 	render() {
@@ -16,94 +16,61 @@ export class FormFieldMsgBase extends Component {
 
 export class FormFieldBase extends Component {
 	
-	constructor(props){
-		super(props);
-		this.onFocusInFieldItem = this.onFocusInFieldItem.bind(this);
-		this.onFocusOutFieldItem = this.onFocusOutFieldItem.bind(this);
-		
-		this.state = {  
-			fireEvent :  props.fireFieldFocusIn ? "focus" : null ,
-			fireFieldFocusIn  : props.fireFieldFocusIn  || false
-		}
-	}
-	
-	
 	componentWillReceiveProps(nextProps){
-
-		if( nextProps.fireFieldFocusIn !== this.state.fireFieldFocusIn){
-			
-			this.setState( { 
-				fireEvent : nextProps.fireFieldFocusIn ? "focus" : null, 
-				fireFieldFocusIn : nextProps.fireFieldFocusIn
-			} );
+		if(nextProps.focused != this.props.focused && nextProps.focused){
+			requestAnimationFrame(()=>{
+				this.fieldRef && this.fieldRef.focus()
+			});
 		}
-	}
-	
-
-	onFocusInFieldItem(ev){
-				
-		this.props.onFocusFieldUpdate && this.props.onFocusFieldUpdate("up",null,()=>{
-			
-			this.setState( { 
-				
-				fireEvent : null ,
-				fireFieldFocusIn : false 
-				
-			})
-			
-		});
-	}
-	
-	onFocusOutFieldItem(ev){
-			
-		this.props.onFocusFieldUpdate && this.props.onFocusFieldUpdate("down",  ev.target.value ,()=>{
-			
-			this.setState({ 
-				
-				fireEvent : "blur" ,
-				fireFieldFocusIn : false 
-				
-			})
-			
-		});
 	}
 	
 	render() {
 		
 		let {
+			
 			fieldStyle,
 			tabIndex,
-			required,
-			disabled,
-			readOnly,
+			
 			focused,
 			errored,
 			valid,
+			
 			validation,
 			onPassValidation,
 			onFailValidation,
 			
-			onFocusFieldUpdate
+			fieldValue,
+			getFieldValue,
+			valueKey,
+			
+			onFoucsField,
+			onBlurField
 			
 		} = this.props;
+		
+		
 		let FieldChild = React.Children.only(this.props.children);
 		let childOnPassValidation = FieldChild.props.onPassValidation;
 		let childOnFailValidation = FieldChild.props.onFailValidation;
 		
 		return (
-			<div className={fieldStyle} tabIndex={tabIndex}>
+			<div className={fieldStyle} >
+			
 				{React.cloneElement(FieldChild, {
-					ref : (el)=>{ this.fieldRef = el },
-					disabled: disabled,
-					readOnly: readOnly,
+					getElementRef : (el)=>{ this.fieldRef = el },
+					
+					[valueKey] : fieldValue, 
+					getValue : getFieldValue,
+					
 					errored: errored,
-					focused: focused,
 					valid: valid,
-					fireEvent : this.state.fireFieldFocusIn ? this.state.fireEvent : this.state.fireEvent,
+					
+					onFocus : onFoucsField,
+					onBlur : onBlurField,
+					
 					validation: validation,
-					focusIn :  this.onFocusInFieldItem,
-					focusOut : this.onFocusOutFieldItem,
-					tabIndex : FieldChild.props.tabIndex || "-1" ,			
+					tabIndex : onFoucsField ?  null : "-1",
+					
 					onPassValidation: (a, b) => {
 						childOnPassValidation && childOnPassValidation(a, b);
 						onPassValidation && onPassValidation(a, b);
@@ -112,15 +79,25 @@ export class FormFieldBase extends Component {
 						childOnFailValidation && childOnFailValidation(a, b, c);
 						onFailValidation && onFailValidation(a, b, c);
 					}
+					
 				})}
 			</div>
 		);
 	}
 }
 
+FormFieldBase.defaultProps = {
+	valueKey : "value" 
+}
+
 FormFieldBase.propTypes = {
 	fieldStyle: PropTypes.string, 
-	tabIndex: PropTypes.string
+	fieldValue : PropTypes.any,
+	getFieldValue : PropTypes.func,
+	valueKey : PropTypes.string,
+	tabIndex: PropTypes.string,
+	onFoucsField :PropTypes.func,
+	onBlurField : PropTypes.func
 };
 
 export default class FormFieldSetBase extends React.Component {
@@ -130,32 +107,22 @@ export default class FormFieldSetBase extends React.Component {
 		this.state = {
 			errored: false,
 			errMessage: null,
-			validate: ((props.validation && props.validation.validate) ? true : false),
-			labelRaised : props.raiseLabelOnChange ? (props.value ? true : false) : false,
-			fieldFocused : false,
-			fireFocusIn : props.fireFocusIn || false
+			floatLabel : (this.props.floatLabel && props.value ) ?  true :  false  ,
+			fieldValue : props.value
 		};
 		
 		//Bind the method to the component context
 		this.onPassValidationItem = this.onPassValidationItem.bind(this);
 		this.onFailValidationItem = this.onFailValidationItem.bind(this);
-		this.onFocusFieldUpdate = this.onFocusFieldUpdate.bind(this);
+		this.onValueChangeItem = this.onValueChangeItem.bind(this);
 		this.setFieldSetRef = this.setFieldSetRef.bind(this);
+		
+		this.onFoucsFieldItem = this.onFoucsFieldItem.bind(this);
+		this.onBlurFieldItem = this.onBlurFieldItem.bind(this);
 	}
 	
 	setFieldSetRef(el){
 		this.fieldSetRef = el
-	}
-	
-	componentWillReceiveProps(nextProps){
-
-		if( (nextProps.value != this.props.value ) || ( nextProps.validate !== this.props.validate )  ){
-			
-			this.setState({ 
-				 validate : nextProps.validate,
-				 labelRaised : nextProps.raiseLabelOnChange ? (nextProps.value ? true : false) : false 
-			 })
-		}
 	}
 	
 	onPassValidationItem(val, el) {
@@ -163,7 +130,6 @@ export default class FormFieldSetBase extends React.Component {
 			state => {
 				state.errored = false;
 				state.errMessage = null;
-				state.validate = false;
 				return state;
 			},
 			() => {
@@ -171,29 +137,12 @@ export default class FormFieldSetBase extends React.Component {
 			}
 		);
 	}
-
-	onFocusFieldUpdate(type , value, callback ){
-		
-		this.setState({
-			fieldFocused : (type == "up") , 
-			labelRaised : this.props.raiseLabelOnChange && ( (type == "up") ? true : (value && value.length > 0 ? true : false) ) 
-	    },()=>{
-	    		callback && callback();
-	    		/*if(this.props.fireFocusIn ){
-	    			requestAnimationFrame(()=>{
-	    				this.fieldSetRef && this.fieldSetRef.focus && this.fieldSetRef.focus();
-	    			})
-	    		}*/
-	    });
-		
-	}
 	
 	onFailValidationItem(rule, message, el) {
 		this.setState(
 			state => {
 				state.errored = true;
 				state.errMessage = message;
-				state.validate = false;
 				return state;
 			},
 			() => {
@@ -202,20 +151,52 @@ export default class FormFieldSetBase extends React.Component {
 		);
 	}
 
+	onFoucsFieldItem(){
+		if( this.props.floatingLabel ){
+			this.setState({ floatLabel : true })
+		}
+	}
+	
+	onBlurFieldItem(){
+		if( this.props.floatingLabel ){
+			this.setState({ floatLabel : (this.state.fieldValue ? true :  false)  })
+		}
+	}
+	
+	componentWillReceiveProps(nextProps){
+		
+		if(deepEqualObject(nextProps.value,this.state.fieldValue) == false){
+			this.onValueChangeItem(nextProps.value);
+		}
+	}
+	
+	onValueChangeItem(fieldValue){
+		
+		let stateValues = {};
+		if( this.props.floatingLabel ){
+			stateValues.floatLabel = fieldValue ? true : false;
+		}
+		
+		stateValues.fieldValue = fieldValue;
+		
+		this.setState( stateValues ,()=>{
+			this.props.getValue && this.props.getValue(this.state.fieldValue);
+		});
+
+	}
+	
 	render() {
+
 		let {
 			fieldSetStyle,
-
-			focusFieldOnChange,
-			hideMessageOnValid,
-
 			tabIndex,
-			fieldInfo,
+			floatingLabel,
+			
 			validation,
 			onPassValidation,
 			onFailValidation
+			
 		} = this.props;
-		
 		
 		return (
 			<div className={fieldSetStyle} tabIndex={tabIndex} ref={this.setFieldSetRef}>
@@ -226,24 +207,27 @@ export default class FormFieldSetBase extends React.Component {
 							FieldLabelChild,
 							Object.assign(omit(childComponent.props, ['children']), {
 								errored : this.state.errored,
-								focused : this.state.fieldFocused,
-								raised : this.state.labelRaised
+								raised : this.state.floatLabel
 							})
 						);
 					} else if (childComponent.type.prototype === FormFieldBase.prototype) {
 						return React.cloneElement(childComponent, {
-							errored: this.state.errored,
 							
-							focused: this.state.fieldFocused,
-							fireFieldFocusIn : this.props.fireFocusIn,
-							onFocusFieldUpdate : focusFieldOnChange ? this.onFocusFieldUpdate : null,
-									
+							fieldValue : this.state.fieldValue,
+							errored: this.state.errored,
 							valid: !this.state.errored,
+							focused:this.props.focusField,
+							getFieldValue : this.onValueChangeItem,
+							
+							onFoucsField : this.props.floatingLabel ? this.onFoucsFieldItem : null,
+							onBlurField : this.props.floatingLabel ? this.onBlurFieldItem : null,
+							
 							validation: Object.assign({}, childComponent.props.validation, validation, {
-								validate: this.state.validate
+								validate: this.props.validate
 							}),
 							onPassValidation: this.onPassValidationItem,
 							onFailValidation: this.onFailValidationItem
+							
 						});
 					} else if (childComponent.type.prototype === FormFieldMsgBase.prototype) {
 						let FieldMsgChild = React.Children.only(childComponent.props.children);
@@ -252,9 +236,7 @@ export default class FormFieldSetBase extends React.Component {
 							FieldMsgChild,
 							Object.assign(omit(childComponent.props, ['children']), {
 								errored: this.state.errored,
-								focused: this.state.fieldFocused,
-								valid: !this.state.errored,
-								hidden: !this.state.errored && hideMessageOnValid
+								valid: !this.state.errored
 							}),
 							this.state.errored ? this.state.errMessage : this.props.infoMessage || FieldMsgChild.props.children
 						);
@@ -273,11 +255,10 @@ FormFieldSetBase.propTypes = {
 	tabIndex : PropTypes.string,
 	fieldId: PropTypes.string.isRequired,
 	value: PropTypes.any,
-
-	fireFocusIn :  PropTypes.bool,
-	hideMessageOnValid: PropTypes.bool,
-	focusFieldOnChange : PropTypes.bool,
-	raiseLabelOnChange : PropTypes.bool,
+	getValue : PropTypes.func,
+	
+	focusField :  PropTypes.bool,
+	floatingLabel : PropTypes.bool,
 
 	infoMessage: PropTypes.string,
 	errMessage: PropTypes.string,

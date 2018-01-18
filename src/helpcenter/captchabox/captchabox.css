@@ -1,0 +1,57 @@
+@value _roboto from "../common-css/variables/fontfamily.css";
+
+.default{
+  text-align:left;
+}
+
+.default input{
+	border: none !important;
+	border-top: 1px solid #e0e0e0 !important;
+	padding: 15px !important;
+	font-family: _roboto;
+}
+
+default input:focus{
+	border: none;
+} 
+
+.default input[type="text"]::-webkit-input-placeholder{
+	color:#aaa;
+	font-size: 14px;
+}
+
+.default input[type="text"]::-moz-input-placeholder{
+	color:#aaa;
+	font-size: 14px;
+}
+
+.default input[type="text"]::-ms-input-placeholder{
+	color:#aaa;
+	font-size: 14px;
+}
+
+.default .textboxview {
+	
+}
+
+.default .captchainnerview {
+    border:1px solid #e0e0e0;
+    text-align:left;
+    min-height:77px
+}
+
+.default .captchainnerview .captchimg{
+  max-width:100%;
+}
+
+.default .captchainnerview .refresh_option{
+    margin: 30px 0px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}
+.captchaImgStyle{
+	composes: fleft from '../common-css/floats/floats.css';
+    padding: 5px;
+    border-right: 1px solid #e0e0e0;
+}

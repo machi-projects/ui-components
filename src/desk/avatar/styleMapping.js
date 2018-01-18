@@ -7,11 +7,12 @@ export default {
     textStyle : "default",
     iconStyle : "default"
   },
-  "myavatar" : {
-    picStyles : Object.assign({ groupStyle : "default"}, pictureStyleMapping[ "default" ] ),
-    textStyle : "default",
-    iconStyle : "default"
+  "thumbnail_box" : {
+    picStyles : Object.assign({ groupStyle : "thumbnail_group"}, pictureStyleMapping[ "thumbnail_group" ] ),
+    textStyle : "thumbnail_text",
+    iconStyle : "thumbnail_icon"
   }
+
 
 }
 

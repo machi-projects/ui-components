@@ -2,36 +2,28 @@
 
 .default {
 	outline: none; 	
-	margin-bottom: 30px;	
+	margin-bottom: 30px;
+	text-align: left;	
 }
 
 .default:focus{
-	
-	outline: none;
+	outline: none
 }
-
 
 .default .field_default{
-	
-	/* child item  */
+	outline: none
 }
 
 
 
-/* .default .field_default::before, .default .field_default::after{
-	content: '';
-    height: 1px;
-    width: 0;
-    bottom: 0;
-    position: absolute;
-    background: _red_1;
-    transition: 0.2s ease all;
+.float_checkboxgroup {
+	composes:default;
 }
 
-.default .field_default::before{
-	left: 50%;
+.float_checkboxgroup:focus{
+	outline: none
 }
 
-.default .field_default::after{
-	right: 50%;
-} */
+.float_checkboxgroup .field_default{
+	outline: none;
+}

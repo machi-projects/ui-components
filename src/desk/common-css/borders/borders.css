@@ -4,10 +4,6 @@
 @value _solid : solid;
 
 
-.bdr_none{
-
-}
-
 .bdr_5px_rs_5per{
   border: _px_5 _solid _green;
   border-radius: _per_5;
@@ -18,11 +14,6 @@
   border-radius: _per_100;
 }
 
-/*
-
-  border _ bdr
-  radius _ rs
-
-  border _ px _ rounded _ per
-
-*/
+.bdr_rs_50per{
+	border-radius:50%
+}

@@ -5,7 +5,8 @@
 	margin:0px 0px 0px 10px;
 	width:40px;
 	display:inline-block;
-    font:14px/18px 'ProximaNovaRegular',sans-serif;
+     composes: fs_14_px from '../../common-css/font-sizes/fontsizes.css';
+    line-height:18px;
 }
 .drop
 {

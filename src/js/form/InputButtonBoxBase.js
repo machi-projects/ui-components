@@ -2,19 +2,15 @@ import React from 'react';
 import InputBase from '../core/InputBase';
 import validator from '../../utils/validator';
 import PropTypes from 'prop-types';
-import {equals} from '../../utils/objectUtils';
+import {deepEqualObject} from '../../utils/objectUtils';
 
 export default class InputButtonBoxBase extends React.Component {
 
-	shouldComponentUpdate(nextProps)
+	shouldComponentUpdate(nextProps, nextState)
 	{
-			if( equals(nextProps, this.props) ){
-					return false;
-			}
-
-			return true;
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false));
 	}
-
+	
 	render() {
 
 			let defaultCheckPropsRules = 	[ "required" , "pattern" ]
@@ -44,7 +40,7 @@ InputButtonBoxBase.propTypes = {
 	id : PropTypes.string ,
 	type : PropTypes.oneOf([  "checkbox" , "radio"  ]).isRequired ,
 	name : PropTypes.string ,
-  className : PropTypes.string,
+    className : PropTypes.string,
 
 	readOnly : PropTypes.bool ,
 	defaultChecked :  PropTypes.bool ,
@@ -55,11 +51,13 @@ InputButtonBoxBase.propTypes = {
 	pattern :  PropTypes.string ,
 	value : PropTypes.string ,
 
+	getElementRef : PropTypes.func,
 	onFocus: PropTypes.func,
 	onBlur : PropTypes.func,
 	onKeyDown : PropTypes.func,
 	onKeyUp : PropTypes.func,
 	onChange : PropTypes.func,
+	getValue : PropTypes.func,
 
 	validation : PropTypes.shape({
 			validate : PropTypes.bool ,

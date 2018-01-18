@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { omit , equals } from '../../utils/objectUtils';
+import { omit , deepEqualObject } from '../../utils/objectUtils';
 
 
 let getTotalFieldsCount=(fieldChildren)=>{
 
 	let count = 0;
 	React.Children.map(fieldChildren, (child, i) => {
-		if( child ){
+		if( child && child.props.fieldId){
 			count += 1;
 		}
 	})
@@ -22,11 +22,10 @@ export default class FormFieldsGroupBase extends Component {
 		super(props);	
 		this.state = {
 			errored: false,
-			validate: props.validate,
 			validFields: {},
 			inValidFields: {},
 			totalFieldsCount : ( props.totalFieldsCount ? nextProps.totalFieldsCount : getTotalFieldsCount(props.children)),
-			errorFocusFieldId : props.errorFieldId || null
+			errorFocusFieldId : props.errorFocusFieldId || null
 		};
 		
 		this.reseSetDoneFieldsCount();
@@ -34,7 +33,6 @@ export default class FormFieldsGroupBase extends Component {
 		this.getDoneFieldsCount = this.getDoneFieldsCount.bind(this);
 		this.reseSetDoneFieldsCount = this.reseSetDoneFieldsCount.bind(this);
 		this.addDoneFieldsCount = this.addDoneFieldsCount.bind(this);
-		
 	}
 	
 	getDoneFieldsCount(){
@@ -49,29 +47,19 @@ export default class FormFieldsGroupBase extends Component {
 		this.doneFieldsCount = this.doneFieldsCount + 1;
 	}
 	
-	componentWillReceiveProps(nextProps){
-		if( nextProps.validate !== this.state.validate  ){
-			this.setState({ 
-				validate : nextProps.validate,
-				totalFieldsCount :( nextProps.totalFieldsCount ? nextProps.totalFieldsCount : getTotalFieldsCount(nextProps.children))
-			});
-		}
-	}
-	
 	onValidationDone(){
 		
 		let invalidFields =  Object.keys(this.state.inValidFields);
 		//let numOfValidFields =  Object.keys(this.state.validFields).length;
 		if( invalidFields.length > 0 ){
 			
-			console.log("invalidFields-->",invalidFields);
 			this.props.onFailValidation && this.props.onFailValidation(this.state.inValidFields);
 			if(this.props.focusFieldOnError){
-				this.setState({ errorFocusFieldId : invalidFields[0] })
+				this.setState({ errorFocusFieldId : invalidFields[0] },()=>{this.setState({errorFocusFieldId:null})})
 			}
 		}
 		else{
-			this.props.onPassValidation && this.props.onPassValidation(this.state.validatedFields);
+			this.props.onPassValidation && this.props.onPassValidation(this.state.validFields);
 			this.setState({ errorFocusFieldId : null })
 		}
 		
@@ -79,12 +67,10 @@ export default class FormFieldsGroupBase extends Component {
 	}
 	
 	onPassValidationItem(fieldId, fieldVal, el) {
-		
 		this.setState(
 			state => {
 				state.validFields[fieldId] = fieldVal;
 				state.inValidFields = omit(state.inValidFields, fieldId);
-				state.validate = false;
 				state.errored = false;
 				return state;
 			},
@@ -101,12 +87,10 @@ export default class FormFieldsGroupBase extends Component {
 	}
 
 	onFailValidationItem(fieldId, rule, message, el) {
-
 		this.setState(
 			state => {
 				state.inValidFields[fieldId] = { [rule]: message };
 				state.validFields = omit(state.validFields, fieldId);
-				state.validate = false;
 				state.errored = true;
 				return state;
 			},
@@ -122,31 +106,28 @@ export default class FormFieldsGroupBase extends Component {
 			
 	}
 	
-	shouldComponentUpdate(nextProps, nextState)
-	{
-		return !equals(nextState , this.state)
-	}
-
 	render() {
-		let { formFieldsGroupStyle } = this.props;
+	
+		let { formFieldsGroupStyle , focusFieldOnError, onChangeFieldValue } = this.props;
 
 		return (
-			<div className={formFieldsGroupStyle} tabIndex="-1">
+			<div className={formFieldsGroupStyle} >
 				{React.Children.map(this.props.children, (child, i) => {
 					return child
 						? React.cloneElement(child, {
 								key: i,
-								validate: this.state.validate,
-								tabIndex: "-1",
-								fireFocusIn : ( this.state.errorFocusFieldId == child.props.fieldId ),
-								onPassValidation: (fieldId, fieldVal, el)=>{ 
+								validate: this.props.validate,
+								tabIndex: focusFieldOnError ? "-1" : null,
+								focusField : ( this.state.errorFocusFieldId == child.props.fieldId ),
+								getValue : onChangeFieldValue ? (val)=>{ onChangeFieldValue(child.props.fieldId, val) } : null ,
+								onPassValidation: (fieldId, fieldVal, el)=>{
 									child.props.onPassValidation && child.props.onPassValidation(fieldId, fieldVal, el); 
-									this.state.validate && this.onPassValidationItem(fieldId, fieldVal, el);
+									this.props.validate && this.onPassValidationItem(fieldId, fieldVal, el);
 								},
-								onFailValidation: (fieldId, rule, message, el)=>{ 
+								onFailValidation: (fieldId, rule, message, el)=>{
 									child.props.onFailValidation && child.props.onFailValidation(fieldId, rule, message, el);  
-									this.state.validate && this.onFailValidationItem(fieldId, rule, message, el);
-								} 
+									this.props.validate && this.onFailValidationItem(fieldId, rule, message, el);
+								}
 							})
 						: null;
 				})}
@@ -162,6 +143,7 @@ FormFieldsGroupBase.propTypes = {
 	validate: PropTypes.bool,
 	onFailValidation: PropTypes.func,
 	onPassValidation: PropTypes.func,
+	onChangeFieldValue : PropTypes.func,
 
 	totalFieldsCount : PropTypes.number,
 	children: PropTypes.oneOfType([

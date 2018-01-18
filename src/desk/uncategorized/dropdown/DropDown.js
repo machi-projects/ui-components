@@ -5,40 +5,21 @@ import { FormatText } from 'fz-i18n';
 import style from './DropDown.css';
 import Popup from '../Popup';
 import { Icon } from '../../index';
-import { formatValue } from '../common';
+import { formatValue , formatSelectedValue } from '../common';
 
 import validator from '../../../utils/validator';
-import {  equals } from '../../../utils/objectUtils';
-
-const getSelectedValue = function(options, value) {
-	var selected = value,
-		count = 0,
-		selectedOptName = value;
-
-	options.forEach((opt, index) => {
-		let val = opt,
-			name = opt;
-		if (typeof opt == 'object') {
-			val = opt.id;
-			name = opt.name;
-		}
-
-		if (value == val) {
-			selected = val;
-			count = index;
-			selectedOptName = name;
-		}
-	});
-	return { selected, count, selectedOptName, options };
-};
+import { deepEqualObject } from '../../../utils/objectUtils';
 
 class DropDown extends React.Component {
 	constructor(props) {
 		super(props);
-		let { selected, count, selectedOptName, options } = getSelectedValue(
-			formatValue(props.defaultOptions),
-			props.defaultValue
+		let { selected, count, selectedOptName, options } = formatSelectedValue(
+			formatValue(props.options,props.valueField,props.textField),
+			props.selectedValue,
+			props.valueField ,
+			props.textField
 		);
+
 		this.state = {
 			options,
 			selectedOptName,
@@ -46,48 +27,68 @@ class DropDown extends React.Component {
 			count,
 			searchStr: ''
 		};
-		
-		this.textidchange = this.textidchange.bind(this);
-		this.handleChange = this.handleChange.bind(this);
+
+		this.handleOnSelect = this.handleOnSelect.bind(this);
+		this.handleOnSearch = this.handleOnSearch.bind(this);
 		this.filterSuggestion = this.filterSuggestion.bind(this);
 		this.togglePopup = this.togglePopup.bind(this);
+		this.onChangeValue = this.onChangeValue.bind(this);
 
 		this.setRef = this.setRef.bind(this);
 		this.setDropPopupRef = this.setDropPopupRef.bind(this);
 		this.setPlaceHolderRef = this.setPlaceHolderRef.bind(this);
-		
+		//this.setSearchInputRef = this.setSearchInputRef.bind(this);
 	}
+
 
 	setRef(el) {
 		this.elementRef = el;
+		this.props.getElementRef && this.props.getElementRef(el);
 	}
 
 	setDropPopupRef(el) {
 		this.dropPopupRef = el;
 	}
-	
+
 	setPlaceHolderRef(el) {
 		this.placeHolderRef = el;
 	}
 
-	textidchange(id, opt, count, e) {
-		this.setState({ selected: id, selectedOptName: opt, count: count }, () => {
-			this.props.onChange && this.props.onChange(this.state.selected, this.props.groupName, e);
+	handleOnSelect(val, optName, count, e) {
+		this.setState({ selected: val, selectedOptName: optName, count: count }, () => {
+			this.onChangeValue(this.state.selected, this.props.groupName, e)
 			if (this.props.validation && this.props.validation.validateOn) {
 				this.validateOnSelect(this.state.selected, this.props);
 			}
 		});
+		this.props.closePopupOnly && this.props.closePopupOnly(e);
 	}
 
-	componentWillReceiveProps(nextprops) {
-		
-		if ( (nextprops.value && nextprops.value !== this.props.value) || (nextprops.options && !equals(nextprops.options , this.props.options) )) {
+	shouldComponentUpdate(nextProps, nextState)
+	{
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false));
+	}
 
-			this.setState(getSelectedValue(formatValue(nextprops.options), nextprops.value));
+	componentWillReceiveProps(nextProps) {
+
+		if (	 deepEqualObject( nextProps.selectedValue , this.state.selected) == false ) {
+
+			let { selected, count, selectedOptName } = formatSelectedValue(this.state.options,
+					nextProps.selectedValue,
+					this.props.valueField,
+					this.props.textField)
+
+			this.setState({ selectedOptName, selected, count });
 		}
 
-		if (nextprops.validation != null && nextprops.validation.validate) {
-			this.validateOnSelect(this.state.selected, nextprops);
+		if (	 deepEqualObject(nextProps.options , this.props.options) == false) {
+
+			let options = formatValue(nextProps.options,this.props.valueField,this.props.textField);
+			this.setState({options});
+		}
+
+		if( deepEqualObject(nextProps.validation,this.props.validation) == false && nextProps.validation && nextProps.validation.validate ){
+			this.validateOnSelect(this.state.selected, nextProps);
 		}
 	}
 
@@ -124,7 +125,7 @@ class DropDown extends React.Component {
 
 	keyPress(e) {
 		let keyCode = e.keyCode;
-		let { onChange, id, togglePopup } = this.props;
+		let { togglePopup , valueField , groupName } = this.props;
 		let { count, searchStr } = this.state;
 		let options = this.filterSuggestion(this.state.options, searchStr);
 		if (options.length) {
@@ -148,12 +149,10 @@ class DropDown extends React.Component {
 
 			if (keyCode == 13) {
 				var opt = options[this.state.count],
-					val = opt;
-				if (typeof opt == 'object') {
-					val = opt.id;
-				}
+					val = opt[valueField];
 				this.setState({ selected: val });
-				onChange && onChange(val, id, e);
+
+				this.onChangeValue(val, groupName, e);
 				togglePopup && togglePopup(e);
 			}
 		}
@@ -168,15 +167,24 @@ class DropDown extends React.Component {
 			this.refs.input && this.refs.input.focus();
 		});
 	}
-	handleChange(e) {
+	handleOnSearch(e) {
 		this.setState({ searchStr: e.target.value, count: 0 });
 	}
 
+	onChangeValue(val, groupName, e){
+		this.props.onChange && this.props.onChange(val, groupName, e);
+		this.props.getValue && this.props.getValue(val);
+	}
+
 	filterSuggestion(options = [], searchStr) {
+
+		let textField = this.props.textField;
+		let valueField = this.props.valueField;
+
 		let minimumResultsForSearch = this.props.minimumResultsForSearch;
 		let suggestions = options.filter((opt, index) => {
-			let val = opt.id,
-				name = opt.name;
+			let val = opt[valueField],
+				name = opt[textField];
 			return name.toLowerCase().indexOf(searchStr.toLowerCase()) != -1;
 		});
 
@@ -188,14 +196,8 @@ class DropDown extends React.Component {
 		return suggestions;
 	}
 
-	componentDidUpdate(prevProps) {
-		
-		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
-			requestAnimationFrame(()=>{
-				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			})
-		}
-		
+	componentDidUpdate(prevProps,prevState) {
+
 		var suggestionContainer = ReactDom.findDOMNode(this.refs.suggestionContainer);
 		var selSuggestion = ReactDom.findDOMNode(this.refs['suggestion_' + this.state.count]);
 		if (selSuggestion && suggestionContainer) {
@@ -209,21 +211,17 @@ class DropDown extends React.Component {
 				suggestionContainer.scrollTop = selSuggestion.offsetTop - 30;
 			}
 		}
-		
+
 	}
 
 	componentDidMount() {
 		if (this.props.validation != null && this.props.validation.validate) {
 			this.validateOnSelect(this.state.selected, this.props);
 		}
-		if(this.props.fireEvent!=null){
-			requestAnimationFrame(()=>{
-				this.elementRef  && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			});
-		}
 	}
 
 	render() {
+
 		let {
 			isPopupReady,
 			isPopupOpen,
@@ -233,78 +231,79 @@ class DropDown extends React.Component {
 			placeholder,
 			minimumResultsForSearch,
 			enableSeachOptionsCount,
-			
+
 			tabIndex,
-			focusIn,
-			focusOut,
-			onClick
-			
+			onClick,
+			textField,
+			valueField,
+			styleId
+
 		} = this.props;
+
 		let options = this.state.options;
 
-		let arrowopen = isPopupOpen ? style.arrowUp : style.arrowDown;
+		let arrowopen = isPopupOpen ? style[`${styleId}_arrowUp`] : style[`${styleId}_arrowDown`];
 		let suggestions = this.filterSuggestion(options, this.state.searchStr);
 
 		let enableSearch = minimumResultsForSearch > 0 && options.length >= enableSeachOptionsCount;
 		return (
-			<div className={style.main} ref={this.setRef} tabIndex={tabIndex} onFocus={focusIn} onBlur={focusOut} onClick={onClick} >
-				<div onClick={(e)=>{ this.togglePopup(e , this.dropPopupRef , this.placeHolderRef ) }} 
+			<div className={style[`${styleId}_main`]} ref={this.setRef} tabIndex={tabIndex} onClick={onClick} >
+				<div onClick={(e)=>{ this.togglePopup(e , this.dropPopupRef , this.placeHolderRef ) }}
 				ref={this.setPlaceHolderRef}>
 					<div
 						className={
-							isError ? style.isError + ' ' + style.dropdown + ' ' + arrowopen : style.dropdown + ' ' + arrowopen
+							isError ? style[`${styleId}_isError`] + ' ' + style[`${styleId}_dropdown`] + ' ' + arrowopen : style[`${styleId}_dropdown`] + ' ' + arrowopen
 						}
 					>
-						<span className={style.selectname}>
+						<span className={style[`${styleId}_selectname`]}>
 							{this.state.selectedOptName}
 						</span>
 					</div>
 				</div>
-				<div ref={this.setDropPopupRef} 
+				<div ref={this.setDropPopupRef}  onClick={removeClose}
 				className={
-						style.droppopup+' '+ ( isPopupReady ? style.ready : '' ) +' '+ 
+						style[`${styleId}_droppopup`]+' '+ ( isPopupReady ?style.ready : '' ) +' '+
 						( isPopupOpen ? style.opened : '')  +' '+
-						(position == 'top' ? style.listViewTop : style.listview) 
+						(position == 'top' ? style[`${styleId}_listViewTop`] : style[`${styleId}_listview`])
 				} >
-				
-				
+
+
 					{enableSearch &&
-						<div className={style.posRel}>
+						<div className={style[`${styleId}_posRel`]} >
 							<input
 								type="text"
 								ref="input"
-								className={style.searchicon}
+								className={style[`${styleId}_searchicon`]}
 								placeholder={placeholder}
 								onKeyDown={this.keyPress.bind(this)}
-								onChange={this.handleChange}
+								onChange={this.handleOnSearch}
 								value={this.state.searchStr}
+
 							/>
-							<div className={style.searchIconPosSet}>
+							<div className={style[`${styleId}_searchIconPosSet`]}>
 								<Icon id="searchIcon" color="greyshade2" size="size15" />
 							</div>
 						</div>}
 					{suggestions.length
-						? <ul className={style.listmenu} ref="suggestionContainer">
+						? <ul className={style[`${styleId}_listmenu`]} ref="suggestionContainer">
 								{suggestions.map((opt, index) => {
-									let val = opt,
-										name = opt;
-									if (typeof opt == 'object') {
-										val = opt.id;
-										name = opt.name;
-									}
+
+									let val = opt[valueField];
+									let name = opt[textField];
+
 									return (
 										<li
 											key={index + 'opt'}
 											ref={'suggestion_' + index}
-											className={this.state.count == index ? style.bccolor : style.normal}
-											onClick={this.textidchange.bind(this, val, name, index)}
+											className={this.state.count == index ? style[`${styleId}_bccolor`] : style[`${styleId}_normal`]}
+											onClick={this.handleOnSelect.bind(this, val, name, index)}
 										>
 											{name}
 										</li>
 									);
 								})}
 							</ul>
-						: <FormatText i18NKey="No matches found" className={style.notfound} type="div" />}
+						: <FormatText i18NKey="No matches found" className={style[`${styleId}_notfound`]} type="div" />}
 				</div>
 			</div>
 		);
@@ -315,32 +314,36 @@ export default Popup(DropDown);
 
 DropDown.defaultProps = {
 	minimumResultsForSearch: Infinity,
-	enableSeachOptionsCount: 1
+	enableSeachOptionsCount: 1,
+	textField : "name",
+	valueField : "id",
+	styleId : "default"
 };
 
 DropDown.propTypes = {
+	styleId:PropTypes.string,
 	options: PropTypes.array,
 	defaultOptions: PropTypes.array,
 	id: PropTypes.string,
+	textField : PropTypes.string,
 	isPopupOpen: PropTypes.bool,
 	position: PropTypes.string,
 	removeClose: PropTypes.func,
 	isError: PropTypes.bool,
 	onChange: PropTypes.func,
 	groupName: PropTypes.string,
-	defaultValue: PropTypes.string,
-	value: PropTypes.string,
+	selectedValue: PropTypes.string,
 	togglePopup: PropTypes.func,
 
-	fireEvent : PropTypes.string,
 	tabIndex : PropTypes.string,
-	focusIn : PropTypes.func,
-	focusOut : PropTypes.func,
+	getElementRef : PropTypes.func,
+	getValue : PropTypes.func,
 	onClick : PropTypes.func,
-	
+
 	raised : PropTypes.bool,
 	focused : PropTypes.bool,
-	
+	errored : PropTypes.bool,
+
 	minimumResultsForSearch: PropTypes.number,
 	enableSeachOptionsCount: PropTypes.number,
 

@@ -16,6 +16,7 @@ export * from './picture/index';
 export * from './plaintext/index';
 export * from './message/index';
 export * from './searchbox/index';
+export * from './captchabox/index';
 
 export * from './freezelayer/index';
 export * from './tabs/index';

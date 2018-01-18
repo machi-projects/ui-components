@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PickOneGroupBase, { PickOneItemBase } from '../../js/core/PickOneGroupBase';
 
-import styles from './pickonegroup.css';
 import styleMapping from './styleMapping';
 
 import { omit } from '../../utils/objectUtils';
@@ -36,9 +35,7 @@ export var PickOneItem = function (_Component) {
 
 PickOneItem.propTypes = {
   pickId: PropTypes.string.isRequired,
-  tabIndex: PropTypes.string,
-  focusIn: PropTypes.func,
-  focusOut: PropTypes.func
+  tabIndex: PropTypes.string
 };
 
 var PickOneGroup = function (_Component2) {
@@ -108,12 +105,11 @@ PickOneGroup.propTypes = {
   itemsControls: PropTypes.bool,
   selectedItem: PropTypes.string,
   onSelect: PropTypes.func,
+  getValue: PropTypes.func,
   pickOn: PropTypes.string,
 
-  fireEvent: PropTypes.string,
   tabIndex: PropTypes.string,
-  focusIn: PropTypes.func,
-  focusOut: PropTypes.func,
+  getElementRef: PropTypes.func,
   onClick: PropTypes.func,
 
   validation: PropTypes.shape({

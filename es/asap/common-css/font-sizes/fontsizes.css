@@ -1,22 +1,57 @@
-@value _small, _medium, _large, _xlarge,  _small_2 from "../variables/fontsizes.css";
-
+@value _0_px, _10_px, _12_px, _14_px, _15_px, _16_px, _21_px, _18_px,  _small, _medium, _large, _xlarge, _small_2 from "../variables/fontsizes.css";
+ 
 .fs_small {
-    font-size: _small;
+	font-size: _small;
 }
 
 .fs_medium {
-    font-size: _medium;
+	font-size: _medium;
 }
 
 .fs_large {
-    font-size: _large;
+	font-size: _large;
 }
 
-
 .fs_xlarge {
-    font-size: _xlarge;
+	font-size: _xlarge;
 }
 
 .fs_small_2 {
-    font-size: _small_2;
+	font-size: _small_2;
+}
+
+.fs_0_px {
+	font-size: _0_px;
+}
+
+.fs_10_px {
+	font-size: _10_px;
+}
+
+.fs_12_px {
+	font-size: _12_px;
+}
+
+.fs_14_px {
+	font-size: _14_px;
+}
+
+.fs_15_px {
+	font-size: _15_px;
+}
+
+.fs_16_px {
+	font-size: _16_px;
+}
+
+.fs_18_px {
+	font-size: _18_px;
+}
+
+.fs_20_px {
+	font-size: _20_px;
+}
+
+.fs_21_px {
+	font-size: _21_px;
 }

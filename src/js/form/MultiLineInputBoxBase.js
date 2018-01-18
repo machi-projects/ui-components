@@ -2,17 +2,13 @@ import React from 'react';
 import MultiLineInputBase from '../core/MultiLineInputBase';
 import validator from '../../utils/validator';
 import PropTypes from 'prop-types';
-import {equals} from '../../utils/objectUtils';
+import {deepEqualObject} from '../../utils/objectUtils';
 
 export default class MultiLineInputBoxBase extends React.Component {
-
-	shouldComponentUpdate(nextProps)
+	
+	shouldComponentUpdate(nextProps, nextState)
 	{
-			if( equals(nextProps, this.props) ){
-					return false;
-			}
-
-			return true;
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false));
 	}
 	
     render() {
@@ -52,12 +48,14 @@ MultiLineInputBoxBase.propTypes ={
 	required :  PropTypes.bool ,
 	value : PropTypes.string ,
 
+	getElementRef : PropTypes.func,
 	onFocus: PropTypes.func,
 	onBlur : PropTypes.func,
 	onKeyDown : PropTypes.func,
 	onKeyUp : PropTypes.func,
 	onChange : PropTypes.func,
 	onInput : PropTypes.func,
+	getValue : PropTypes.func,
 
 	validation : PropTypes.shape({
 			validate : PropTypes.bool ,

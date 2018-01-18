@@ -8,7 +8,6 @@ import TabsBase, {
   TabContentBase
  } from '../../js/core/TabsBase';
 
-import styles from './tabs.css';
 import styleMapping from './styleMapping';
 
 export class TabItem extends Component {

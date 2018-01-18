@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TabsBase, { TabsHeaderBase, TabItemBase, TabsBodyBase, TabContentBase } from '../../js/core/TabsBase';
 
-import styles from './tabs.css';
 import styleMapping from './styleMapping';
 
 export var TabItem = function (_Component) {

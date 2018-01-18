@@ -13,11 +13,18 @@ import colorsStyles from '../common-css/colors/colors.css';
 import bordersStyles from '../common-css/borders/borders.css';
 
 import pictureStyles from '../picture/picturebox.css';
+
 import textStyles from '../plaintext/plaintext.css';
+
 import iconStyles from '../icons/icon.css';
 
 import styleMapping from './styleMapping';
 import cx from '../../utils/classNamesUtils/classNames';
+
+import sizeStyles from '../common-css/layoutunits/units.css';
+import borderStyles from '../common-css/borders/borders.css';
+import fontSizeStyles from '../common-css/font-sizes/fontsizes.css';
+import lineHeightStyles from '../common-css/layoutunits/units.css';
 
 var Avatar = function (_React$Component) {
   _inherits(Avatar, _React$Component);
@@ -38,19 +45,24 @@ var Avatar = function (_React$Component) {
           text = _props.text,
           name = _props.name,
           iconId = _props.iconId,
+          onPictureError = _props.onPictureError,
           shape = _props.shape,
           bgColor = _props.bgColor,
           textColor = _props.textColor,
+          textBorderColor = _props.textBorderColor,
           size = _props.size,
-          borderSize = _props.borderSize;
+          borderSize = _props.borderSize,
+          fontSize = _props.fontSize,
+          lineHeight = _props.lineHeight;
 
 
       var styleMappings = styleMapping[styleId];
-      var classNames = cx(styles[styleId], styles["avatar_" + type], styles["shape_" + shape], styles["size_" + size], bordersStyles["bdr_" + borderSize], colorsStyles["bg_" + bgColor], colorsStyles["clr_" + textColor]);
+      var classNames = cx(styles[styleId], styles["avatar_" + type], borderStyles["bdr_" + shape], sizeStyles["dm_" + size], borderStyles["bdr_" + borderSize], fontSizeStyles["fs_" + fontSize], lineHeightStyles["lh_" + lineHeight], colorsStyles["bg_" + bgColor], colorsStyles["clr_" + textColor], colorsStyles["foto_set_" + textBorderColor]);
 
       return React.createElement(FrameShapeBase, { type: type, picture: picture, text: text, name: name, iconId: iconId,
 
-        avatarStyle: classNames,
+        onPictureError: onPictureError,
+        frameStyle: classNames,
         textStyle: textStyles[styleMappings.textStyle],
         iconStyle: iconStyles[styleMappings.iconStyle],
         picStyles: {
@@ -82,15 +94,20 @@ Avatar.propTypes = {
   name: PropTypes.string,
   iconId: PropTypes.string,
 
+  onPictureError: PropTypes.func,
   shape: PropTypes.string,
   size: PropTypes.string,
   borderSize: PropTypes.string,
+  frameStyle: PropTypes.string,
 
   bgColor: PropTypes.string,
   textColor: PropTypes.string,
 
-  styleId: PropTypes.string
+  styleId: PropTypes.string,
+  fontSize: PropTypes.string,
+  lineHeight: PropTypes.string,
 
+  textBorderColor: PropTypes.string
 };
 
 if (__DOCS__) {

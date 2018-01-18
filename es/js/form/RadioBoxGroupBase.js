@@ -9,6 +9,7 @@ import PickOneGroupBase, { PickOneItemBase } from '../core/PickOneGroupBase';
 import PropTypes from 'prop-types';
 import InputButtonBoxBase from './InputButtonBoxBase';
 import LabelBoxBase from './LabelBoxBase';
+import { deepEqualObject } from '../../utils/objectUtils';
 
 export var RadioBoxItemBase = function (_React$Component) {
 	_inherits(RadioBoxItemBase, _React$Component);
@@ -55,6 +56,14 @@ var RadioBoxGroupBase = function (_React$Component2) {
 	}
 
 	_createClass(RadioBoxGroupBase, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+
+			if (deepEqualObject(nextProps.selectedItem, this.state.selectedItem) == false) {
+				this.setState({ selectedItem: nextProps.selectedItem });
+			}
+		}
+	}, {
 		key: 'onSelectedItem',
 		value: function onSelectedItem(newSelectedItem, el) {
 			var _this3 = this;
@@ -79,10 +88,9 @@ var RadioBoxGroupBase = function (_React$Component2) {
 			    validation = _props.validation,
 			    onPassValidation = _props.onPassValidation,
 			    onFailValidation = _props.onFailValidation,
-			    fireEvent = _props.fireEvent,
 			    tabIndex = _props.tabIndex,
-			    focusIn = _props.focusIn,
-			    focusOut = _props.focusOut,
+			    getElementRef = _props.getElementRef,
+			    getValue = _props.getValue,
 			    onClick = _props.onClick;
 
 
@@ -101,12 +109,10 @@ var RadioBoxGroupBase = function (_React$Component2) {
 				}, allStyles, {
 					selectedItem: selectedItem,
 					onSelect: this.onSelectedItem,
+					getValue: getValue,
 
-					fireEvent: fireEvent,
 					tabIndex: tabIndex,
-					focusIn: focusIn,
-					focusOut: focusOut,
-					onClick: onClick
+					getElementRef: getElementRef
 				}),
 				React.Children.map(this.props.children, function (child, i) {
 					var checked = stateSelectedItem == child.props.value;
@@ -156,11 +162,10 @@ RadioBoxGroupBase.propTypes = {
 	groupName: PropTypes.string,
 	selectedItem: PropTypes.string,
 	onSelect: PropTypes.func,
+	getValue: PropTypes.func,
 
-	fireEvent: PropTypes.string,
 	tabIndex: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func,
+	getElementRef: PropTypes.func,
 	onClick: PropTypes.func,
 
 	validation: PropTypes.shape({

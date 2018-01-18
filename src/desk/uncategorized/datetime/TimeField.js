@@ -1,6 +1,7 @@
 import React from 'react';
 import style from './TimeField.css';
 import DropdownComponent from './DropdownComponent';
+import { deepEqualObject } from '../../../utils/objectUtils';
 
 export default class DateTime extends React.Component {
 	constructor(props){
@@ -13,6 +14,12 @@ export default class DateTime extends React.Component {
 		this.state={ hours,mins,amPm}
 
 	}
+	
+	shouldComponentUpdate(nextProps, nextState)
+	{
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false) )
+	}
+	
 	render(){
 		let { hours,mins,amPm}= this.state;
 		let hourSuggestions= (()=>{
@@ -46,7 +53,9 @@ export default class DateTime extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 	    let {hours,mins,amPm}= nextProps;
-		this.setState({ hours,mins,amPm });
+	    if(deepEqualObject(nextProps,this.props) == false ){
+	    		this.setState({ hours,mins,amPm });
+	    }
 	}
 
 	hoursSelect(value){

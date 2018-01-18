@@ -1,55 +1,41 @@
 import React from 'react';
 import validator from '../../utils/validator';
 import PropTypes from 'prop-types';
-import {omit,extract,equals} from '../../utils/objectUtils';
+import {omit,extract,deepEqualObject} from '../../utils/objectUtils';
 
 export default class MultiLineInputBase extends React.Component {
 
 	constructor(props)
 	{
 		super(props);
-		this.state = { text : this.props.value };
+		this.state = { text : this.props.value || '' };
 		this.onChangeText = this.onChangeText.bind(this);
 		this.validateInputBox = this.validateInputBox.bind(this);
 		this.setTextValue = this.setTextValue.bind(this);
-		
 		this.setRef = this.setRef.bind(this);
 	}
 
-
 	setRef(el){
 		this.elementRef = el;
+		this.props.getElementRef && this.props.getElementRef(el);
 	}
 	
 	shouldComponentUpdate(nextProps, nextState)
 	{
-		if( equals(nextProps, this.props) && nextState.text && this.state.text && ( nextState.text == this.state.text ) ){
-				return false;
-		}
-
-		return true;
+		return ((deepEqualObject(nextProps,this.props) == false) || (deepEqualObject(nextState,this.state) == false));
 	}
 
 	componentWillReceiveProps(nextProps){
 
-		if( nextProps.value != this.props.value ){
-			this.setTextValue( nextProps.value );
-		}
+	  if( nextProps.value != this.state.text ){
+		 this.setTextValue( (nextProps.value || '') );
+	  }
 
-	  if( nextProps.validation != null && nextProps.validation.validate  ){
-			let textareaTag =this.elementRef;
-			this.validateInputBox(null, textareaTag, null ,extract( nextProps , ["validation","onPassValidation","onFailValidation"] ) );
-		}
+	  if( deepEqualObject(nextProps.validation,this.props.validation) == false && nextProps.validation && nextProps.validation.validate ){
+		  let textareaTag = this.elementRef;
+		  this.validateInputBox(null, textareaTag, null ,extract( nextProps , ["validation","onPassValidation","onFailValidation"] ) );
+	  }
 
-	}
-
-	componentDidUpdate(prevProps, prevState)
-	{
-		if(this.props.fireEvent!==prevProps.fireEvent  && this.props.fireEvent){
-			requestAnimationFrame(()=>{
-				this.elementRef && this.elementRef[this.props.fireEvent] && this.elementRef[this.props.fireEvent]();
-			})
-		}
 	}
 	
 	componentDidMount(){
@@ -59,14 +45,8 @@ export default class MultiLineInputBase extends React.Component {
 			 this.validateInputBox(null, textareaTag , null ,extract( this.props , ["validation","onPassValidation","onFailValidation"] ) );
 		}
 
-		if(this.props.fireEvent!=null){
-			requestAnimationFrame(()=>{
-				textareaTag && textareaTag[this.props.fireEvent] && textareaTag[this.props.fireEvent]();
-			})
-		}
-		
-		requestAnimationFrame(()=>{
-			if(this.props.autoExpandX || this.props.autoExpandY ){
+		//requestAnimationFrame(()=>{
+			if(this.props.autoExpandX || this.props.autoExpandY){
 				this.setState({
 					minHeight : textareaTag.clientHeight , 
 					minWidth : textareaTag.clientWidth , 
@@ -74,12 +54,14 @@ export default class MultiLineInputBase extends React.Component {
 					yAutoExpand : (textareaTag.clientHeight == textareaTag.scrollHeight)
 				})
 			}
-		})
+		//})
 		
 	}
 
 	setTextValue(text){
-		this.setState({ text : text });
+		this.setState({ text },()=>{
+			this.props.getValue && this.props.getValue(this.state.text);
+		});
 	}
 
 	onChangeText(ev, callback){
@@ -135,9 +117,10 @@ export default class MultiLineInputBase extends React.Component {
 
     render() {
 
+    	let removeTabIndex = this.props.tabIndex < 0 ? 'tabIndex' : '';
 		let validationObj = extract( this.props , ["validation","onPassValidation","onFailValidation"] );
 		let { validation } = validationObj || {};
-		let newProps = omit( this.props, ["fireEvent","autoExpandX","autoExpandY","validation","onPassValidation","onFailValidation"] );
+		let newProps = omit( this.props, [removeTabIndex , "getValue" ,"getElementRef","autoExpandX","autoExpandY","validation","onPassValidation","onFailValidation"] );
 
 		let onChangeEventFunc = newProps.onChange;
 		newProps.onChange = (ev)=>{
@@ -172,7 +155,6 @@ MultiLineInputBase.propTypes = {
 	rows :  PropTypes.oneOfType( [PropTypes.string,PropTypes.number] ),
 	cols :  PropTypes.oneOfType( [PropTypes.string,PropTypes.number] ),
 
-	fireEvent : PropTypes.string,
 	tabIndex : PropTypes.string,
 	autoExpandY : PropTypes.bool ,
 	autoExpandX : PropTypes.bool ,
@@ -182,12 +164,14 @@ MultiLineInputBase.propTypes = {
 	required :  PropTypes.bool ,
 	value : PropTypes.string ,
 
+	getElementRef :  PropTypes.func,
 	onFocus: PropTypes.func,
 	onBlur : PropTypes.func,
 	onKeyDown : PropTypes.func,
 	onKeyUp : PropTypes.func,
 	onChange : PropTypes.func,
 	onInput : PropTypes.func,
+	getValue : PropTypes.func,
 
 	validation : PropTypes.shape({
 			validate : PropTypes.bool ,

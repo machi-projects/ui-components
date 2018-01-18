@@ -1,17 +1,21 @@
+import _defineProperty from 'babel-runtime/helpers/defineProperty';
 import _toConsumableArray from 'babel-runtime/helpers/toConsumableArray';
 import _Object$getPrototypeOf from 'babel-runtime/core-js/object/get-prototype-of';
 import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
 import _createClass from 'babel-runtime/helpers/createClass';
 import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
 import _inherits from 'babel-runtime/helpers/inherits';
+
+var _MultiSelect$propType;
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import style from './MultiSelect.css';
-import { formatValue, bind } from '../common';
+import { formatValue, bind, getSelectedValue } from '../common';
 
-import { equals } from '../../../utils/objectUtils';
+import { deepEqualObject } from '../../../utils/objectUtils';
 import validator from '../../../utils/validator';
 import Popup from '../Popup';
 import Pill from '../Pill';
@@ -26,18 +30,20 @@ var MultiSelect = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (MultiSelect.__proto__ || _Object$getPrototypeOf(MultiSelect)).call(this, props));
 
-		bind.apply(_this, ['handleFocus', 'handleKeyUp', 'handleSelect', 'handleChange', 'handleRemove', 'handleHover', 'handleToggle', 'handleToggleClick', 'handleKeyDown', 'onSelectedItem']);
+		bind.apply(_this, ['handleSearchFocus', 'handleKeyUp', 'handleSelect', 'handleChange', 'handleRemove', 'handleHover', 'handleToggle', 'handleToggleClick', 'handleKeyDown', 'onSelectedItem', 'onChangeValue']);
 
 		_this.state = {
-			focusedSuggestion: 0,
+			focusedSuggestionIndex: 0,
 			searchString: '',
-			suggestions: formatValue(props.defaultSuggestions),
-			selectedValues: formatValue(props.defaultSelectedValues)
+			selectedValues: props.selectedValues,
+			formattedSuggestions: formatValue(props.suggestions, props.valueField, props.textField),
+			formattedSelectedValues: formatValue(props.selectedValues, props.valueField, props.textField)
 		};
 
 		_this.setRef = _this.setRef.bind(_this);
 		_this.setDropPopupRef = _this.setDropPopupRef.bind(_this);
 		_this.setPlaceHolderRef = _this.setPlaceHolderRef.bind(_this);
+		_this.setSearchInputRef = _this.setSearchInputRef.bind(_this);
 		return _this;
 	}
 
@@ -45,6 +51,7 @@ var MultiSelect = function (_React$Component) {
 		key: 'setRef',
 		value: function setRef(el) {
 			this.elementRef = el;
+			this.props.getElementRef && this.props.getElementRef(el);
 		}
 	}, {
 		key: 'setDropPopupRef',
@@ -57,18 +64,40 @@ var MultiSelect = function (_React$Component) {
 			this.placeHolderRef = el;
 		}
 	}, {
+		key: 'setSearchInputRef',
+		value: function setSearchInputRef(el) {
+			this.searchInputRef = el;
+		}
+	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return deepEqualObject(nextProps, this.props) == false || deepEqualObject(nextState, this.state) == false;
+		}
+	}, {
 		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(nextprops) {
-			if (nextprops.selectedValues && !equals(nextprops.selectedValues !== this.props.selectedValues) || nextprops.suggestions && !equals(nextprops.suggestions, this.props.suggestions)) {
+		value: function componentWillReceiveProps(nextProps) {
+			var _this2 = this;
+
+			if (deepEqualObject(nextProps.selectedValues, this.state.selectedValues) == false) {
 
 				this.setState({
-					suggestions: formatValue(nextprops.suggestions),
-					selectedValues: formatValue(nextprops.selectedValues)
+					selectedValues: nextProps.selectedValues,
+					formattedSelectedValues: formatValue(nextProps.selectedValues, this.props.valueField, this.props.textField)
+				}, function () {
+
+					var selectedValues = getSelectedValue(_this2.state.formattedSelectedValues, _this2.props.valueField);
+					_this2.onChangeValue(selectedValues);
 				});
 			}
 
-			if (nextprops.validation != null && nextprops.validation.validate) {
-				this.validateOnSelect(this.state.selectedValues, nextprops);
+			if (deepEqualObject(nextProps.suggestions, this.props.suggestions) == false) {
+				this.setState({
+					formattedSuggestions: formatValue(nextProps.suggestions, this.props.valueField, this.props.textField)
+				});
+			}
+
+			if (deepEqualObject(nextProps.validation, this.props.validation) == false && nextProps.validation && nextProps.validation.validate) {
+				this.validateOnSelect(getSelectedValue(this.state.formattedSelectedValues, this.props.valueField), nextProps);
 			}
 		}
 	}, {
@@ -100,29 +129,10 @@ var MultiSelect = function (_React$Component) {
 			}
 		}
 	}, {
-		key: 'componentDidUpdate',
-		value: function componentDidUpdate(prevProps, prevState) {
-			var _this2 = this;
-
-			if (this.props.fireEvent !== prevProps.fireEvent && this.props.fireEvent) {
-				requestAnimationFrame(function () {
-					_this2.elementRef && _this2.elementRef[_this2.props.fireEvent] && _this2.elementRef[_this2.props.fireEvent]();
-				});
-			}
-		}
-	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var _this3 = this;
-
 			if (this.props.validation != null && this.props.validation.validate) {
-				this.validateOnSelect(this.state.selectedValues, this.props);
-			}
-
-			if (this.props.fireEvent != null) {
-				requestAnimationFrame(function () {
-					_this3.elementRef && _this3.elementRef[_this3.props.fireEvent] && _this3.elementRef[_this3.props.fireEvent]();
-				});
+				this.validateOnSelect(getSelectedValue(this.state.formattedSelectedValues, this.props.valueField), this.props);
 			}
 		}
 	}, {
@@ -146,45 +156,55 @@ var MultiSelect = function (_React$Component) {
 			    isPopupOpen = _props2.isPopupOpen,
 			    togglePopup = _props2.togglePopup;
 
-			ReactDOM.findDOMNode(this.refs.nameInput).focus();
+			this.handleSearchFocus();
 			!isPopupOpen && togglePopup(e, dropRef, placeHolderRef);
 		}
 	}, {
 		key: 'handleSelect',
 		value: function handleSelect(selectedValue, e) {
-			var _this4 = this;
+			var _this3 = this;
 
 			var _props3 = this.props,
 			    closePopupOnly = _props3.closePopupOnly,
 			    isPopupOpen = _props3.isPopupOpen;
 
+			this.setState(function (state) {
 
-			var selectedValues = this.state.selectedValues;
-			var newSelectedSuggestions = [].concat(_toConsumableArray(selectedValues), [selectedValue]);
-			this.setState({ focusedSuggestion: 0, searchString: '', selectedValues: newSelectedSuggestions }, function () {
-				_this4.onSelectedItem();
+				state.focusedSuggestionIndex = 0;
+				state.searchString = '';
+				state.formattedSelectedValues = [].concat(_toConsumableArray(state.formattedSelectedValues), [selectedValue]);
+			}, function () {
+				_this3.onSelectedItem();
 			});
+
 			isPopupOpen && closePopupOnly(e);
-			this.refs.nameInput.focus();
+			this.handleSearchFocus();
 		}
 	}, {
 		key: 'onSelectedItem',
 		value: function onSelectedItem() {
 
-			this.props.onChange && this.props.onChange(this.state.selectedValues, this.props.groupName);
+			var selectedValues = getSelectedValue(this.state.formattedSelectedValues, this.props.valueField);
+			this.onChangeValue(selectedValues, this.props.groupName);
 			if (this.props.validation && this.props.validation.validateOn) {
-				this.validateOnSelect(this.state.selectedValues, this.props);
+				this.validateOnSelect(selectedValues, this.props);
 			}
 		}
 	}, {
-		key: 'handleFocus',
-		value: function handleFocus() {
-			ReactDOM.findDOMNode(this.refs.nameInput).focus();
+		key: 'onChangeValue',
+		value: function onChangeValue(val, groupName) {
+			this.props.onChange && this.props.onChange(val, groupName);
+			this.props.getValue && this.props.getValue(val);
+		}
+	}, {
+		key: 'handleSearchFocus',
+		value: function handleSearchFocus() {
+			this.searchInputRef && this.searchInputRef.focus();
 		}
 	}, {
 		key: 'handleRemove',
 		value: function handleRemove(selectedValue, e) {
-			var _this5 = this;
+			var _this4 = this;
 
 			var _props4 = this.props,
 			    valueField = _props4.valueField,
@@ -192,21 +212,21 @@ var MultiSelect = function (_React$Component) {
 			    closePopupOnly = _props4.closePopupOnly,
 			    groupName = _props4.groupName;
 
-			var selectedValues = this.state.selectedValues;
+			var selectedValues = this.state.formattedSelectedValues;
 			var newSelectedSuggestions = selectedValues.filter(function (selectedSuggestion, i) {
 				return !(selectedSuggestion[valueField] === selectedValue[valueField]);
 			});
 
 			isPopupOpen && closePopupOnly(e);
-			ReactDOM.findDOMNode(this.refs.nameInput).focus();
-			this.setState({ focusedSuggestion: 0, selectedValues: newSelectedSuggestions }, function () {
-				_this5.onSelectedItem();
+			this.handleSearchFocus();
+			this.setState({ focusedSuggestionIndex: 0, formattedSelectedValues: newSelectedSuggestions }, function () {
+				_this4.onSelectedItem();
 			});
 		}
 	}, {
 		key: 'handleKeyDown',
 		value: function handleKeyDown(e) {
-			var _this6 = this;
+			var _this5 = this;
 
 			var keyCode = e.keyCode;
 			var searchString = e.target.value;
@@ -218,24 +238,24 @@ var MultiSelect = function (_React$Component) {
 			    closePopupOnly = _props5.closePopupOnly,
 			    groupName = _props5.groupName;
 			var _state = this.state,
-			    focusedSuggestion = _state.focusedSuggestion,
-			    suggestions = _state.suggestions,
-			    selectedValues = _state.selectedValues;
+			    focusedSuggestionIndex = _state.focusedSuggestionIndex,
+			    formattedSuggestions = _state.formattedSuggestions,
+			    formattedSelectedValues = _state.formattedSelectedValues;
 
-			var suggestionList = this.filterSuggestions(searchString, suggestions, selectedValues, searchKeys, searchType, valueField);
+			var suggestionList = this.filterSuggestions(searchString, formattedSuggestions, formattedSelectedValues, searchKeys, searchType, valueField);
 
 			var suggestionLength = suggestionList.length;
 			switch (keyCode) {
 				case 8:
-					if (selectedValues.length && searchString.length == 0) {
-						var newSelectedSuggestions = selectedValues.slice(0, -1);
-						focusedSuggestion = 0;
-						this.setState({ focusedSuggestion: focusedSuggestion, selectedValues: newSelectedSuggestions }, function () {
-							_this6.onSelectedItem();
+					if (formattedSelectedValues.length && searchString.length == 0) {
+						var newSelectedSuggestions = formattedSelectedValues.slice(0, -1);
+						focusedSuggestionIndex = 0;
+						this.setState({ focusedSuggestionIndex: focusedSuggestionIndex, formattedSelectedValues: newSelectedSuggestions }, function () {
+							_this5.onSelectedItem();
 						});
 
 						//isPopupOpen && closePopupOnly(e)
-						this.handleFocus();
+						this.handleSearchFocus();
 					}
 					break;
 			}
@@ -243,7 +263,7 @@ var MultiSelect = function (_React$Component) {
 	}, {
 		key: 'handleKeyUp',
 		value: function handleKeyUp(e) {
-			var _this7 = this;
+			var _this6 = this;
 
 			var keyCode = e.keyCode;
 			var searchString = e.target.value;
@@ -257,51 +277,55 @@ var MultiSelect = function (_React$Component) {
 			    closePopupOnly = _props6.closePopupOnly,
 			    groupName = _props6.groupName;
 			var _state2 = this.state,
-			    focusedSuggestion = _state2.focusedSuggestion,
-			    suggestions = _state2.suggestions,
-			    selectedValues = _state2.selectedValues;
+			    focusedSuggestionIndex = _state2.focusedSuggestionIndex,
+			    formattedSuggestions = _state2.formattedSuggestions,
+			    formattedSelectedValues = _state2.formattedSelectedValues;
 
-			var suggestionList = this.filterSuggestions(searchString, suggestions, selectedValues, searchKeys, searchType, valueField);
+			var suggestionList = this.filterSuggestions(searchString, formattedSuggestions, formattedSelectedValues, searchKeys, searchType, valueField);
 			var suggestionLength = suggestionList.length;
 			switch (keyCode) {
 				case 40:
 				case 34:
 					if (suggestionLength) {
-						if (focusedSuggestion === suggestionLength - 1) {
-							focusedSuggestion = 0;
+						if (focusedSuggestionIndex === suggestionLength - 1) {
+							focusedSuggestionIndex = 0;
 						} else {
-							focusedSuggestion += 1;
+							focusedSuggestionIndex += 1;
 						}
 					}
 					break;
 				case 38:
 				case 33:
 					if (suggestionLength) {
-						if (focusedSuggestion === 0) {
-							focusedSuggestion = suggestionLength - 1;
+						if (focusedSuggestionIndex === 0) {
+							focusedSuggestionIndex = suggestionLength - 1;
 						} else {
-							focusedSuggestion -= 1;
+							focusedSuggestionIndex -= 1;
 						}
 					}
 					break;
 				case 13:
 					if (suggestionLength) {
-						ReactDOM.findDOMNode(this.refs.nameInput).focus();
-						var selectedSuggestion = suggestionList[focusedSuggestion];
-						var newSelectedSuggestions = [].concat(_toConsumableArray(selectedValues), [selectedSuggestion]);
+						this.handleSearchFocus();
+						var selectedSuggestion = suggestionList[focusedSuggestionIndex];
+						var newSelectedSuggestions = [].concat(_toConsumableArray(formattedSelectedValues), [selectedSuggestion]);
 
-						if (isPopupOpen) {
-							focusedSuggestion = 0;
-							searchString = '';
-							closePopupOnly(e);
-						} else {
-							togglePopup(e);
-						}
-						this.setState({ focusedSuggestion: focusedSuggestion, searchString: searchString, selectedValues: newSelectedSuggestions }, function () {
-							if (isPopupOpen) {
-								_this7.onSelectedItem();
-								_this7.handleFocus();
-							}
+						//if (isPopupOpen) {
+						focusedSuggestionIndex = 0;
+						searchString = '';
+						//closePopupOnly(e);
+						//}
+
+						/*else{
+      	togglePopup(e);
+      }*/
+
+						//togglePopup(e);
+						this.setState({ focusedSuggestionIndex: focusedSuggestionIndex, searchString: searchString, formattedSelectedValues: newSelectedSuggestions }, function () {
+							//if (isPopupOpen) {
+							_this6.onSelectedItem();
+							_this6.handleSearchFocus();
+							//}
 						});
 
 						return;
@@ -313,11 +337,11 @@ var MultiSelect = function (_React$Component) {
 					isPopupOpen && closePopupOnly(e);
 					break;
 				default:
-					focusedSuggestion = 0;
+					focusedSuggestionIndex = 0;
 					break;
 			}
 
-			this.setState({ focusedSuggestion: focusedSuggestion, searchString: searchString });
+			this.setState({ focusedSuggestionIndex: focusedSuggestionIndex, searchString: searchString });
 		}
 	}, {
 		key: 'filterSuggestions',
@@ -343,8 +367,8 @@ var MultiSelect = function (_React$Component) {
 		}
 	}, {
 		key: 'handleHover',
-		value: function handleHover(focusedSuggestion) {
-			this.state.focusedSuggestion !== focusedSuggestion && this.setState({ focusedSuggestion: focusedSuggestion });
+		value: function handleHover(focusedSuggestionIndex) {
+			this.state.focusedSuggestionIndex !== focusedSuggestionIndex && this.setState({ focusedSuggestionIndex: focusedSuggestionIndex });
 		}
 	}, {
 		key: 'handleToggleClick',
@@ -355,11 +379,11 @@ var MultiSelect = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this8 = this;
+			var _this7 = this;
 
 			var _state3 = this.state,
 			    searchString = _state3.searchString,
-			    focusedSuggestion = _state3.focusedSuggestion,
+			    focusedSuggestionIndex = _state3.focusedSuggestionIndex,
 			    inputFocus = _state3.inputFocus;
 			var _props7 = this.props,
 			    groupName = _props7.groupName,
@@ -367,8 +391,7 @@ var MultiSelect = function (_React$Component) {
 			    searchType = _props7.searchType,
 			    textField = _props7.textField,
 			    valueField = _props7.valueField,
-			    _props7$styles = _props7.styles,
-			    styles = _props7$styles === undefined ? {} : _props7$styles,
+			    styleId = _props7.styleId,
 			    isReadOnly = _props7.isReadOnly,
 			    isPopupReady = _props7.isPopupReady,
 			    isPopupOpen = _props7.isPopupOpen,
@@ -378,60 +401,60 @@ var MultiSelect = function (_React$Component) {
 			    placeholder = _props7.placeholder,
 			    allowClear = _props7.allowClear,
 			    tabIndex = _props7.tabIndex,
-			    focusIn = _props7.focusIn,
-			    focusOut = _props7.focusOut,
 			    onClick = _props7.onClick;
 
 
-			var stateSuggestions = this.state.suggestions;
-			var stateSelectedValues = this.state.selectedValues;
+			var stateSuggestions = this.state.formattedSuggestions;
+			var stateSelectedValues = this.state.formattedSelectedValues;
 
-			var selectedValues = stateSelectedValues.map(function (selectedValue, i) {
+			var displaySelectedItems = stateSelectedValues.map(function (selectedValue, i) {
 				return [React.createElement(SelectedItem, {
 					value: selectedValue,
 					allowClear: allowClear,
 					textField: textField,
-					onDelete: _this8.handleRemove,
-					key: i
+					onDelete: _this7.handleRemove,
+					key: i,
+					styleId: styleId
 				})];
 			});
 
 			var suggestions = this.filterSuggestions(searchString, stateSuggestions, stateSelectedValues, searchKeys, searchType, valueField);
 
-			var suggestionList = void 0;
+			var suggestionList = null;
 			if (suggestions.length) {
 				suggestionList = suggestions.map(function (suggestion, i) {
-					var focus = focusedSuggestion === i;
+					var focus = focusedSuggestionIndex === i;
 					return React.createElement(SuggestionItem, {
 						index: i,
 						key: i,
 						textField: textField,
 						valueField: valueField,
-						onHover: _this8.handleHover,
-						value: suggestion,
-						onChange: _this8.handleSelect,
-						focus: focus
+						onHover: _this7.handleHover,
+						option: suggestion,
+						onChange: _this7.handleSelect,
+						focus: focus,
+						styleId: styleId
 					});
 				});
 			} else {
-				suggestionList = React.createElement(FormatText, { i18NKey: 'No matches found', className: style.notfound, type: 'div' });
+				suggestionList = React.createElement(FormatText, { i18NKey: 'No matches found', className: style[styleId + '_notfound'], type: 'div' });
 			}
 
 			return React.createElement(
 				'div',
-				{ className: style.mainrel, ref: this.setRef, tabIndex: tabIndex, onFocus: focusIn, onBlur: focusOut, onClick: onClick },
+				{ className: style[styleId + '_mainrel'], ref: this.setRef, tabIndex: tabIndex, onClick: onClick },
 				React.createElement(
 					'div',
-					{ ref: this.setPlaceHolderRef, className: isPopupOpen ? style.mainFlexWrap : style.mainBorder,
+					{ ref: this.setPlaceHolderRef, className: isPopupOpen ? style[styleId + '_mainFlexWrap'] : style[styleId + '_mainBorder'],
 						onClick: !isReadOnly && this.handleToggleClick },
-					selectedValues,
+					displaySelectedItems,
 					React.createElement(
 						'span',
-						{ className: style.inputAdjust },
+						{ className: style[styleId + '_inputAdjust'] },
 						React.createElement('input', {
-							className: style.inputFocus,
+							className: style[styleId + '_inputFocus'],
 							placeholder: placeholder,
-							ref: 'nameInput',
+							ref: this.setSearchInputRef,
 							readOnly: isReadOnly,
 							onKeyDown: this.handleKeyDown,
 							onKeyUp: this.handleKeyUp,
@@ -439,15 +462,16 @@ var MultiSelect = function (_React$Component) {
 							value: searchString
 						})
 					),
-					React.createElement('div', { className: style.clr })
+					React.createElement('div', { className: style[styleId + '_clr'] })
 				),
 				React.createElement(
 					'div',
 					{ ref: this.setDropPopupRef, onClick: removeClose,
-						className: style.droppopup + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'top' ? style.ListAdsTop : style.ListAds) },
+
+						className: style[styleId + '_droppopup'] + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'top' ? style[styleId + '_ListAdsTop'] : style[styleId + '_ListAds']) },
 					suggestionList
 				),
-				React.createElement('div', { className: style.clr })
+				React.createElement('div', { className: style[styleId + '_clr'] })
 			);
 		}
 	}]);
@@ -462,10 +486,12 @@ MultiSelect.defaultProps = {
 	textField: 'name',
 	searchKeys: ['name'],
 	searchType: 'indexOf',
-	allowClear: true
+	allowClear: true,
+	styleId: "default"
 };
 
-MultiSelect.propTypes = {
+MultiSelect.propTypes = (_MultiSelect$propType = {
+	styleId: PropTypes.string,
 	groupName: PropTypes.string,
 	placeholder: PropTypes.string,
 	selectedValues: PropTypes.array,
@@ -481,23 +507,20 @@ MultiSelect.propTypes = {
 	onChange: PropTypes.func,
 	closePopupOnly: PropTypes.func,
 
-	fireEvent: PropTypes.string,
 	tabIndex: PropTypes.string,
-	focusIn: PropTypes.func,
-	focusOut: PropTypes.func,
+	getElementRef: PropTypes.func,
+	getValue: PropTypes.func,
 	onClick: PropTypes.func,
 
-	validation: PropTypes.shape({
-		validate: PropTypes.bool,
-		validateOn: PropTypes.string,
-		rulesOrder: PropTypes.arrayOf(PropTypes.string),
-		rules: PropTypes.object,
-		messages: PropTypes.object
-	}),
-
-	onPassValidation: PropTypes.func,
-	onFailValidation: PropTypes.func
-};
+	errored: PropTypes.bool,
+	focused: PropTypes.bool
+}, _defineProperty(_MultiSelect$propType, 'errored', PropTypes.bool), _defineProperty(_MultiSelect$propType, 'validation', PropTypes.shape({
+	validate: PropTypes.bool,
+	validateOn: PropTypes.string,
+	rulesOrder: PropTypes.arrayOf(PropTypes.string),
+	rules: PropTypes.object,
+	messages: PropTypes.object
+})), _defineProperty(_MultiSelect$propType, 'onPassValidation', PropTypes.func), _defineProperty(_MultiSelect$propType, 'onFailValidation', PropTypes.func), _MultiSelect$propType);
 
 var SuggestionItem = function (_React$Component2) {
 	_inherits(SuggestionItem, _React$Component2);
@@ -505,11 +528,11 @@ var SuggestionItem = function (_React$Component2) {
 	function SuggestionItem(props) {
 		_classCallCheck(this, SuggestionItem);
 
-		var _this9 = _possibleConstructorReturn(this, (SuggestionItem.__proto__ || _Object$getPrototypeOf(SuggestionItem)).call(this, props));
+		var _this8 = _possibleConstructorReturn(this, (SuggestionItem.__proto__ || _Object$getPrototypeOf(SuggestionItem)).call(this, props));
 
-		_this9.handleSelect = _this9.handleSelect.bind(_this9);
-		_this9.handleHover = _this9.handleHover.bind(_this9);
-		return _this9;
+		_this8.handleSelect = _this8.handleSelect.bind(_this8);
+		_this8.handleHover = _this8.handleHover.bind(_this8);
+		return _this8;
 	}
 
 	_createClass(SuggestionItem, [{
@@ -526,9 +549,9 @@ var SuggestionItem = function (_React$Component2) {
 		value: function handleSelect(e) {
 			var _props9 = this.props,
 			    onChange = _props9.onChange,
-			    value = _props9.value;
+			    option = _props9.option;
 
-			onChange && onChange(value, e);
+			onChange && onChange(option, e);
 		}
 	}, {
 		key: 'render',
@@ -536,15 +559,16 @@ var SuggestionItem = function (_React$Component2) {
 			var _props10 = this.props,
 			    focus = _props10.focus,
 			    textField = _props10.textField,
-			    _props10$value = _props10.value,
-			    value = _props10$value === undefined ? {} : _props10$value;
+			    _props10$option = _props10.option,
+			    option = _props10$option === undefined ? {} : _props10$option,
+			    styleId = _props10.styleId;
 
 
-			var className = focus ? style.suggestionFocus : style.suggestion;
+			var className = focus ? style[styleId + '_suggestionFocus'] : style[styleId + '_suggestion'];
 			return React.createElement(
 				'div',
 				{ className: className, onClick: this.handleSelect, onMouseOver: this.handleHover },
-				value[textField]
+				option[textField]
 			);
 		}
 	}]);
@@ -553,7 +577,7 @@ var SuggestionItem = function (_React$Component2) {
 }(React.Component);
 
 SuggestionItem.propTypes = {
-	value: PropTypes.object,
+	option: PropTypes.object,
 	textField: PropTypes.string,
 	onHover: PropTypes.func,
 	onChange: PropTypes.func
@@ -565,10 +589,10 @@ var SelectedItem = function (_React$Component3) {
 	function SelectedItem(props) {
 		_classCallCheck(this, SelectedItem);
 
-		var _this10 = _possibleConstructorReturn(this, (SelectedItem.__proto__ || _Object$getPrototypeOf(SelectedItem)).call(this, props));
+		var _this9 = _possibleConstructorReturn(this, (SelectedItem.__proto__ || _Object$getPrototypeOf(SelectedItem)).call(this, props));
 
-		_this10.handleRemove = _this10.handleRemove.bind(_this10);
-		return _this10;
+		_this9.handleRemove = _this9.handleRemove.bind(_this9);
+		return _this9;
 	}
 
 	_createClass(SelectedItem, [{
@@ -590,13 +614,14 @@ var SelectedItem = function (_React$Component3) {
 			    textField = _props12.textField,
 			    _props12$value = _props12.value,
 			    value = _props12$value === undefined ? {} : _props12$value,
-			    allowClear = _props12.allowClear;
+			    allowClear = _props12.allowClear,
+			    styleId = _props12.styleId;
 
 			return React.createElement(
 				'span',
-				{ className: style.multiSel },
+				{ className: style[styleId + '_multiSel'] },
 				React.createElement(Pill, {
-					backIcon: allowClear ? { name: 'xCloseIcon', size: 'small' } : null,
+					backIcon: allowClear ? { name: 'closeicon', size: 'small' } : null,
 					text: value[textField],
 					onBackIconClick: this.handleRemove
 				})
