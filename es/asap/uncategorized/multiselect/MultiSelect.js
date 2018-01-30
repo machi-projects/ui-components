@@ -9,7 +9,6 @@ import _inherits from 'babel-runtime/helpers/inherits';
 var _MultiSelect$propType;
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import style from './MultiSelect.css';
@@ -19,8 +18,6 @@ import { deepEqualObject } from '../../../utils/objectUtils';
 import validator from '../../../utils/validator';
 import Popup from '../Popup';
 import Pill from '../Pill';
-
-import { FormatText } from 'fz-i18n';
 
 var MultiSelect = function (_React$Component) {
 	_inherits(MultiSelect, _React$Component);
@@ -399,6 +396,7 @@ var MultiSelect = function (_React$Component) {
 			    togglePopup = _props7.togglePopup,
 			    removeClose = _props7.removeClose,
 			    placeholder = _props7.placeholder,
+			    noMatchesLabel = _props7.noMatchesLabel,
 			    allowClear = _props7.allowClear,
 			    tabIndex = _props7.tabIndex,
 			    onClick = _props7.onClick;
@@ -437,7 +435,11 @@ var MultiSelect = function (_React$Component) {
 					});
 				});
 			} else {
-				suggestionList = React.createElement(FormatText, { i18NKey: 'No matches found', className: style[styleId + '_notfound'], type: 'div' });
+				suggestionList = React.createElement(
+					'div',
+					{ className: style[styleId + '_notfound'] },
+					noMatchesLabel
+				);
 			}
 
 			return React.createElement(
@@ -468,7 +470,7 @@ var MultiSelect = function (_React$Component) {
 					'div',
 					{ ref: this.setDropPopupRef, onClick: removeClose,
 
-						className: style[styleId + '_droppopup'] + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'top' ? style[styleId + '_ListAdsTop'] : style[styleId + '_ListAds']) },
+						className: style[styleId + '_droppopup'] + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'topCenter' ? style[styleId + '_ListAdsTop'] : style[styleId + '_ListAds']) },
 					suggestionList
 				),
 				React.createElement('div', { className: style[styleId + '_clr'] })
@@ -494,6 +496,7 @@ MultiSelect.propTypes = (_MultiSelect$propType = {
 	styleId: PropTypes.string,
 	groupName: PropTypes.string,
 	placeholder: PropTypes.string,
+	noMatchesLabel: PropTypes.string,
 	selectedValues: PropTypes.array,
 	searchKeys: PropTypes.array,
 	searchType: PropTypes.string,

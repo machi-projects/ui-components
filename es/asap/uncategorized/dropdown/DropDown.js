@@ -6,7 +6,6 @@ import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDom from 'react-dom';
-import { FormatText } from 'fz-i18n';
 import style from './DropDown.css';
 import Popup from '../Popup';
 import { Icon } from '../../index';
@@ -234,13 +233,13 @@ var DropDown = function (_React$Component) {
 			var selSuggestion = ReactDom.findDOMNode(this.refs['suggestion_' + this.state.count]);
 			if (selSuggestion && suggestionContainer) {
 				if (suggestionContainer.scrollHeight == selSuggestion.offsetTop + selSuggestion.offsetHeight) {
-					suggestionContainer.scrollTop = selSuggestion.offsetTop - 200;
+					suggestionContainer.scrollTop = selSuggestion.offsetTop - selSuggestion.offsetHeight;
 				} else if (selSuggestion.offsetTop == 0) {
 					suggestionContainer.scrollTop = 0;
 				} else if (suggestionContainer.offsetHeight + suggestionContainer.scrollTop < selSuggestion.offsetTop) {
-					suggestionContainer.scrollTop = selSuggestion.offsetTop - 200;
+					suggestionContainer.scrollTop = selSuggestion.offsetTop - selSuggestion.offsetHeight;
 				} else if (suggestionContainer.scrollTop > selSuggestion.offsetTop) {
-					suggestionContainer.scrollTop = selSuggestion.offsetTop - 30;
+					suggestionContainer.scrollTop = selSuggestion.offsetTop - selSuggestion.offsetHeight;
 				}
 			}
 		}
@@ -263,6 +262,7 @@ var DropDown = function (_React$Component) {
 			    removeClose = _props2.removeClose,
 			    isError = _props2.isError,
 			    placeholder = _props2.placeholder,
+			    noMatchesLabel = _props2.noMatchesLabel,
 			    minimumResultsForSearch = _props2.minimumResultsForSearch,
 			    enableSeachOptionsCount = _props2.enableSeachOptionsCount,
 			    tabIndex = _props2.tabIndex,
@@ -302,7 +302,7 @@ var DropDown = function (_React$Component) {
 				React.createElement(
 					'div',
 					{ ref: this.setDropPopupRef, onClick: removeClose,
-						className: style[styleId + '_droppopup'] + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'top' ? style[styleId + '_listViewTop'] : style[styleId + '_listview']) },
+						className: style[styleId + '_droppopup'] + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'topCenter' ? style[styleId + '_listViewTop'] : style[styleId + '_listview']) },
 					enableSearch && React.createElement(
 						'div',
 						{ className: style[styleId + '_posRel'] },
@@ -341,7 +341,11 @@ var DropDown = function (_React$Component) {
 								name
 							);
 						})
-					) : React.createElement(FormatText, { i18NKey: 'No matches found', className: style[styleId + '_notfound'], type: 'div' })
+					) : React.createElement(
+						'div',
+						{ className: style[styleId + '_notfound'] },
+						noMatchesLabel
+					)
 				)
 			);
 		}
@@ -353,11 +357,14 @@ var DropDown = function (_React$Component) {
 export default Popup(DropDown);
 
 DropDown.defaultProps = {
+
+	noMatchesLabel: "No matches found",
 	minimumResultsForSearch: Infinity,
 	enableSeachOptionsCount: 1,
 	textField: "name",
 	valueField: "id",
 	styleId: "default"
+
 };
 
 DropDown.propTypes = {
@@ -387,6 +394,7 @@ DropDown.propTypes = {
 	minimumResultsForSearch: PropTypes.number,
 	enableSeachOptionsCount: PropTypes.number,
 
+	noMatchesLabel: PropTypes.string,
 	placeholder: PropTypes.string,
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

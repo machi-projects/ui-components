@@ -303,6 +303,7 @@ const validator = {
 					};
 				} else if ((rule == 'email' || rule == 'month' || rule == 'time' || rule == 'phone' || rule == 'url' || 
 						rule == 'hexcode' || rule == 'cleartextpattern' ) && ruleInfo === true) {
+					
 					newValidationRules[rule] = (val, el) => {
 						let value = (val || '').trim();
 						return !defaultPatterns[rule].test(value);

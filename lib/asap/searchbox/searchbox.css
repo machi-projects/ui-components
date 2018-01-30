@@ -79,12 +79,13 @@
 .default.isfloatlabel.iscollaspe  .floatbox{
 	width:100%;
 	display : block;
+	height: 100%;
 }
 
 .searchicon,.clearicon{
 	cursor:pointer;
     position: absolute;
-    top: 7px;
+    top: 9px;
     right: 20px;
     background: #f7f7f7;
     composes: clr_greyshade from '../common-css/colors/colors.css';

@@ -6,7 +6,7 @@
     border: 1px solid _gallery_1;
     border-radius: 50px;
     padding: 4px 5px;
-    composes: fs_15_px from '../../../components/common-css/typography/fontsizes.css';
+    composes: fs_15_px from '../common-css/font-sizes/fontsizes.css';
 }
 .tag{
    display:inline-block;

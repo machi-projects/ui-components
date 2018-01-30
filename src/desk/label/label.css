@@ -1,6 +1,6 @@
 @value _crimson,_froly,_red,_white,_yellow,_green,_blue from '../common-css/variables/colors.css';
 @value _none from '../common-css/variables/units.css';
-@value _px_14, _px_15 from '../../../components/common-css/typography/fontsizes.css';
+@value _px_14, _px_15 from '../common-css/variables/fontsizes.css';
 
 .default  {
 	composes: clr_dustyGray from '../common-css/colors/colors.css';
@@ -8,7 +8,7 @@
     display: inline-block;
     position: relative;
     outline: none;
-    composes: fs_14_px from '../../../components/common-css/typography/fontsizes.css';
+    composes: fs_14_px from '../common-css/font-sizes/fontsizes.css';
     composes: ft_400 from '../common-css/font-weight/fontweight.css';
     pointer-events: none;
     left: 5px;
@@ -27,7 +27,7 @@
 }
 
  
-.default.mandatory::before,.fload_checkboxlabel::before, .captchaLabel::before{
+.default.mandatory::before, .captchaLabel::before{
 	content: "*";
     color: _crimson;
     font-size: _px_15;
@@ -56,7 +56,7 @@
     cursor: text;
     display: inline-block;
     outline: none;
-    composes: fs_14_px from '../../../components/common-css/typography/fontsizes.css';
+    composes: fs_14_px from '../common-css/font-sizes/fontsizes.css';
     composes: ft_400 from '../common-css/font-weight/fontweight.css';
     transition: 0.2s ease all;
     margin-top: 4px;

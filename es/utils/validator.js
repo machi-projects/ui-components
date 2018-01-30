@@ -301,6 +301,7 @@ var validator = {
 						return !new RegExp(ruleInfo).test(value);
 					};
 				} else if ((rule == 'email' || rule == 'month' || rule == 'time' || rule == 'phone' || rule == 'url' || rule == 'hexcode' || rule == 'cleartextpattern') && ruleInfo === true) {
+
 					newValidationRules[rule] = function (val, el) {
 						var value = (val || '').trim();
 						return !defaultPatterns[rule].test(value);

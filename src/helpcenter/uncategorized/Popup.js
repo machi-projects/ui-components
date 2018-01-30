@@ -85,26 +85,12 @@ var Popup = function(Component, group = 'global') {
 					let betterPosition = viewPort.betterView( dropElement , placeHoldeEl , defaultPosition ,  frame);
 					
 					//Auto predict views
-					if( betterPosition.view == "topCenter" ) {
-						
-						this.setState({ isPopupReady : true , position: 'top'  });
+					if( betterPosition.view ) {
+						this.setState({ isPopupReady : true , position: betterPosition.view });
+					}else{
+						this.setState({ isPopupReady : true , position: defaultPosition  });
 					}
-					else if( betterPosition.view == "bottomCenter" ){
-						
-						this.setState({ isPopupReady : true  , position: 'bottom' });
-					}
-					else if( betterPosition.view == "leftCenter" ) {
-						
-						this.setState({ isPopupReady : true , position: 'left'  });
-					}
-					else if( betterPosition.view == "rightCenter" ){
-						
-						this.setState({ isPopupReady : true  , position: 'right' });
-					}
-					else{
-						
-						this.setState({ isPopupReady : true , position: 'bottom'  });
-					}
+				
 				})
 				
 			});

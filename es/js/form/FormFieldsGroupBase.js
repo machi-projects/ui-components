@@ -128,7 +128,6 @@ var FormFieldsGroupBase = function (_Component) {
 			    focusFieldOnError = _props.focusFieldOnError,
 			    onChangeFieldValue = _props.onChangeFieldValue;
 
-
 			return React.createElement(
 				'div',
 				{ className: formFieldsGroupStyle },
@@ -136,6 +135,7 @@ var FormFieldsGroupBase = function (_Component) {
 					return child ? React.cloneElement(child, {
 						key: i,
 						validate: _this5.props.validate,
+						resetField: _this5.props.resetForm,
 						tabIndex: focusFieldOnError ? "-1" : null,
 						focusField: _this5.state.errorFocusFieldId == child.props.fieldId,
 						getValue: onChangeFieldValue ? function (val) {
@@ -166,6 +166,7 @@ FormFieldsGroupBase.propTypes = {
 
 	focusFieldOnError: PropTypes.bool,
 	validate: PropTypes.bool,
+	resetForm: PropTypes.bool,
 	onFailValidation: PropTypes.func,
 	onPassValidation: PropTypes.func,
 	onChangeFieldValue: PropTypes.func,

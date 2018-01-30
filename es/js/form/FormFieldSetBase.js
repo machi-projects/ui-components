@@ -209,6 +209,14 @@ var FormFieldSetBase = function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate(prevProps) {
+
+			if (prevProps.resetField !== this.props.resetField) {
+				this.props.resetField && this.setState({ errored: false, errMessage: null });
+			}
+		}
+	}, {
 		key: 'onValueChangeItem',
 		value: function onValueChangeItem(fieldValue) {
 			var _this9 = this;
@@ -303,6 +311,7 @@ FormFieldSetBase.propTypes = {
 	errMessage: PropTypes.string,
 
 	validate: PropTypes.bool,
+	resetField: PropTypes.bool,
 
 	validation: PropTypes.shape({
 		validateOn: PropTypes.string,

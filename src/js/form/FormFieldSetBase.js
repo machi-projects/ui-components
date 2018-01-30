@@ -170,6 +170,13 @@ export default class FormFieldSetBase extends React.Component {
 		}
 	}
 	
+	componentDidUpdate(prevProps){
+		
+		if( prevProps.resetField !== this.props.resetField ){
+			this.props.resetField && this.setState({ errored : false , errMessage : null })
+		}
+	}
+
 	onValueChangeItem(fieldValue){
 		
 		let stateValues = {};
@@ -264,6 +271,7 @@ FormFieldSetBase.propTypes = {
 	errMessage: PropTypes.string,
 	
 	validate: PropTypes.bool,
+	resetField: PropTypes.bool,
 	
 	validation: PropTypes.shape({
 		validateOn: PropTypes.string,

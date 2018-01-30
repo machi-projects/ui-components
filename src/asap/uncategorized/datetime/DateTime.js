@@ -1,38 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { i18NProviderUtils } from 'fz-i18n';
 import CalendarView from './CalendarView.js';
-import TimeField from './TimeField';
 import DropdownComponent from './DropdownComponent';
 import style from './DateTime.css';
 import moment from 'moment-timezone';
-import selectn from 'selectn';
 
 import { Icon } from '../../index';
 
 var monthend = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 var monthname = [
-	'January',
-	'February',
-	'March',
-	'April',
-	'May',
-	'June',
-	'July',
-	'August',
-	'September',
-	'October',
-	'November',
-	'December'
+	'january',
+	'february',
+	'march',
+	'april',
+	'may',
+	'june',
+	'july',
+	'august',
+	'september',
+	'october',
+	'november',
+	'december'
 ];
 
-function title(dat, year, month) {
+function getDisplayMonthAndYear(dat, year, month) {
 	if (month == 1) {
 		monthend[1] = year % 400 == 0 || (year % 4 == 0 && year % 100 != 0) ? 29 : 28;
 	}
-	var showheadingtxt = monthname[month] + ' ' + year;
-	return showheadingtxt;
+	
+	return {
+		month : monthname[month] ,
+		year
+	};
 }
 
 export default class DateTime extends React.Component {
@@ -64,8 +63,8 @@ export default class DateTime extends React.Component {
 			return minArr;
 		})();
 		this.ampmSuggestions = [
-			{ id: 'AM', name: i18NProviderUtils.getI18NValue('AM') },
-			{ id: 'PM', name: i18NProviderUtils.getI18NValue('PM') }
+			{ id: 'AM', name: props.formatMessages.am },
+			{ id: 'PM', name: props.formatMessages.pm }
 		];
 
 		this.state = this.getStateFromProps(props);
@@ -103,9 +102,12 @@ export default class DateTime extends React.Component {
 	}
 
 	render() {
+		
 		let { date, month, year, hours, mins, amPm } = this.state;
-		let showmonthtxt = title(date, year, month);
-		let { isClear, isDateTimeField = true, position } = this.props;
+		let { isClear, isDateTimeField = true, position , formatMessages } = this.props;
+		let displayTextObject = getDisplayMonthAndYear(date, year, month);
+		let displayText = formatMessages.monthsFull[ displayTextObject.month ] +' ' +year;
+		
 		return (
 			<div className={style.dateContainer} onClick={this.closePopup}>
 				<i className={position ? style[`${position}ArowPos`] : style.topArow} />
@@ -118,7 +120,7 @@ export default class DateTime extends React.Component {
 							<Icon id="rightArrow"  styleId="datepickerarw" />
 						</span>
 						<span className={style.monthStr}>
-							{showmonthtxt}
+							{displayText}
 						</span>
 						<span className={style.sideArows} onClick={this.modifyCalendar.bind(this, 'g')}>
 							<Icon id="rightArrow"  styleId="datepickerarw" />
@@ -129,20 +131,20 @@ export default class DateTime extends React.Component {
 					</div>
 
 					<div className={style.days}>
-						<span className={style.daysStr}>Sun</span>
-						<span className={style.daysStr}>Mon</span>
-						<span className={style.daysStr}>Tue</span>
-						<span className={style.daysStr}>Wed</span>
-						<span className={style.daysStr}>Thu</span>
-						<span className={style.daysStr}>Fri</span>
-						<span className={style.daysStr}>Sat</span>
+						<span className={style.daysStr}>{ formatMessages.weeksShort.sun }</span>
+						<span className={style.daysStr}>{ formatMessages.weeksShort.mon }</span>
+						<span className={style.daysStr}>{ formatMessages.weeksShort.tue }</span>
+						<span className={style.daysStr}>{ formatMessages.weeksShort.wed }</span>
+						<span className={style.daysStr}>{ formatMessages.weeksShort.thu }</span>
+						<span className={style.daysStr}>{ formatMessages.weeksShort.fri }</span>
+						<span className={style.daysStr}>{ formatMessages.weeksShort.sat }</span>
 					</div>
 
 					<CalendarView date={date} year={year} month={month} onSelect={this.dateSelect} />
 					{isDateTimeField &&
 						<div className={style.timesection}>
 							<span className={style.timeStr}>
-								{i18NProviderUtils.getI18NValue('Time')}
+								{formatMessages.time}
 							</span>
 							<span className={style.dropDown}>
 								<DropdownComponent
@@ -178,10 +180,10 @@ export default class DateTime extends React.Component {
 
 					<div className={style.marTop}>
 						<button className={style.canButton} onClick={this.handleClear}>
-							{i18NProviderUtils.getI18NValue('Clear')}
+							{formatMessages.clear}
 						</button>
 						<button className={style.blueBut} onClick={this.handleSelect}>
-							{i18NProviderUtils.getI18NValue('Set')}
+							{formatMessages.set}
 						</button>
 					</div>
 				</div>
@@ -274,3 +276,42 @@ export default class DateTime extends React.Component {
 		}
 	}
 }
+
+DateTime.defaultProps = {
+	formatMessages : {
+		set : "Set",
+		clear : "Clear",
+		time : "Time",
+		am : "AM",
+		pm : "PM",
+		weeksShort : {
+			sun : "Sun",
+			mon : "Mon" ,
+			tue : "Tue",
+			wed : "Wed",
+			thu : "Thu",
+			fri : "Fri",
+			sat : "Sat"
+		},
+		monthsFull : {
+			'january' : "January",
+			'february' : "February",
+			'march' : "March",
+			'april' : "April",
+			'may' : "May",
+			'june' : "June",
+			'july' : "July",
+			'august' : "August",
+			'september': "September",
+			'october' : "October",
+			'november' : "November",
+			'december' : "December"
+		}
+	}
+}
+
+DateTime.propTypes = {
+	formatMessages : PropTypes.object
+}
+
+

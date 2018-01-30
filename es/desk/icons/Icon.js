@@ -33,14 +33,14 @@ var Icon = function (_Component) {
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			if (document.getElementById('zohohc-asap-common-icons-holder') == null) {
+			if (document.getElementById('zohodesk-common-icons-holder') == null) {
 				var child = document.createElement('div');
-				child.id = 'zohohc-asap-common-icons-holder';
+				child.id = 'zohodesk-common-icons-holder';
 				document.body.appendChild(child);
 			}
 
-			if (document.getElementById('zohohc-asap-common-icons') == null) {
-				ReactDOM.render(React.createElement(IconContent, null), document.getElementById('zohohc-asap-common-icons-holder'));
+			if (document.getElementById('zohodesk-common-icons') == null) {
+				ReactDOM.render(React.createElement(IconContent, null), document.getElementById('zohodesk-common-icons-holder'));
 			}
 		}
 	}, {

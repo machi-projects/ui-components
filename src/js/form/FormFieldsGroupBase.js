@@ -109,7 +109,6 @@ export default class FormFieldsGroupBase extends Component {
 	render() {
 	
 		let { formFieldsGroupStyle , focusFieldOnError, onChangeFieldValue } = this.props;
-
 		return (
 			<div className={formFieldsGroupStyle} >
 				{React.Children.map(this.props.children, (child, i) => {
@@ -117,6 +116,7 @@ export default class FormFieldsGroupBase extends Component {
 						? React.cloneElement(child, {
 								key: i,
 								validate: this.props.validate,
+								resetField : this.props.resetForm,
 								tabIndex: focusFieldOnError ? "-1" : null,
 								focusField : ( this.state.errorFocusFieldId == child.props.fieldId ),
 								getValue : onChangeFieldValue ? (val)=>{ onChangeFieldValue(child.props.fieldId, val) } : null ,
@@ -141,6 +141,7 @@ FormFieldsGroupBase.propTypes = {
 
 	focusFieldOnError : PropTypes.bool,
 	validate: PropTypes.bool,
+	resetForm : PropTypes.bool,
 	onFailValidation: PropTypes.func,
 	onPassValidation: PropTypes.func,
 	onChangeFieldValue : PropTypes.func,

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDom from 'react-dom';
-import { FormatText } from 'fz-i18n';
 import style from './DropDown.css';
 import Popup from '../Popup';
 import { Icon } from '../../index';
@@ -202,13 +201,13 @@ class DropDown extends React.Component {
 		var selSuggestion = ReactDom.findDOMNode(this.refs['suggestion_' + this.state.count]);
 		if (selSuggestion && suggestionContainer) {
 			if (suggestionContainer.scrollHeight == selSuggestion.offsetTop + selSuggestion.offsetHeight) {
-				suggestionContainer.scrollTop = selSuggestion.offsetTop - 200;
+				suggestionContainer.scrollTop = selSuggestion.offsetTop - selSuggestion.offsetHeight;
 			} else if (selSuggestion.offsetTop == 0) {
 				suggestionContainer.scrollTop = 0;
 			} else if (suggestionContainer.offsetHeight + suggestionContainer.scrollTop < selSuggestion.offsetTop) {
-				suggestionContainer.scrollTop = selSuggestion.offsetTop - 200;
+				suggestionContainer.scrollTop = selSuggestion.offsetTop - selSuggestion.offsetHeight;
 			} else if (suggestionContainer.scrollTop > selSuggestion.offsetTop) {
-				suggestionContainer.scrollTop = selSuggestion.offsetTop - 30;
+				suggestionContainer.scrollTop = selSuggestion.offsetTop - selSuggestion.offsetHeight;
 			}
 		}
 
@@ -229,6 +228,7 @@ class DropDown extends React.Component {
 			removeClose,
 			isError,
 			placeholder,
+			noMatchesLabel,
 			minimumResultsForSearch,
 			enableSeachOptionsCount,
 
@@ -264,7 +264,7 @@ class DropDown extends React.Component {
 				className={
 						style[`${styleId}_droppopup`]+' '+ ( isPopupReady ?style.ready : '' ) +' '+
 						( isPopupOpen ? style.opened : '')  +' '+
-						(position == 'top' ? style[`${styleId}_listViewTop`] : style[`${styleId}_listview`])
+						(position == 'topCenter' ? style[`${styleId}_listViewTop`] : style[`${styleId}_listview`])
 				} >
 
 
@@ -303,7 +303,7 @@ class DropDown extends React.Component {
 									);
 								})}
 							</ul>
-						: <FormatText i18NKey="No matches found" className={style[`${styleId}_notfound`]} type="div" />}
+						: (<div className={style[`${styleId}_notfound`]} >{noMatchesLabel}</div>)	}
 				</div>
 			</div>
 		);
@@ -313,11 +313,14 @@ class DropDown extends React.Component {
 export default Popup(DropDown);
 
 DropDown.defaultProps = {
+		
+	noMatchesLabel : "No matches found",
 	minimumResultsForSearch: Infinity,
 	enableSeachOptionsCount: 1,
 	textField : "name",
 	valueField : "id",
 	styleId : "default"
+		
 };
 
 DropDown.propTypes = {
@@ -347,6 +350,7 @@ DropDown.propTypes = {
 	minimumResultsForSearch: PropTypes.number,
 	enableSeachOptionsCount: PropTypes.number,
 
+	noMatchesLabel : PropTypes.string,
 	placeholder: PropTypes.string,
 	validation: PropTypes.shape({
 		validate: PropTypes.bool,

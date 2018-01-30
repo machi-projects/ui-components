@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import style from './MultiSelect.css';
@@ -9,9 +8,6 @@ import { deepEqualObject } from '../../../utils/objectUtils';
 import validator from '../../../utils/validator';
 import Popup from '../Popup';
 import Pill from '../Pill';
-
-import { FormatText } from 'fz-i18n';
-
 
 class MultiSelect extends React.Component {
 	constructor(props) {
@@ -360,6 +356,7 @@ class MultiSelect extends React.Component {
 			togglePopup,
 			removeClose,
 			placeholder,
+			noMatchesLabel,
 			allowClear,
 
 			tabIndex,
@@ -411,9 +408,9 @@ class MultiSelect extends React.Component {
 				);
 			});
 		} else {
-			suggestionList = <FormatText i18NKey="No matches found" className={style[`${styleId}_notfound`]} type="div" />;
+			suggestionList = (<div className={style[`${styleId}_notfound`]} >{noMatchesLabel}</div>);
 		}
-
+		
 		return (
 			<div className={style[`${styleId}_mainrel`]} ref={this.setRef}  tabIndex={tabIndex} onClick={onClick} >
 				<div ref={this.setPlaceHolderRef} className={isPopupOpen ? style[`${styleId}_mainFlexWrap`] : style[`${styleId}_mainBorder`]}
@@ -438,7 +435,7 @@ class MultiSelect extends React.Component {
 				className={
 						style[`${styleId}_droppopup`]+' '+ ( isPopupReady ? style.ready : '' ) +' '+
 						( isPopupOpen ? style.opened : '')  +' '+
-						(position == 'top' ? style[`${styleId}_ListAdsTop`] : style[`${styleId}_ListAds`])
+						(position == 'topCenter' ? style[`${styleId}_ListAdsTop`] : style[`${styleId}_ListAds`])
 				}>
 					{suggestionList}
 				</div>
@@ -463,6 +460,7 @@ MultiSelect.propTypes = {
 	styleId: PropTypes.string,
 	groupName: PropTypes.string,
 	placeholder: PropTypes.string,
+	noMatchesLabel : PropTypes.string,
 	selectedValues: PropTypes.array,
 	searchKeys: PropTypes.array,
 	searchType: PropTypes.string,

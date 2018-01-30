@@ -2,6 +2,7 @@ import React from 'react';
 import style from './TimeField.css';
 import DropdownComponent from './DropdownComponent';
 import { deepEqualObject } from '../../../utils/objectUtils';
+import { i18NProviderUtils } from 'fz-i18n';
 
 export default class DateTime extends React.Component {
 	constructor(props){
@@ -39,11 +40,11 @@ export default class DateTime extends React.Component {
 			return minArr;		
 		})();
 		let ampmSuggestions=[
-			{id:"AM",name:getI18NValue('AM')},
-			{id:"PM",name:getI18NValue('PM')}
+			{id:"AM",name:i18NProviderUtils.getI18NValue('AM')},
+			{id:"PM",name:i18NProviderUtils.getI18NValue('PM')}
 		]
 		return <div className="m10 calendar">
-					<span className={style.timeStr}>{getI18NValue('crm.events.time')}</span>
+					<span className={style.timeStr}>{i18NProviderUtils.getI18NValue('Time')}</span>
 					<span className={style.dropdown}><DropdownComponent suggestions={hourSuggestions} value={ hours } valueField="id" textField="name" onSelect={ this.hoursSelect}/></span>
 					<span className={style.dropdown}><DropdownComponent suggestions={minSuggestions} value={ mins } valueField="id" textField="name" onSelect={ this.minutesSelect }/></span>
 					<span className={style.dropdown}><DropdownComponent suggestions={ampmSuggestions} value={ amPm } valueField="id" textField="name" onSelect={ this.amPmSelect }/></span>

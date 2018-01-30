@@ -68,6 +68,7 @@ export default class InputBase extends React.Component {
 		if (ev.target.type !== 'checkbox' || ev.target.type !== 'radio') {
 			this.setTextValue(ev.target.value);
 		}
+		
 	}
 
 	validateInputBox(ev, targetTag, callback, validationProps) {
@@ -99,7 +100,7 @@ export default class InputBase extends React.Component {
 			};
 		}
 		
-		return <input {...newProps}  ref={this.setRef}  value={this.state.text}/>;
+		return <input {...newProps}  ref={this.setRef} value={this.state.text}/>;
 	}
 }
 

@@ -7,6 +7,7 @@ import React from 'react';
 import style from './TimeField.css';
 import DropdownComponent from './DropdownComponent';
 import { deepEqualObject } from '../../../utils/objectUtils';
+import { i18NProviderUtils } from 'fz-i18n';
 
 var DateTime = function (_React$Component) {
 	_inherits(DateTime, _React$Component);
@@ -58,14 +59,14 @@ var DateTime = function (_React$Component) {
 				}
 				return minArr;
 			}();
-			var ampmSuggestions = [{ id: "AM", name: getI18NValue('AM') }, { id: "PM", name: getI18NValue('PM') }];
+			var ampmSuggestions = [{ id: "AM", name: i18NProviderUtils.getI18NValue('AM') }, { id: "PM", name: i18NProviderUtils.getI18NValue('PM') }];
 			return React.createElement(
 				'div',
 				{ className: 'm10 calendar' },
 				React.createElement(
 					'span',
 					{ className: style.timeStr },
-					getI18NValue('crm.events.time')
+					i18NProviderUtils.getI18NValue('Time')
 				),
 				React.createElement(
 					'span',

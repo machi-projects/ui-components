@@ -57,15 +57,14 @@
 	width: 100%;
     border-radius: 2px;
     composes: bg_white from '../../common-css/colors/colors.css';
-    position: relative;
-    top: 10px;
+    position: absolute;
+    top:10px;
     box-shadow: 0 2px 5px 0 _transparent_alpha_16, 0 2px 10px 0 _transparent_alpha_12;
     composes: max_level_8 from '../../common-css/zindexes/zindex.css';
     will-change: width, height;
     min-width: 100px;
     max-height: 650px;
     overflow-y: auto;
-    position: absolute;
 }
 .default_listViewTop
 {
@@ -162,7 +161,8 @@
 .default_notfound{
 	padding: 10px 16px;
 	float: left;
-	width: 90%;
+	width: 100%;
 	font-size: 14px;
 	color: #444;
+	box-sizing: border-box;
 }

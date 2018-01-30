@@ -21,6 +21,10 @@ export default class CalendarView extends React.Component {
 		else if ((monthend[month] == 28) && (userSeeDay == 1)) {
 			noOfRow = 4;
 		}
+		
+		let totalDays = monthend[month];
+		date = totalDays < date ? totalDays : date;
+		
 		let incremday = 1;
 		let incremleti = 1;
 		let rows= (()=>{

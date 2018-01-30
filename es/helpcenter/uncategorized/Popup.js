@@ -108,21 +108,10 @@ var Popup = function Popup(Component) {
 						var betterPosition = viewPort.betterView(dropElement, placeHoldeEl, defaultPosition, frame);
 
 						//Auto predict views
-						if (betterPosition.view == "topCenter") {
-
-							_this3.setState({ isPopupReady: true, position: 'top' });
-						} else if (betterPosition.view == "bottomCenter") {
-
-							_this3.setState({ isPopupReady: true, position: 'bottom' });
-						} else if (betterPosition.view == "leftCenter") {
-
-							_this3.setState({ isPopupReady: true, position: 'left' });
-						} else if (betterPosition.view == "rightCenter") {
-
-							_this3.setState({ isPopupReady: true, position: 'right' });
+						if (betterPosition.view) {
+							_this3.setState({ isPopupReady: true, position: betterPosition.view });
 						} else {
-
-							_this3.setState({ isPopupReady: true, position: 'bottom' });
+							_this3.setState({ isPopupReady: true, position: defaultPosition });
 						}
 					});
 				});

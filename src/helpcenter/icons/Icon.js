@@ -17,14 +17,14 @@ export default class Icon extends Component {
 	componentWillUnmount() {}
 
 	componentDidMount() {
-		if (document.getElementById('zohohc-asap-common-icons-holder') == null) {
+		if (document.getElementById('zohohc-common-icons-holder') == null) {
 			let child = document.createElement('div');
-			child.id = 'zohohc-asap-common-icons-holder';
+			child.id = 'zohohc-common-icons-holder';
 			document.body.appendChild(child);
 		}
 		
-		if (document.getElementById('zohohc-asap-common-icons') == null) {
-			ReactDOM.render(<IconContent />, document.getElementById('zohohc-asap-common-icons-holder'));
+		if (document.getElementById('zohohc-common-icons') == null) {
+			ReactDOM.render(<IconContent />, document.getElementById('zohohc-common-icons-holder'));
 		}
 	}
 

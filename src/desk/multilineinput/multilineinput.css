@@ -16,7 +16,7 @@
     composes: clr_tundora from '../common-css/colors/colors.css';
     outline: none !important;
     width: 100%;
-    composes: fs_16_px from '../../../components/common-css/typography/fontsizes.css';
+    composes: fs_16_px from '../common-css/font-sizes/fontsizes.css';
     overflow:auto;
     box-shadow: none;
 }
@@ -32,7 +32,7 @@
 .default.autoExpandY{
 	 box-sizing: border-box;
 	 resize:none;
-	 max-height: 100px;
+	 max-height: 150px;
      padding: 0 10px 10px 5px;
      margin-top: 15px;
      height: 30px;

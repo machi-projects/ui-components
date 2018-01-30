@@ -43,7 +43,8 @@ export default class InputTextBoxBase extends React.Component {
 			'month',
 			'date',
 			'time',
-			'datetime'
+			'datetime',
+			'cleartextpattern'
 		];
 
 		let defaultType = 'text';

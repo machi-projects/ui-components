@@ -64,7 +64,7 @@ export default class CaptchaBox extends Component {
 						
 						<InputText type="text"
 							styleId={inputStyleId}
-							placeholder={'Type the word above'}
+							placeholder={placeholder}
 							maxLength={maxLength} 
 							value={value}
 							onChange={onChange}

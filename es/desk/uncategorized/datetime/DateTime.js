@@ -5,26 +5,25 @@ import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructo
 import _inherits from 'babel-runtime/helpers/inherits';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { i18NProviderUtils } from 'fz-i18n';
 import CalendarView from './CalendarView.js';
-import TimeField from './TimeField';
 import DropdownComponent from './DropdownComponent';
 import style from './DateTime.css';
 import moment from 'moment-timezone';
-import selectn from 'selectn';
 
 import { Icon } from '../../index';
 
 var monthend = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-var monthname = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+var monthname = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 
-function title(dat, year, month) {
+function getDisplayMonthAndYear(dat, year, month) {
 	if (month == 1) {
 		monthend[1] = year % 400 == 0 || year % 4 == 0 && year % 100 != 0 ? 29 : 28;
 	}
-	var showheadingtxt = monthname[month] + ' ' + year;
-	return showheadingtxt;
+
+	return {
+		month: monthname[month],
+		year: year
+	};
 }
 
 var DateTime = function (_React$Component) {
@@ -60,7 +59,7 @@ var DateTime = function (_React$Component) {
 			}
 			return minArr;
 		}();
-		_this.ampmSuggestions = [{ id: 'AM', name: i18NProviderUtils.getI18NValue('AM') }, { id: 'PM', name: i18NProviderUtils.getI18NValue('PM') }];
+		_this.ampmSuggestions = [{ id: 'AM', name: props.formatMessages.am }, { id: 'PM', name: props.formatMessages.pm }];
 
 		_this.state = _this.getStateFromProps(props);
 		return _this;
@@ -118,13 +117,15 @@ var DateTime = function (_React$Component) {
 			    hours = _state.hours,
 			    mins = _state.mins,
 			    amPm = _state.amPm;
-
-			var showmonthtxt = title(date, year, month);
 			var _props = this.props,
 			    isClear = _props.isClear,
 			    _props$isDateTimeFiel = _props.isDateTimeField,
 			    isDateTimeField = _props$isDateTimeFiel === undefined ? true : _props$isDateTimeFiel,
-			    position = _props.position;
+			    position = _props.position,
+			    formatMessages = _props.formatMessages;
+
+			var displayTextObject = getDisplayMonthAndYear(date, year, month);
+			var displayText = formatMessages.monthsFull[displayTextObject.month] + ' ' + year;
 
 			return React.createElement(
 				'div',
@@ -149,7 +150,7 @@ var DateTime = function (_React$Component) {
 						React.createElement(
 							'span',
 							{ className: style.monthStr },
-							showmonthtxt
+							displayText
 						),
 						React.createElement(
 							'span',
@@ -168,37 +169,37 @@ var DateTime = function (_React$Component) {
 						React.createElement(
 							'span',
 							{ className: style.daysStr },
-							'Sun'
+							formatMessages.weeksShort.sun
 						),
 						React.createElement(
 							'span',
 							{ className: style.daysStr },
-							'Mon'
+							formatMessages.weeksShort.mon
 						),
 						React.createElement(
 							'span',
 							{ className: style.daysStr },
-							'Tue'
+							formatMessages.weeksShort.tue
 						),
 						React.createElement(
 							'span',
 							{ className: style.daysStr },
-							'Wed'
+							formatMessages.weeksShort.wed
 						),
 						React.createElement(
 							'span',
 							{ className: style.daysStr },
-							'Thu'
+							formatMessages.weeksShort.thu
 						),
 						React.createElement(
 							'span',
 							{ className: style.daysStr },
-							'Fri'
+							formatMessages.weeksShort.fri
 						),
 						React.createElement(
 							'span',
 							{ className: style.daysStr },
-							'Sat'
+							formatMessages.weeksShort.sat
 						)
 					),
 					React.createElement(CalendarView, { date: date, year: year, month: month, onSelect: this.dateSelect }),
@@ -208,7 +209,7 @@ var DateTime = function (_React$Component) {
 						React.createElement(
 							'span',
 							{ className: style.timeStr },
-							i18NProviderUtils.getI18NValue('Time')
+							formatMessages.time
 						),
 						React.createElement(
 							'span',
@@ -253,12 +254,12 @@ var DateTime = function (_React$Component) {
 						React.createElement(
 							'button',
 							{ className: style.canButton, onClick: this.handleClear },
-							i18NProviderUtils.getI18NValue('Clear')
+							formatMessages.clear
 						),
 						React.createElement(
 							'button',
 							{ className: style.blueBut, onClick: this.handleSelect },
-							i18NProviderUtils.getI18NValue('Set')
+							formatMessages.set
 						)
 					)
 				)
@@ -379,3 +380,41 @@ var DateTime = function (_React$Component) {
 }(React.Component);
 
 export default DateTime;
+
+
+DateTime.defaultProps = {
+	formatMessages: {
+		set: "Set",
+		clear: "Clear",
+		time: "Time",
+		am: "AM",
+		pm: "PM",
+		weeksShort: {
+			sun: "Sun",
+			mon: "Mon",
+			tue: "Tue",
+			wed: "Wed",
+			thu: "Thu",
+			fri: "Fri",
+			sat: "Sat"
+		},
+		monthsFull: {
+			'january': "January",
+			'february': "February",
+			'march': "March",
+			'april': "April",
+			'may': "May",
+			'june': "June",
+			'july': "July",
+			'august': "August",
+			'september': "September",
+			'october': "October",
+			'november': "November",
+			'december': "December"
+		}
+	}
+};
+
+DateTime.propTypes = {
+	formatMessages: PropTypes.object
+};

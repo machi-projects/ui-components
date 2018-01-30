@@ -79,7 +79,7 @@ var CaptchaBox = function (_Component) {
 					),
 					React.createElement(InputText, { type: 'text',
 						styleId: inputStyleId,
-						placeholder: 'Type the word above',
+						placeholder: placeholder,
 						maxLength: maxLength,
 						value: value,
 						onChange: onChange,

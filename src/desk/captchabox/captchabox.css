@@ -40,6 +40,10 @@ default input:focus{
     min-height:77px
 }
 
+.default .captchainnerview input[type="text"]:focus{
+	border-bottom: none !important;
+}
+
 .default .captchainnerview .captchimg{
   max-width:100%;
 }
@@ -50,6 +54,9 @@ default input:focus{
     display: flex;
     justify-content: center;
 }
+
+
+
 .captchaImgStyle{
 	composes: fleft from '../common-css/floats/floats.css';
     padding: 5px;

@@ -1,12 +1,12 @@
 .default {
     composes: bg_provincial_pink from '../common-css/colors/colors.css';
     composes: clr_crimson from '../common-css/colors/colors.css';
-    composes: fs_14_px from '../../../components/common-css/typography/fontsizes.css';
+    composes: fs_14_px from '../common-css/font-sizes/fontsizes.css';
     font-weight:400;
     padding: 10px 15px;
     composes: dm_ht_100per from '../common-css/layoutunits/units.css';
-    max-height: 72px;
     height: 100%;
+    box-sizing: border-box;
 }
 
 .default.valid {

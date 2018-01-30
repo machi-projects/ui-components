@@ -11,11 +11,12 @@ import validator from '../../../utils/validator';
 import { deepEqualObject } from '../../../utils/objectUtils';
 
 class DateWidget extends React.Component {
+	
 	constructor(props) {
 		super(props);
 		this.handleSelect = this.handleSelect.bind(this);
 		this.onChangeValue = this.onChangeValue.bind(this);
-		this.state = { selected : props.value, timeZone: (props.timeZone || moment.tz.guess()) };
+		this.state = { selected : props.value, timeZone: props.timeZone};
 		this.setDropPopupRef = this.setDropPopupRef.bind(this);
 		this.setRef = this.setRef.bind(this);
 		this.setPlaceHolderRef = this.setPlaceHolderRef.bind(this);
@@ -70,6 +71,7 @@ class DateWidget extends React.Component {
 			min,
 			max,
 			placeholder,
+			formatMessages,
 			isPopupOpen,
 			isPopupReady,
 			isDateTime,
@@ -105,7 +107,7 @@ class DateWidget extends React.Component {
 						className={
 							style.droppopup+' '+ ( isPopupReady ? style.ready : '' ) +' '+ 
 							( isPopupOpen ? style.opened : '')  +' '+
-							(position == 'top' ? style.dateTop : style.absolute)
+							(position == 'topCenter' ? style.dateTop : style.absolute)
 						}
 						onClick={removeClose}>
 						<DateTime
@@ -113,11 +115,12 @@ class DateWidget extends React.Component {
 							isDateTimeField={isDateTime}
 							onSelect={this.handleSelect}
 							timeZone={this.state.timeZone}
-							position={position == 'top' ? 'top' : arrowPosition}
+							position={position == 'topCenter' ? 'top' : arrowPosition}
 							min={min}
 							max={max}
 							maxErrorText={maxErrorText}
 							minErrorText={minErrorText}
+						    formatMessages={formatMessages}
 						/>
 				</div>
 			</div>
@@ -203,6 +206,7 @@ DateWidget.propTypes = {
 	timeZone: PropTypes.string,
 	arrowPosition: PropTypes.string,
 	placeholder: PropTypes.string,
+	formatMessages : PropTypes.object,
 
 	tabIndex : PropTypes.string,
 	getElementRef : PropTypes.func,

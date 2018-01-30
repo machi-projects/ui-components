@@ -3,7 +3,7 @@
 
 .default{
 	composes: fy_roboto from '../common-css/font-family/fontfamily.css';
-	composes: fs_16_px from '../../../components/common-css/typography/fontsizes.css';
+	composes: fs_16_px from '../common-css/font-sizes/fontsizes.css';
 	border: none;
     composes: bg_transparent from '../common-css/colors/colors.css';
     border-radius: 0;
@@ -20,10 +20,16 @@
 .createform_reset{
 	composes: default;
 	color: _inherit; 
+	max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
 	
 }
 
 .createform_submit{
 	composes: default;
 	composes: clr_froly from '../common-css/colors/colors.css';
+	max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
 }

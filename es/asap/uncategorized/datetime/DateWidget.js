@@ -29,7 +29,7 @@ var DateWidget = function (_React$Component) {
 
 		_this.handleSelect = _this.handleSelect.bind(_this);
 		_this.onChangeValue = _this.onChangeValue.bind(_this);
-		_this.state = { selected: props.value, timeZone: props.timeZone || moment.tz.guess() };
+		_this.state = { selected: props.value, timeZone: props.timeZone };
 		_this.setDropPopupRef = _this.setDropPopupRef.bind(_this);
 		_this.setRef = _this.setRef.bind(_this);
 		_this.setPlaceHolderRef = _this.setPlaceHolderRef.bind(_this);
@@ -94,6 +94,7 @@ var DateWidget = function (_React$Component) {
 			    min = _props.min,
 			    max = _props.max,
 			    placeholder = _props.placeholder,
+			    formatMessages = _props.formatMessages,
 			    isPopupOpen = _props.isPopupOpen,
 			    isPopupReady = _props.isPopupReady,
 			    isDateTime = _props.isDateTime,
@@ -131,18 +132,19 @@ var DateWidget = function (_React$Component) {
 				React.createElement(
 					'div',
 					{ ref: this.setDropPopupRef,
-						className: style.droppopup + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'top' ? style.dateTop : style.absolute),
+						className: style.droppopup + ' ' + (isPopupReady ? style.ready : '') + ' ' + (isPopupOpen ? style.opened : '') + ' ' + (position == 'topCenter' ? style.dateTop : style.absolute),
 						onClick: removeClose },
 					React.createElement(DateTime, {
 						value: value,
 						isDateTimeField: isDateTime,
 						onSelect: this.handleSelect,
 						timeZone: this.state.timeZone,
-						position: position == 'top' ? 'top' : arrowPosition,
+						position: position == 'topCenter' ? 'top' : arrowPosition,
 						min: min,
 						max: max,
 						maxErrorText: maxErrorText,
-						minErrorText: minErrorText
+						minErrorText: minErrorText,
+						formatMessages: formatMessages
 					})
 				)
 			);
@@ -219,7 +221,7 @@ DateWidget.propTypes = (_DateWidget$propTypes = {
 	onChange: PropTypes.func,
 	removeClose: PropTypes.func,
 	name: PropTypes.string
-}, _defineProperty(_DateWidget$propTypes, 'isReadOnly', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'minErrorText', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'maxErrorText', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'min', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'max', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'isPopupOpen', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'isDateTime', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'dtPtn', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'position', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'timeZone', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'arrowPosition', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'placeholder', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'tabIndex', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'getElementRef', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'getValue', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'onClick', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'raised', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'focused', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'errored', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'validation', PropTypes.shape({
+}, _defineProperty(_DateWidget$propTypes, 'isReadOnly', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'minErrorText', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'maxErrorText', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'min', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'max', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'isPopupOpen', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'isDateTime', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'dtPtn', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'position', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'timeZone', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'arrowPosition', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'placeholder', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'formatMessages', PropTypes.object), _defineProperty(_DateWidget$propTypes, 'tabIndex', PropTypes.string), _defineProperty(_DateWidget$propTypes, 'getElementRef', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'getValue', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'onClick', PropTypes.func), _defineProperty(_DateWidget$propTypes, 'raised', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'focused', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'errored', PropTypes.bool), _defineProperty(_DateWidget$propTypes, 'validation', PropTypes.shape({
 	validate: PropTypes.bool,
 	validateOn: PropTypes.string,
 	rulesOrder: PropTypes.arrayOf(PropTypes.string),
